@@ -19,7 +19,7 @@ model User {
   email String @unique
   password String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime @map("deleted_at")
   post Post[]
   comment Comment[]
@@ -33,7 +33,7 @@ model Post {
     userId Int @map("user_id")
     content String
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @map("updated_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime @map("deleted_at")
     postList PostLike[]
     postImage PostImage[]
@@ -48,7 +48,7 @@ model PostLike {
     postId Int @map("post_id")
     userId Int @map("user_id")
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @map("updated_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
 
@@ -61,7 +61,7 @@ model PostImage {
     url String
     type String
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @map("updated_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
 
@@ -74,7 +74,7 @@ model Comment {
     userId Int @map("user_id")
     content String
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @map("updated_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
     user User @relation(fields: [userId], references: [id])
@@ -87,7 +87,7 @@ model Follow {
     userId Int @map("user_id")
     followedUserId Int @map("followed_id")
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @map("updated_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
     deletedAt DateTime @map("deleted_at")
     user User @relation(fields: [userId], references: [id])
 
