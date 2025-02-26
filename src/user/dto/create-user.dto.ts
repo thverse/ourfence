@@ -1,10 +1,6 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator';
-import { DateDto } from 'src/dtos/common.dto';
+import { IsEmail, IsString } from 'class-validator';
 
-export class CreateUserDto extends DateDto {
-  @IsNumber()
-  id: number;
-
+export class CreateUserDto {
   @IsString()
   username: string;
 

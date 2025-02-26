@@ -18,9 +18,9 @@ model User {
   username String @unique
   email String @unique
   password String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  deletedAt DateTime @map("deleted_at")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
   post Post[]
   comment Comment[]
   follow Follow[]
@@ -32,9 +32,9 @@ model Post {
     id Int @id @default(autoincrement())
     userId Int @map("user_id")
     content String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    deletedAt DateTime @map("deleted_at")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
     postList PostLike[]
     postImage PostImage[]
     comment Comment[]
@@ -47,9 +47,9 @@ model PostLike {
     id Int @id @default(autoincrement())
     postId Int @map("post_id")
     userId Int @map("user_id")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    deletedAt DateTime @map("deleted_at")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
 
     @@map("post_like")
@@ -60,9 +60,9 @@ model PostImage {
     postId Int @map("post_id")
     url String
     type String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    deletedAt DateTime @map("deleted_at")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
 
     @@map("post_image")
@@ -73,9 +73,9 @@ model Comment {
     postId Int @map("post_id")
     userId Int @map("user_id")
     content String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    deletedAt DateTime @map("deleted_at")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
     post Post @relation(fields: [postId], references: [id])
     user User @relation(fields: [userId], references: [id])
 
@@ -86,9 +86,9 @@ model Follow {
     id Int @id @default(autoincrement())
     userId Int @map("user_id")
     followedUserId Int @map("followed_id")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    deletedAt DateTime @map("deleted_at")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
     user User @relation(fields: [userId], references: [id])
 
     @@map("follow")
