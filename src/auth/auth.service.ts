@@ -21,10 +21,14 @@ export class AuthService {
     };
     return {
       user,
-      backendTokens: {
+      tokens: {
         accessToken: await this.jwtService.signAsync(payload, {
           expiresIn: '1h',
           secret: process.env.JWT_SECRET_KEY,
+        }),
+        refreshToken: await this.jwtService.signAsync(payload, {
+          expiresIn: '7d',
+          secret: process.env.JWT_REFRESH_TOKEN_KEY,
         }),
       },
     };
@@ -38,6 +42,6 @@ export class AuthService {
       return result;
     }
 
-    throw new UnauthorizedException();
+    throw new UnauthorizedException('Please check your username or email.');
   }
 }

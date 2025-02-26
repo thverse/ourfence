@@ -1,4 +1,10 @@
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UserCreateDto {
   @IsString()
@@ -12,12 +18,17 @@ export class UserCreateDto {
 }
 
 export enum UserFindCondition {
+  ID = 'id',
   USERNAME = 'username',
   EMAIL = 'email',
 }
 export class UserFindOneDto {
   @IsEnum(UserFindCondition)
   type: string;
+
+  @IsOptional()
+  @IsNumber()
+  id: number;
 
   @IsOptional()
   @IsString()
