@@ -1,9 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { SignInDto } from 'src/user/dto/user.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcryptjs';
+import { SignInDto } from 'src/auth/dto/auth.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  async signIn(dto: SignInDto) {}
+  constructor(
+    private readonly userSerive: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async validateUser(dto: SignInDto) {}
+  async signIn(dto: SignInDto) {
+    const user = await this.validateUser(dto);
+    const payload = {
+      username: user.email,
+      sub: {
+        name: user.username,
+      },
+    };
+    return {
+      user,
+      backendTokens: {
+        accessToken: await this.jwtService.signAsync(payload, {
+          expiresIn: '1h',
+          secret: process.env.JWT_SECRET_KEY,
+        }),
+      },
+    };
+  }
+
+  async validateUser(dto: SignInDto) {
+    const user = await this.userSerive.findOne(dto);
+
+    if (user && (await compare(dto.password, user.password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+
+    throw new UnauthorizedException();
+  }
 }

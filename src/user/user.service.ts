@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcryptjs';
-import { UserCreateDto } from './dto/user.dto';
+import {
+  UserCreateDto,
+  UserFindCondition,
+  UserFindOneDto,
+} from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -25,8 +29,21 @@ export class UserService {
     return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(userFindOneDto: UserFindOneDto) {
+    const { email, username } = userFindOneDto;
+
+    let condition;
+    if (userFindOneDto.type === UserFindCondition.EMAIL) {
+      condition = { email };
+    } else if (userFindOneDto.type === UserFindCondition.USERNAME) {
+      condition = { username };
+    }
+
+    const result = await this.prismaService.user.findUnique({
+      where: condition,
+    });
+
+    return result;
   }
 
   update(id: number, updateUserDto: any) {
