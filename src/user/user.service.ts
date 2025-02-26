@@ -9,12 +9,15 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    const result = await this.prismaService.user.create({
+    const createdUser = await this.prismaService.user.create({
       data: {
         ...createUserDto,
         password: await hash(createUserDto.password, 10),
       },
     });
+
+    //비밀번호를 제외한 나머지 데이터 반환
+    const { password, ...result } = createdUser;
     return result;
   }
 
