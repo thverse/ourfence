@@ -7,9 +7,10 @@ import { CatsModule } from './cats/cats.module';
 import { UserModule } from './user/user.module';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [CatsModule, UserModule],
+  imports: [CatsModule, UserModule, AuthModule],
   controllers: [AppController, CatsController, UserController],
   providers: [AppService, CatsService, UserService],
 })
