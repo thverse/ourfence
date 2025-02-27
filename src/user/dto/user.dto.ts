@@ -22,16 +22,8 @@ export enum UserFindCondition {
   EMAIL = 'email',
 }
 export class UserFindOneDto {
-  @IsEnum(UserFindCondition)
-  type: string;
-
-  @IsOptional()
   @IsString()
   username: string;
-
-  @IsOptional()
-  @IsEmail()
-  email: string;
 
   @IsString()
   password: string;

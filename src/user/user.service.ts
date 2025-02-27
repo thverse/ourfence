@@ -29,23 +29,12 @@ export class UserService {
   }
 
   async findOne(userFindOneDto: UserFindOneDto) {
-    const { email, username } = userFindOneDto;
-
-    let condition;
-
-    if (userFindOneDto.type === UserFindCondition.EMAIL) {
-      condition = { email };
-    } else if (userFindOneDto.type === UserFindCondition.USERNAME) {
-      condition = { username };
-    }
-
+    const { username } = userFindOneDto;
     const user = await this.prismaService.user.findUnique({
-      where: condition,
+      where: {
+        username,
+      },
     });
-
-    if (!user) {
-      throw new NotFoundException();
-    }
 
     return user;
   }
