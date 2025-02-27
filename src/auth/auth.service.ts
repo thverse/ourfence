@@ -23,11 +23,13 @@ export class AuthService {
       user,
       tokens: {
         accessToken: await this.jwtService.signAsync(payload, {
-          expiresIn: '30s',
+          expiresIn: this.configService.get<string>('JWT_EXPIRES_IN'),
           secret: this.configService.get<string>('JWT_SECRET_KEY'),
         }),
         refreshToken: await this.jwtService.signAsync(payload, {
-          expiresIn: '7d',
+          expiresIn: this.configService.get<string>(
+            'JWT_REFRESH_TOKEN_EXPIRES_IN',
+          ),
           secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
         }),
       },
