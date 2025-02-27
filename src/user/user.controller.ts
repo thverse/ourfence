@@ -26,8 +26,8 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @UseGuards(JwtGuard)
   @Get(':id')
+  @UseGuards(JwtGuard)
   async getUserProfile(@Param('id') id: number) {
     return await this.userService.findOneById(id);
   }
