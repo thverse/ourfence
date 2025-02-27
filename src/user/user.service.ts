@@ -29,7 +29,7 @@ export class UserService {
   }
 
   async findOne(userFindOneDto: UserFindOneDto) {
-    const { email, username, id } = userFindOneDto;
+    const { email, username } = userFindOneDto;
 
     let condition;
 
@@ -37,15 +37,17 @@ export class UserService {
       condition = { email };
     } else if (userFindOneDto.type === UserFindCondition.USERNAME) {
       condition = { username };
-    } else if (userFindOneDto.type === UserFindCondition.ID) {
-      condition = { id };
     }
 
-    const result = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: condition,
     });
 
-    return result;
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 
   async findOneById(id: number) {

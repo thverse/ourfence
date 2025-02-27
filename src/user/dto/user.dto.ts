@@ -18,17 +18,12 @@ export class UserCreateDto {
 }
 
 export enum UserFindCondition {
-  ID = 'id',
   USERNAME = 'username',
   EMAIL = 'email',
 }
 export class UserFindOneDto {
   @IsEnum(UserFindCondition)
   type: string;
-
-  @IsOptional()
-  @IsNumber()
-  id: number;
 
   @IsOptional()
   @IsString()
