@@ -16,6 +16,23 @@ export class UserCreateDto {
   @IsString()
   password: string;
 }
+export class UserUpdateDto {
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @IsOptional()
+  @IsString()
+  refreshToken?: string;
+}
 
 export enum UserFindCondition {
   USERNAME = 'username',

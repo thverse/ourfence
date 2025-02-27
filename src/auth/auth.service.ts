@@ -19,19 +19,24 @@ export class AuthService {
       iss: this.configService.get<string>('PROJECT_NAME'),
       sub: user.username,
     };
+
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: this.configService.get<string>('JWT_EXPIRES_IN'),
+      secret: this.configService.get<string>('JWT_SECRET_KEY'),
+    });
+
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRES_IN'),
+      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
+    });
+
+    await this.userSerive.update(user.id, { refreshToken });
+
     return {
       user,
       tokens: {
-        accessToken: await this.jwtService.signAsync(payload, {
-          expiresIn: this.configService.get<string>('JWT_EXPIRES_IN'),
-          secret: this.configService.get<string>('JWT_SECRET_KEY'),
-        }),
-        refreshToken: await this.jwtService.signAsync(payload, {
-          expiresIn: this.configService.get<string>(
-            'JWT_REFRESH_TOKEN_EXPIRES_IN',
-          ),
-          secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
-        }),
+        accessToken,
+        refreshToken,
       },
     };
   }

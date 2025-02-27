@@ -5,6 +5,7 @@ import {
   UserCreateDto,
   UserFindCondition,
   UserFindOneDto,
+  UserUpdateDto,
 } from './dto/user.dto';
 
 @Injectable()
@@ -52,8 +53,24 @@ export class UserService {
     throw new NotFoundException();
   }
 
-  update(id: number, updateUserDto: any) {
-    return `This action updates a #${id} user`;
+  async update(id: number, userUpdateDto: UserUpdateDto) {
+    const { username, email, password, refreshToken } = userUpdateDto;
+    let condition;
+    if (username) {
+      condition = { username };
+    } else if (email) {
+      condition = { email };
+    } else if (password) {
+      condition = { password };
+    } else if (refreshToken) {
+      condition = { refreshToken };
+    }
+    return await this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: condition,
+    });
   }
 
   remove(id: number) {
