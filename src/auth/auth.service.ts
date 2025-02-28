@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { OmitType } from '@nestjs/mapped-types';
 import { compare } from 'bcryptjs';
 import { SignInDto } from 'src/auth/dto/auth.dto';
 import { UserService } from 'src/user/user.service';
@@ -30,10 +31,15 @@ export class AuthService {
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
     });
 
-    await this.userSerive.update(user.id, { refreshToken });
-
+    //변수명 refreshToken이 겹치는 이슈로 id, username, email object key값만 따로 추출해서 반환
+    const { id, username, email } = await this.userSerive.update(user.id, {
+      refreshToken,
+    });
+    OmitType;
     return {
-      user,
+      id,
+      username,
+      email,
       tokens: {
         accessToken,
         refreshToken,
