@@ -36,7 +36,11 @@ export class AuthController {
 
   @Post('signout')
   @UseGuards(LocalGuard)
-  async signOut(@Body() dto: SignOutDto) {
+  async signOut(
+    @Body() dto: SignOutDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.clearCookie('refreshToken');
     return await this.authService.signOut(dto);
   }
 

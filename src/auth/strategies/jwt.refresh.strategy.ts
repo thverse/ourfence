@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { JsonWebTokenError } from '@nestjs/jwt';
@@ -25,7 +25,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
             );
             return refreshToken;
           }
-          throw new JsonWebTokenError('Refresh token not found.');
+          throw new NotFoundException('Refreshtoken not found.');
         },
       ]),
       ignoreExpiration: false,
