@@ -47,7 +47,7 @@ export class AuthService {
     };
   }
 
-  async refreshToken(req) {}
+  async checkRefreshToken(req) {}
 
   async validateUser(dto: SignInDto) {
     const user = await this.userSerive.findOne(dto);
