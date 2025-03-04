@@ -7,6 +7,7 @@ import {
   UserFindOneDto,
   UserUpdateDto,
 } from './dto/user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -29,15 +30,18 @@ export class UserService {
     return result;
   }
 
-  async findOne(userFindOneDto: UserFindOneDto) {
-    const { username } = userFindOneDto;
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        username,
-      },
-    });
+  async findOneByUsername(username: string): Promise<User | null> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          username,
+        },
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new NotFoundException('User not found.');
+    }
   }
 
   async findOneById(id: number) {
@@ -50,7 +54,7 @@ export class UserService {
       return result;
     }
 
-    throw new NotFoundException();
+    throw new NotFoundException('User not found.');
   }
 
   async update(id: number, userUpdateDto: UserUpdateDto) {
@@ -65,12 +69,29 @@ export class UserService {
     } else if (refreshToken) {
       condition = { refreshToken };
     }
+
     return await this.prismaService.user.update({
       where: {
         id,
       },
       data: condition,
     });
+  }
+
+  async removeRefreshToken(id: number) {
+    try {
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          id,
+        },
+        data: { refreshToken: null },
+      });
+
+      const { password, ...result } = updatedUser;
+      return result;
+    } catch (error) {
+      new NotFoundException('Not found user');
+    }
   }
 
   remove(id: number) {

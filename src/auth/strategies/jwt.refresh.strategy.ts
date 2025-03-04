@@ -4,13 +4,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { JsonWebTokenError } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
@@ -26,9 +30,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_REFRESH_TOKEN_KEY') as string,
-      passReqToCallback: true,
+      // passReqToCallback: true,
     });
   }
 
-  async validate(payload: any) {}
+  async validate(payload: JwtValidatePayload) {
+    const user = await this.userService.findOneByUsername(payload.username);
+
+    return user;
+  }
 }

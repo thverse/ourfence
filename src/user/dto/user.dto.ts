@@ -31,7 +31,7 @@ export class UserUpdateDto {
 
   @IsOptional()
   @IsString()
-  refreshToken?: string;
+  refreshToken?: string | null;
 }
 
 export enum UserFindCondition {
@@ -39,6 +39,20 @@ export enum UserFindCondition {
   EMAIL = 'email',
 }
 export class UserFindOneDto {
+  @IsOptional()
+  @IsNumber()
+  id?: number;
+
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+}
+
+export class ValidateUserDto {
   @IsString()
   username: string;
 
