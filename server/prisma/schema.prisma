@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
+  password String
+  refreshToken String? @db.VarChar(255)
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  post Post[]
+  comment Comment[]
+  follow Follow[]
+
+  @@map("user")
+}
+
+model Post {
+    id Int @id @default(autoincrement())
+    userId Int @map("user_id")
+    content String
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    postList PostLike[]
+    postImage PostImage[]
+    comment Comment[]
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("post")
+}
+
+model PostLike {
+    id Int @id @default(autoincrement())
+    postId Int @map("post_id")
+    userId Int @map("user_id")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    post Post @relation(fields: [postId], references: [id])
+
+    @@map("post_like")
+}
+
+model PostImage {
+    id Int @id @default(autoincrement())
+    postId Int @map("post_id")
+    url String
+    type String
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    post Post @relation(fields: [postId], references: [id])
+
+    @@map("post_image")
+}
+
+model Comment {
+    id Int @id @default(autoincrement())
+    postId Int @map("post_id")
+    userId Int @map("user_id")
+    content String
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    post Post @relation(fields: [postId], references: [id])
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("comment")
+}
+
+model Follow {
+    id Int @id @default(autoincrement())
+    userId Int @map("user_id")
+    followedUserId Int @map("followed_id")
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("follow")
+}
