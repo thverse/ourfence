@@ -57,6 +57,19 @@ export class UserService {
     throw new NotFoundException('User not found.');
   }
 
+  async findOneByEmail(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+
+    if (user) {
+      const { password, ...result } = user;
+      return result;
+    }
+
+    throw new NotFoundException('User not found.');
+  }
+
   async update(id: number, userUpdateDto: UserUpdateDto) {
     const { username, email, password, refreshToken } = userUpdateDto;
     let condition;

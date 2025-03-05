@@ -22,11 +22,26 @@ model User {
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
+  googleAccount GoogleAccount?
   post Post[]
   comment Comment[]
   follow Follow[]
 
   @@map("user")
+}
+
+model GoogleAccount {
+    id Int @id @default(autoincrement())
+    userId Int @map("user_id") @unique
+    name String @map("name")
+    email String @map("email") 
+    image String @map("image") @db.VarChar(255)
+    createdAt DateTime? @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("google_account")
 }
 
 model Post {
@@ -94,3 +109,4 @@ model Follow {
 
     @@map("follow")
 }
+

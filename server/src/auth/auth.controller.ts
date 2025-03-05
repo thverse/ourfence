@@ -15,6 +15,7 @@ import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
+import { GoogleAuthGuard } from './guards/google.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +33,21 @@ export class AuthController {
   @UseGuards(LocalGuard)
   async signIn(@Body() dto: SignInDto) {
     return await this.authService.signIn(dto);
+  }
+
+  @Get('google-signin')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuth(@Req() req: Request) {}
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(@Req() req, @Res() res: Response) {
+    const { user } = req;
+    console.log('Inside google controller: ', user);
+
+    res.redirect('/');
+
+    return user;
   }
 
   @Post('signout')

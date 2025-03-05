@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt.refresh.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtRefreshStrategy } from './strategies/jwt.refresh.strategy';
     LocalStrategy,
     JwtStrategy,
     JwtRefreshStrategy,
+    GoogleStrategy,
   ],
 })
 export class AuthModule {}
