@@ -13,11 +13,11 @@ import { User } from '@prisma/client';
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(userCreateDto: UserCreateDto) {
+  async create(dto: UserCreateDto) {
     const createdUser = await this.prismaService.user.create({
       data: {
-        ...userCreateDto,
-        password: await hash(userCreateDto.password, 10),
+        ...dto,
+        password: await hash(dto.password, 10),
       },
     });
     //비밀번호를 제외한 나머지 데이터 반환

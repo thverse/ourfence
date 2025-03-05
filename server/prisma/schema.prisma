@@ -32,14 +32,14 @@ model User {
 
 model GoogleAccount {
     id Int @id @default(autoincrement())
-    userId Int @map("user_id") @unique
+    userId Int? @map("user_id") @unique
     name String @map("name")
-    email String @map("email") 
+    email String @map("email") @unique
     image String @map("image") @db.VarChar(255)
     createdAt DateTime? @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    user User @relation(fields: [userId], references: [id])
+    user User? @relation(fields: [userId], references: [id])
 
     @@map("google_account")
 }

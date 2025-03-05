@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,7 +8,12 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { OmitType } from '@nestjs/mapped-types';
 import { compare } from 'bcryptjs';
-import { SignInDto, SignOutDto } from 'src/auth/dto/auth.dto';
+import {
+  GoogleAccountCreateDto,
+  SignInDto,
+  SignOutDto,
+} from 'src/auth/dto/auth.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { ValidateUserDto } from 'src/user/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 
@@ -17,6 +23,7 @@ export class AuthService {
     private readonly userSerive: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async signIn(dto: SignInDto) {
@@ -79,7 +86,47 @@ export class AuthService {
     return refreshToken;
   }
 
-  async checkRefreshToken(req) {}
+  async createGoogleAccount(dto: GoogleAccountCreateDto) {
+    const user = this.userSerive.findOneByEmail(dto.email);
+
+    if (!user) {
+    }
+    const googleAccount = await this.prismaService.googleAccount.create({
+      data: {
+        ...dto,
+      },
+    });
+
+    return googleAccount;
+  }
+
+  async findGoogleAccountByUserId(userId: number) {
+    const googleAccount = await this.prismaService.googleAccount.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!googleAccount) {
+      throw new NotFoundException('Not found google account.');
+    }
+
+    return googleAccount;
+  }
+
+  async findGoogleAccountByEmail(email: string) {
+    const googleAccount = await this.prismaService.googleAccount.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!googleAccount) {
+      throw new NotFoundException('Not found google account.');
+    }
+
+    return googleAccount;
+  }
 
   async validateUser(dto: ValidateUserDto) {
     const user = await this.userSerive.findOneByUsername(dto.username);
