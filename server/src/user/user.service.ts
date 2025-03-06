@@ -6,13 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { compare, hash } from 'bcryptjs';
-import {
-  UserCreateDto,
-  UserFindCondition,
-  UserFindOneDto,
-  UserUpdateDto,
-  ValidateUserDto,
-} from './dto/user.dto';
+import { UserCreateDto, UserUpdateDto, ValidateUserDto } from './dto/user.dto';
 import { User } from '@prisma/client';
 
 @Injectable()

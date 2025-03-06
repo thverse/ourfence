@@ -12,7 +12,6 @@ import { UserService } from 'src/user/user.service';
 import { SignInDto, SignOutDto, SignUpDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';

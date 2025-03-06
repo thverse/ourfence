@@ -1,5 +1,5 @@
 import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
-import { UserCreateDto, UserFindOneDto } from 'src/user/dto/user.dto';
+import { UserCreateDto } from 'src/user/dto/user.dto';
 
 export class SignUpDto extends UserCreateDto {}
 

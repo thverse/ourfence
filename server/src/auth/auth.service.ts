@@ -1,13 +1,6 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { OmitType } from '@nestjs/mapped-types';
-import { compare } from 'bcryptjs';
 import {
   GoogleAccountCreateDto,
   SignInByGoogleDto,
@@ -15,7 +8,6 @@ import {
   SignOutDto,
 } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ValidateUserDto } from 'src/user/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
