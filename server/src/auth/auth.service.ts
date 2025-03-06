@@ -29,7 +29,7 @@ export class AuthService {
 
   async signIn(dto: SignInDto) {
     const { username, password } = dto;
-    const user = await this.validateUser({
+    const user = await this.userSerive.validateUser({
       username,
       password,
     });
@@ -147,21 +147,5 @@ export class AuthService {
     } catch (error) {
       throw new NotFoundException('Not found google account.');
     }
-  }
-
-  async validateUser(dto: ValidateUserDto) {
-    const user = await this.userSerive.findOneByUsername(dto.username);
-
-    if (!user) {
-      throw new UnauthorizedException('Please check your username or email.');
-    }
-
-    if (!(await compare(dto.password, user.password))) {
-      throw new UnauthorizedException('Please check your password');
-    }
-
-    //반환값에 비밀번호 제외
-    const { password, ...result } = user;
-    return result;
   }
 }

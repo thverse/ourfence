@@ -1,11 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import {
   UserCreateDto,
   UserFindCondition,
   UserFindOneDto,
   UserUpdateDto,
+  ValidateUserDto,
 } from './dto/user.dto';
 import { User } from '@prisma/client';
 
@@ -14,6 +20,9 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: UserCreateDto) {
+    //중복 검사
+    await this.duplicateCheckUser(dto.username);
+
     const createdUser = await this.prismaService.user.create({
       data: {
         ...dto,
@@ -109,5 +118,26 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async duplicateCheckUser(username: string): Promise<void> {
+    const user = await this.findOneByUsername(username);
+    if (user) {
+      throw new ConflictException('User already exists.');
+    }
+  }
+
+  async validateUser(dto: ValidateUserDto) {
+    const user = await this.findOneByUsername(dto.username);
+
+    if (!user) {
+      throw new UnauthorizedException('Please check your username or email.');
+    }
+
+    if (!(await compare(dto.password, user.password))) {
+      throw new UnauthorizedException('Please check your password');
+    }
+
+    return user;
   }
 }
