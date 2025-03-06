@@ -10,6 +10,7 @@ import { OmitType } from '@nestjs/mapped-types';
 import { compare } from 'bcryptjs';
 import {
   GoogleAccountCreateDto,
+  SignInByGoogleDto,
   SignInDto,
   SignOutDto,
 } from 'src/auth/dto/auth.dto';
@@ -56,6 +57,31 @@ export class AuthService {
     };
   }
 
+  async signInByGoogle(dto: SignInByGoogleDto) {
+    const { username, email, id } = dto;
+
+    const payload = {
+      iss: this.configService.get<string>('PROJECT_NAME') as string,
+      username,
+      email,
+    };
+
+    const accessToken = await this.setAccessToken(payload);
+
+    const refreshToken = await this.setRefreshToken(payload);
+
+    await this.userSerive.update(id, { refreshToken: refreshToken });
+
+    return {
+      id: id,
+      email,
+      tokens: {
+        accessToken,
+        refreshToken,
+      },
+    };
+  }
+
   async signOut(dto: SignOutDto) {
     const user = await this.userSerive.findOneByUsername(dto.username);
 
@@ -87,10 +113,6 @@ export class AuthService {
   }
 
   async createGoogleAccount(dto: GoogleAccountCreateDto) {
-    const user = this.userSerive.findOneByEmail(dto.email);
-
-    if (!user) {
-    }
     const googleAccount = await this.prismaService.googleAccount.create({
       data: {
         ...dto,
@@ -115,17 +137,16 @@ export class AuthService {
   }
 
   async findGoogleAccountByEmail(email: string) {
-    const googleAccount = await this.prismaService.googleAccount.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!googleAccount) {
+    try {
+      const googleAccount = await this.prismaService.googleAccount.findUnique({
+        where: {
+          email,
+        },
+      });
+      return googleAccount;
+    } catch (error) {
       throw new NotFoundException('Not found google account.');
     }
-
-    return googleAccount;
   }
 
   async validateUser(dto: ValidateUserDto) {

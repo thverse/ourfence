@@ -26,7 +26,9 @@ export class AuthController {
 
   @Post('signup')
   async signUp(@Body() dto: SignUpDto) {
-    return await this.userService.create(dto);
+    const user = await this.userService.create(dto);
+
+    return await this.authService.signIn(user);
   }
 
   @Post('signin')
@@ -42,12 +44,8 @@ export class AuthController {
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    const { user } = req;
-    console.log('Inside google controller: ', user);
-
     res.redirect('/');
-
-    return user;
+    return await this.authService.signInByGoogle(req.user);
   }
 
   @Post('signout')

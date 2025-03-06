@@ -14,6 +14,18 @@ export class SignInDto {
   @IsString()
   password: string;
 }
+
+export class SignInByGoogleDto {
+  @IsNumber()
+  id: number;
+
+  @IsString()
+  username: string;
+
+  @IsOptional()
+  @IsEmail()
+  email: string;
+}
 export class SignOutDto {
   @IsString()
   username: string;
@@ -23,8 +35,9 @@ export class SignOutDto {
 }
 
 export class GoogleAccountCreateDto {
+  @IsOptional()
   @IsNumber()
-  userId: number;
+  userId?: number;
 
   @IsString()
   name: string;

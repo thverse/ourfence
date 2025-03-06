@@ -20,9 +20,7 @@ export class UserService {
         password: await hash(dto.password, 10),
       },
     });
-    //비밀번호를 제외한 나머지 데이터 반환
-    const { password, ...result } = createdUser;
-    return result;
+    return createdUser;
   }
 
   async findAll() {
@@ -58,16 +56,18 @@ export class UserService {
   }
 
   async findOneByEmail(email: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { email },
-    });
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { email },
+      });
 
-    if (user) {
-      const { password, ...result } = user;
-      return result;
+      if (user) {
+        const { password, ...result } = user;
+        return result;
+      }
+    } catch (error) {
+      throw new NotFoundException('User not found.');
     }
-
-    throw new NotFoundException('User not found.');
   }
 
   async update(id: number, userUpdateDto: UserUpdateDto) {
