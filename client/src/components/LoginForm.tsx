@@ -11,16 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import Link from "next/link";
 
-export function SignInForm({
+export function LoginForm({
   className,
+  isSignUpMode,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [isSignUpMode, setIsSignUpMode] = useState(false);
-  const onChangeMode = () => {
-    setIsSignUpMode(!isSignUpMode);
-  };
+}: React.ComponentPropsWithoutRef<"div"> & { isSignUpMode: boolean }) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -92,28 +89,19 @@ export function SignInForm({
                   </Button>
                 )}
               </div>
-
-              {isSignUpMode ? (
+              {!isSignUpMode ? (
                 <div className="text-center text-sm">
-                  Do have an account?{" "}
-                  <a
-                    href="#"
-                    className="underline underline-offset-4"
-                    onClick={onChangeMode}
-                  >
-                    Sign in
-                  </a>
+                  Don't have an account?{" "}
+                  <Link href="/signup" className="underline underline-offset-4">
+                    Sign up
+                  </Link>
                 </div>
               ) : (
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <a
-                    href="#"
-                    className="underline underline-offset-4"
-                    onClick={onChangeMode}
-                  >
-                    Sign up
-                  </a>
+                  Do have an account?{" "}
+                  <Link href="/signin" className="underline underline-offset-4">
+                    Sign in
+                  </Link>
                 </div>
               )}
             </div>
