@@ -1,4 +1,4 @@
-import { SignUpForm } from "@/components/signUpForm";
+import { SignUpForm } from "@/modules/auth/components/signUpForm";
 import { GalleryVerticalEnd } from "lucide-react";
 
 export default function SignUpPage() {
