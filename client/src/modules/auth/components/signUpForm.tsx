@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
@@ -12,11 +14,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useSignUp } from "../hooks/user-auth";
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  // const { mutate: register, isPending } = useSignUp();
+
+  // const {
+  //   register: registerField,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<SignUpFormData>({
+  //   resolver: zodResolver(SignUpSchema),
+  // });
+
+  // const onSubmit = handleSubmit((data) => {
+  //   signUp(data);
+  // });
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
