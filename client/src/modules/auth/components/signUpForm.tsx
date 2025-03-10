@@ -14,25 +14,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useSignUp } from "../hooks/user-auth";
+import { useSignUp } from "../hooks/use-auth";
+import { SignUpFormSchema, signUpSchema } from "../schema";
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  // const { mutate: register, isPending } = useSignUp();
+  const { mutate: signUp, isPending } = useSignUp();
 
-  // const {
-  //   register: registerField,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<SignUpFormData>({
-  //   resolver: zodResolver(SignUpSchema),
-  // });
+  const {
+    register: signUpField,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormSchema>({
+    resolver: zodResolver(signUpSchema),
+  });
 
-  // const onSubmit = handleSubmit((data) => {
-  //   signUp(data);
-  // });
+  const onSubmit = handleSubmit((data) => {
+    signUp(data);
+  });
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -43,12 +44,17 @@ export function SignUpForm({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={onSubmit}>
             <div className="grid gap-6">
               <div className="grid gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="username">Username</Label>
-                  <Input id="username" placeholder="username" required />
+                  <Input
+                    id="username"
+                    placeholder="username"
+                    {...signUpField("username")}
+                    required
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
