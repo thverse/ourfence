@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useSignUp } from "../hooks/userAuth";
+import { useSignUp } from "../hooks/useAuth";
 import { SignUpFormSchema, signUpSchema } from "../schema";
 import { Loader2 } from "lucide-react";
 
@@ -83,9 +83,9 @@ export function SignUpForm({
                     {...signUpField("password")}
                     required
                   />
-                  {errors.email && (
+                  {errors.password && (
                     <p className="text-sm text-destructive">
-                      {errors.email.message}
+                      {errors.password.message}
                     </p>
                   )}
                   {errors.password && (

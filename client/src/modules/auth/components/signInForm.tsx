@@ -12,11 +12,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useSignIn } from "../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { signInSchema, SignInSchema } from "../schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 
 export function SignInForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const { mutate: signIn, isPending } = useSignIn();
+
+  const {
+    register: signInField,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    signIn(data);
+  });
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -27,7 +46,7 @@ export function SignInForm({
           <CardDescription>Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={onSubmit}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
                 <Button variant="outline" className="w-full">
@@ -37,7 +56,7 @@ export function SignInForm({
                       fill="currentColor"
                     />
                   </svg>
-                  Login with Google
+                  Sign in with Google
                 </Button>
               </div>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -49,7 +68,17 @@ export function SignInForm({
               <div className="grid gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="username">Username</Label>
-                  <Input id="username" placeholder="username" required />
+                  <Input
+                    id="username"
+                    placeholder="username"
+                    {...signInField("username")}
+                    required
+                  />
+                  {errors.username && (
+                    <p className="text-sm text-destructive">
+                      {errors.username.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid gap-2">
@@ -62,10 +91,28 @@ export function SignInForm({
                       Forgot your password?
                     </a>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="********"
+                    {...signInField("password")}
+                    required
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
-                <Button type="submit" className="w-full">
-                  Sign in
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in account...
+                    </>
+                  ) : (
+                    "Sign in"
+                  )}
                 </Button>
               </div>
               <div className="text-center text-sm">

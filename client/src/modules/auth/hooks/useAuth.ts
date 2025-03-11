@@ -21,3 +21,20 @@ export function useSignUp() {
     },
   });
 }
+
+export function useSignIn() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: authService.signIn,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user"], data.user);
+      router.push("/");
+      toast.success("Welcome Back! Account signed in successfully.");
+    },
+    onError: (error: AxiosError<any>) => {
+      toast.error(error.response?.data?.message || "Sign ip failed");
+    },
+  });
+}
