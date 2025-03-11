@@ -36,12 +36,11 @@ export class AuthService {
 
     const refreshToken = await this.setRefreshToken(payload);
 
+    //DB에 refreshToken 저장
     await this.userSerive.update(user.id, { refreshToken: refreshToken });
 
     return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
+      user,
       tokens: {
         accessToken,
         refreshToken,

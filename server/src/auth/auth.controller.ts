@@ -24,18 +24,38 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async signUp(@Body() dto: SignUpDto) {
+  async signUp(
+    @Body() dto: SignUpDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const user = await this.userService.create(dto);
-    return await this.authService.signIn({
+    const { tokens } = await this.authService.signIn({
       username: user.username,
       password: dto.password,
     });
+
+    res.cookie('accessToken', tokens.accessToken);
+    res.cookie('refreshToken', tokens.accessToken);
+
+    const { password, refreshToken, ...result } = user;
+
+    return result;
   }
 
   @Post('signin')
   @UseGuards(LocalGuard)
-  async signIn(@Body() dto: SignInDto) {
-    return await this.authService.signIn(dto);
+  async signIn(
+    @Body() dto: SignInDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { user, tokens } = await this.authService.signIn(dto);
+
+    res.cookie('accessToken', tokens.accessToken);
+    res.cookie('refreshToken', tokens.accessToken);
+
+    const { password, refreshToken, ...result } = user;
+
+    return result;
   }
 
   @Get('google-signin')
