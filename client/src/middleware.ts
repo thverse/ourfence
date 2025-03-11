@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const publicPaths = ["/signup", "/signin"];
-const protectedPaths = ["/main"];
+const protectedPaths = ["/profile"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hasTokens =
-    request.cookies.get("accessToken") || request.cookies.get("refreshToken");
-  const isAuthenticated = hasTokens;
+
+  const isAuthenticated =
+    request.cookies.get("access_token") || request.cookies.get("refresh_token");
 
   // 미들웨어 검열이 필요없는 경로들
   if (

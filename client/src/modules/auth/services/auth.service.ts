@@ -24,12 +24,15 @@ type AuthResponse = {
 
 export const authService = {
   signIn: async (condition: SignInCondition) => {
-    const response = await apiClient.post<AuthResponse>("/signin", condition);
+    const response = await apiClient.post<AuthResponse>(
+      "/api/signin",
+      condition
+    );
     return response.data;
   },
 
   signUp: async (data: SignUpCondition) => {
-    const response = await apiClient.post<AuthResponse>("/signup", data);
+    const response = await apiClient.post<AuthResponse>("/api/signup", data);
     return response.data;
   },
 
