@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UserCreateDto {
   @IsString()
@@ -58,4 +52,11 @@ export class ValidateUserDto {
 
   @IsString()
   password: string;
+}
+export class DuplicateCheckUserDto {
+  @IsString()
+  username: string;
+
+  @IsEmail()
+  email: string;
 }

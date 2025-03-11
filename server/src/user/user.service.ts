@@ -6,7 +6,12 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { compare, hash } from 'bcryptjs';
-import { UserCreateDto, UserUpdateDto, ValidateUserDto } from './dto/user.dto';
+import {
+  DuplicateCheckUserDto,
+  UserCreateDto,
+  UserUpdateDto,
+  ValidateUserDto,
+} from './dto/user.dto';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -15,7 +20,7 @@ export class UserService {
 
   async create(dto: UserCreateDto) {
     //중복 검사
-    await this.duplicateCheckUser(dto.username);
+    await this.duplicateCheckUser(dto);
 
     const createdUser = await this.prismaService.user.create({
       data: {
@@ -58,16 +63,15 @@ export class UserService {
     throw new NotFoundException('User not found.');
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User | null> {
     try {
       const user = await this.prismaService.user.findUnique({
-        where: { email },
+        where: {
+          email,
+        },
       });
 
-      if (user) {
-        const { password, ...result } = user;
-        return result;
-      }
+      return user;
     } catch (error) {
       throw new NotFoundException('User not found.');
     }
@@ -114,9 +118,14 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 
-  async duplicateCheckUser(username: string): Promise<void> {
-    const user = await this.findOneByUsername(username);
-    if (user) {
+  async duplicateCheckUser(
+    duplicateCheckUserDto: DuplicateCheckUserDto,
+  ): Promise<void> {
+    const { username, email } = duplicateCheckUserDto;
+    const getUserByUsername = await this.findOneByUsername(username);
+    const getUserByemail = await this.findOneByEmail(email);
+
+    if (getUserByUsername || getUserByemail) {
       throw new ConflictException('User already exists.');
     }
   }

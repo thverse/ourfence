@@ -16,8 +16,8 @@ export function useSignUp() {
       router.push("/");
       toast.success("Welcome! Account created successfully.");
     },
-    onError: (error: AxiosError) => {
-      toast.error(error.message || "Sign up failed");
+    onError: (error: AxiosError<any>) => {
+      toast.error(error.response?.data?.message || "Sign up failed");
     },
   });
 }
