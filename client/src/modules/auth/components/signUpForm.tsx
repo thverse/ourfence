@@ -14,8 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useSignUp } from "../hooks/use-auth";
+import { useSignUp } from "../hooks/userAuth";
 import { SignUpFormSchema, signUpSchema } from "../schema";
+import { Loader2 } from "lucide-react";
 
 export function SignUpForm({
   className,
@@ -55,19 +56,53 @@ export function SignUpForm({
                     {...signUpField("username")}
                     required
                   />
+                  {errors.username && (
+                    <p className="text-sm text-destructive">
+                      {errors.username.message}
+                    </p>
+                  )}
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" placeholder="email" required />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="username@example.com"
+                    {...signUpField("email")}
+                    required
+                  />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="********"
+                    {...signUpField("password")}
+                    required
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">
+                      {errors.email.message}
+                    </p>
+                  )}
+                  {errors.password && (
+                    <p className="text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
-                <Button type="submit" className="w-full">
-                  Sign up
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    "Sign up"
+                  )}
                 </Button>
               </div>
               <div className="text-center text-sm">
