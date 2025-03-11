@@ -16,7 +16,7 @@ import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(
     private readonly userService: UserService,
