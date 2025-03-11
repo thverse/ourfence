@@ -62,11 +62,17 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleAuth(@Req() req: Request) {}
 
-  @Get('google')
+  @Get('google-redirect')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    res.redirect('/');
-    return await this.authService.signInByGoogle(req.user);
+    const { user, tokens } = await this.authService.signInByGoogle(req.user);
+    res.cookie('accessToken', tokens.accessToken);
+    res.cookie('refreshToken', tokens.accessToken);
+
+    const { password, refreshToken, ...result } = user;
+
+    res.redirect('http://localhost:3000/');
+    return result;
   }
 
   @Post('signout')

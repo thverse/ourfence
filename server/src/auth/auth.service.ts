@@ -61,11 +61,12 @@ export class AuthService {
 
     const refreshToken = await this.setRefreshToken(payload);
 
-    await this.userSerive.update(id, { refreshToken: refreshToken });
+    const user = await this.userSerive.update(id, {
+      refreshToken: refreshToken,
+    });
 
     return {
-      id: id,
-      email,
+      user,
       tokens: {
         accessToken,
         refreshToken,
