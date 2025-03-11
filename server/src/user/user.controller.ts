@@ -22,11 +22,6 @@ export class UserController {
     return this.userService.create(userCreateDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
   @Get(':id')
   @UseGuards(JwtGuard)
   async getUserProfile(@Param('id') id: number) {
