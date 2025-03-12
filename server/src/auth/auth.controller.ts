@@ -85,7 +85,7 @@ export class AuthController {
     return await this.authService.signOut(dto);
   }
 
-  @Post('refresh')
+  @Post('refreshtoken')
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { username, email } = req.user;

@@ -148,6 +148,7 @@ export class AuthService {
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_MAX_AGE'),
+        sameSite: 'lax',
       });
     }
 
@@ -155,6 +156,7 @@ export class AuthService {
       res.cookie('refreshToken', tokens.accessToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
+        sameSite: 'lax',
       });
     }
 

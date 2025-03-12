@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserCreateDto } from './dto/user.dto';
@@ -22,10 +24,10 @@ export class UserController {
     return this.userService.create(userCreateDto);
   }
 
-  @Get(':id')
+  @Get('/profile')
   @UseGuards(JwtGuard)
-  async getUserProfile(@Param('id') id: number) {
-    return await this.userService.findOneById(id);
+  async getUserProfile(@Req() req: Request) {
+    // return await this.userService.findOneById(id);
   }
 
   @Patch(':id')
