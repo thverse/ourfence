@@ -147,14 +147,15 @@ export class AuthService {
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_MAX_AGE'),
+        sameSite: 'lax',
       });
     }
 
     if (tokens.refreshToken) {
-      console.log('내려줌', tokens.refreshToken);
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
+        sameSite: 'lax',
       });
     }
 
