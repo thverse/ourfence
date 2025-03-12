@@ -12,20 +12,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(
-    private readonly configService: ConfigService,
+    readonly configService: ConfigService,
     private readonly userService: UserService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          if (request.headers.cookie) {
-            const refreshToken = request.headers.cookie.replace(
-              'refreshToken=',
-              '',
-            );
-            return refreshToken;
-          }
-          throw new NotFoundException('Refreshtoken not found.');
+          return request?.cookies?.refreshToken;
         },
       ]),
       ignoreExpiration: false,

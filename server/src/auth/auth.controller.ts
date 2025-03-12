@@ -71,8 +71,7 @@ export class AuthController {
 
     const { password, refreshToken, ...result } = user;
 
-    res.redirect('http://localhost:3000/');
-    return result;
+    return res.redirect('http://localhost:3000/');
   }
 
   @Post('signout')
