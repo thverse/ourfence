@@ -15,12 +15,14 @@ import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AuthController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('signup')
@@ -60,14 +62,20 @@ export class AuthController {
 
   @Get('google-signin')
   @UseGuards(GoogleAuthGuard)
-  async googleAuth(@Req() req: Request) {}
+  async googleAuth() {}
 
   @Get('google-redirect')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const { user, tokens } = await this.authService.signInByGoogle(req.user);
-    res.cookie('accessToken', tokens.accessToken);
-    res.cookie('refreshToken', tokens.accessToken);
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      maxAge: this.configService.get<number>('JWT_MAX_AGE'),
+    });
+    res.cookie('refreshToken', tokens.accessToken, {
+      httpOnly: true,
+      maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
+    });
 
     const { password, refreshToken, ...result } = user;
 
