@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthenticated =
-    request.cookies.get("access_token") || request.cookies.get("refresh_token");
+    request.cookies.get("accessToken") || request.cookies.get("refreshToken");
 
   // 미들웨어 검열이 필요없는 경로들
   if (
@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 인증된 사용자는 모든 URL 접근가능
+  // 로그인하여 인증된 사용자가 로그인, 회원 가입 페이지 진입시 홈으로 리디렉트
   if (isAuthenticated && publicPaths.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }

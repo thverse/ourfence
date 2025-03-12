@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 import {
   GoogleAccountCreateDto,
   SignInByGoogleDto,
@@ -139,5 +140,21 @@ export class AuthService {
     } catch (error) {
       throw new NotFoundException('Not found google account.');
     }
+  }
+
+  setTokenCookies(
+    res: Response,
+    tokens: { accessToken: string; refreshToken: string },
+  ) {
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      maxAge: this.configService.get<number>('JWT_MAX_AGE'),
+    });
+    res.cookie('refreshToken', tokens.accessToken, {
+      httpOnly: true,
+      maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
+    });
+
+    return res;
   }
 }

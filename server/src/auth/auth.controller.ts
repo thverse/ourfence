@@ -52,8 +52,7 @@ export class AuthController {
   ) {
     const { user, tokens } = await this.authService.signIn(dto);
 
-    res.cookie('accessToken', tokens.accessToken);
-    res.cookie('refreshToken', tokens.accessToken);
+    this.authService.setTokenCookies(res, tokens);
 
     const { password, refreshToken, ...result } = user;
 
@@ -68,14 +67,8 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const { user, tokens } = await this.authService.signInByGoogle(req.user);
-    res.cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-    });
-    res.cookie('refreshToken', tokens.accessToken, {
-      httpOnly: true,
-      maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-    });
+
+    this.authService.setTokenCookies(res, tokens);
 
     const { password, refreshToken, ...result } = user;
 
