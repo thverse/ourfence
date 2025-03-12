@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authService } from "./modules/auth/services/auth.service";
+import { authService } from "./modules/auth/auth.service";
 
 const publicPaths = ["/signup", "/signin"];
 const protectedPaths = ["/profile"];
