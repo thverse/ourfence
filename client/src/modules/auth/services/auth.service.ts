@@ -36,6 +36,11 @@ export const authService = {
     return response.data;
   },
 
+  tokenVerify: async () => {
+    const response = await apiClient.post<boolean>("/api/token-verify");
+    return response.data;
+  },
+
   //   getProfile: async () => {
   //     const response = await apiClient.get<User>('/auth/profile');
   //     return response.data;

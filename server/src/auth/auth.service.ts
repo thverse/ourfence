@@ -33,9 +33,9 @@ export class AuthService {
       email: user.email,
     };
 
-    const accessToken = await this.setAccessToken(payload);
+    const accessToken = await this.generateAccessToken(payload);
 
-    const refreshToken = await this.setRefreshToken(payload);
+    const refreshToken = await this.generateRefreshToken(payload);
 
     //DB에 refreshToken 저장
     await this.userSerive.update(user.id, { refreshToken: refreshToken });
@@ -58,9 +58,9 @@ export class AuthService {
       email,
     };
 
-    const accessToken = await this.setAccessToken(payload);
+    const accessToken = await this.generateAccessToken(payload);
 
-    const refreshToken = await this.setRefreshToken(payload);
+    const refreshToken = await this.generateRefreshToken(payload);
 
     const user = await this.userSerive.update(id, {
       refreshToken: refreshToken,
@@ -78,6 +78,7 @@ export class AuthService {
   async signOut(dto: SignOutDto) {
     const user = await this.userSerive.findOneByUsername(dto.username);
 
+    //DB에 저장된 refreshToken 삭제
     if (user) {
       return await this.userSerive.removeRefreshToken(user.id);
     }
@@ -87,7 +88,7 @@ export class AuthService {
     }
   }
 
-  async setAccessToken(payload: JwtCreatePayload) {
+  async generateAccessToken(payload: JwtCreatePayload) {
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: this.configService.get<string>('JWT_EXPIRES_IN'),
       secret: this.configService.get<string>('JWT_SECRET_KEY'),
@@ -96,7 +97,7 @@ export class AuthService {
     return accessToken;
   }
 
-  async setRefreshToken(payload: JwtCreatePayload) {
+  async generateRefreshToken(payload: JwtCreatePayload) {
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRES_IN'),
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
@@ -142,18 +143,20 @@ export class AuthService {
     }
   }
 
-  setTokenCookies(
-    res: Response,
-    tokens: { accessToken: string; refreshToken: string },
-  ) {
-    res.cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-    });
-    res.cookie('refreshToken', tokens.accessToken, {
-      httpOnly: true,
-      maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-    });
+  setTokenCookies(res: Response, tokens: SetTokenCookies) {
+    if (tokens.accessToken) {
+      res.cookie('accessToken', tokens.accessToken, {
+        httpOnly: true,
+        maxAge: this.configService.get<number>('JWT_MAX_AGE'),
+      });
+    }
+
+    if (tokens.refreshToken) {
+      res.cookie('refreshToken', tokens.accessToken, {
+        httpOnly: true,
+        maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
+      });
+    }
 
     return res;
   }

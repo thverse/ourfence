@@ -10,3 +10,8 @@ type JwtCreatePayload = {
   username: string;
   email: string;
 };
+
+type SetTokenCookies = {
+  accessToken: string;
+  refreshToken: string | null;
+};

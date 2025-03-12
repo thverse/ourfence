@@ -22,7 +22,6 @@ export class AuthController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Post('signup')
@@ -87,14 +86,20 @@ export class AuthController {
     return await this.authService.signOut(dto);
   }
 
-  @Get('refreshtoken')
+  @Post('refresh')
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { username, email } = req.user;
-    const accessToken = await this.authService.setAccessToken({
+    const accessToken = await this.authService.generateAccessToken({
       username,
       email,
     });
+
+    const tokens = {
+      accessToken,
+      refreshToken: null,
+    };
+    this.authService.setTokenCookies(res, tokens);
 
     return accessToken;
   }
