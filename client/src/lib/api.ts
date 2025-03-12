@@ -19,13 +19,13 @@ apiClient.interceptors.response.use(
         );
 
         // 재요청 (Access Token이 갱신되었으므로 다시 호출)
-        return apiClient.request(error.config);
+        return await apiClient.request(error.config);
       } catch (refreshError) {
         console.error("Token refresh failed", refreshError);
-        return Promise.reject(refreshError);
+        throw refreshError;
       }
     }
 
-    return Promise.reject(error);
+    throw error;
   }
 );

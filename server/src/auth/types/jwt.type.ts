@@ -1,8 +1,6 @@
 type JwtValidatePayload = {
   iss: string;
   id: number;
-  username: string;
-  email: string;
   iat: number;
   exp: number;
 };

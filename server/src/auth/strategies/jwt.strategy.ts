@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
@@ -15,11 +15,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET_KEY') as string,
+      // passReqToCallback: true,
     });
   }
 
   async validate(payload: JwtValidatePayload) {
-    console.log('jwt stratege: ', payload);
+    if (!payload) {
+      throw new UnauthorizedException('Invalid token');
+    }
     return payload;
   }
 }

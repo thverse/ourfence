@@ -6,6 +6,6 @@ export function useUser() {
     queryKey: ["user"],
     queryFn: getUserProfile,
     staleTime: 1000 * 60 * 10, //캐싱 10분
-    retry: 1,
+    retry: false,
   });
 }

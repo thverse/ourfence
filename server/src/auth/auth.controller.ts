@@ -15,6 +15,7 @@ import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
+import { AuthRequest } from './types/auth.type';
 
 @Controller()
 export class AuthController {
@@ -34,8 +35,7 @@ export class AuthController {
       password: dto.password,
     });
 
-    res.cookie('accessToken', tokens.accessToken);
-    res.cookie('refreshToken', tokens.accessToken);
+    this.authService.setTokenCookies(res, tokens);
 
     const { password, refreshToken, ...result } = user;
 
@@ -86,7 +86,10 @@ export class AuthController {
 
   @Post('refreshtoken')
   @UseGuards(JwtRefreshGuard)
-  async refreshToken(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async refreshToken(
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { id } = req.user;
     const accessToken = await this.authService.generateAccessToken({
       id,

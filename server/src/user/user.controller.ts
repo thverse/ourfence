@@ -14,6 +14,8 @@ import { UserService } from './user.service';
 import { UserCreateDto } from './dto/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { AuthRequest } from 'src/auth/types/auth.type';
 
 @Controller('user')
 export class UserController {
@@ -26,8 +28,12 @@ export class UserController {
 
   @Get('/profile')
   @UseGuards(JwtGuard)
-  async getUserProfile(@Req() req: Request) {
-    // return await this.userService.findOneById(id);
+  async getUserProfile(@Req() req: AuthRequest) {
+    console.log('profile requested');
+    const { refreshToken, ...result } = await this.userService.findOneById(
+      req.user.id,
+    );
+    return result;
   }
 
   @Patch(':id')

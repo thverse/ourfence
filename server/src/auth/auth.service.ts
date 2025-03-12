@@ -37,7 +37,8 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(payload);
 
     //DB에 refreshToken 저장
-    await this.userSerive.update(user.id, { refreshToken: refreshToken });
+    console.log('저장', refreshToken);
+    await this.userSerive.update(user.id, { refreshToken });
 
     return {
       user,
@@ -61,7 +62,7 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(payload);
 
     const user = await this.userSerive.update(id, {
-      refreshToken: refreshToken,
+      refreshToken,
     });
 
     return {
@@ -146,15 +147,14 @@ export class AuthService {
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-        sameSite: 'lax',
       });
     }
 
     if (tokens.refreshToken) {
-      res.cookie('refreshToken', tokens.accessToken, {
+      console.log('내려줌', tokens.refreshToken);
+      res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-        sameSite: 'lax',
       });
     }
 
