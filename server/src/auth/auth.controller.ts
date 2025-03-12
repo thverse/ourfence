@@ -81,6 +81,7 @@ export class AuthController {
     @Body() dto: SignOutDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     return await this.authService.signOut(dto);
   }

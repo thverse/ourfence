@@ -37,9 +37,8 @@ export function SignInForm({
     signIn(data);
   });
 
-  const handleGoogleSignIn = () => {
-    const googleOAuthUrl = `http://localhost:4000/api/google-signin`;
-    window.location.href = googleOAuthUrl;
+  const onGoogleSignIn = () => {
+    window.location.href = `http://localhost:4000/api/google-signin`;
   };
 
   return (
@@ -59,7 +58,7 @@ export function SignInForm({
                   variant="outline"
                   className="w-full"
                   type="button"
-                  onClick={() => handleGoogleSignIn()}
+                  onClick={() => onGoogleSignIn()}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
