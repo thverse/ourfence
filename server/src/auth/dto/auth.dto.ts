@@ -37,7 +37,7 @@ export class SignOutDto {
 export class GoogleAccountCreateDto {
   @IsOptional()
   @IsNumber()
-  userId?: number;
+  id?: number;
 
   @IsString()
   name: string;

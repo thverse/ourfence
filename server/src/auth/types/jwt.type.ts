@@ -1,5 +1,6 @@
 type JwtValidatePayload = {
   iss: string;
+  id: number;
   username: string;
   email: string;
   iat: number;
@@ -7,8 +8,7 @@ type JwtValidatePayload = {
 };
 
 type JwtCreatePayload = {
-  username: string;
-  email: string;
+  id: number;
 };
 
 type SetTokenCookies = {

@@ -55,7 +55,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
     if (!currentGoogleAccount) {
       currentGoogleAccount = await this.authService.createGoogleAccount({
-        userId: user.id,
+        id: user.id,
         name: displayName,
         email: emails[0].value,
         image: photos[0].value,

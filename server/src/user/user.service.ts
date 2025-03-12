@@ -90,6 +90,8 @@ export class UserService {
       condition = { refreshToken };
     }
 
+    console.log('ID:::::', refreshToken?.length);
+
     return await this.prismaService.user.update({
       where: {
         id,

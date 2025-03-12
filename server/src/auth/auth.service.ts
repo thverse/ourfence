@@ -29,8 +29,7 @@ export class AuthService {
 
     const payload = {
       iss: this.configService.get<string>('PROJECT_NAME') as string,
-      username: user.username,
-      email: user.email,
+      id: user.id,
     };
 
     const accessToken = await this.generateAccessToken(payload);
@@ -50,12 +49,11 @@ export class AuthService {
   }
 
   async signInByGoogle(dto: SignInByGoogleDto) {
-    const { username, email, id } = dto;
+    const { id } = dto;
 
     const payload = {
       iss: this.configService.get<string>('PROJECT_NAME') as string,
-      username,
-      email,
+      id,
     };
 
     const accessToken = await this.generateAccessToken(payload);
@@ -116,10 +114,10 @@ export class AuthService {
     return googleAccount;
   }
 
-  async findGoogleAccountByUserId(userId: number) {
+  async findGoogleAccountByUserId(id: number) {
     const googleAccount = await this.prismaService.googleAccount.findUnique({
       where: {
-        userId,
+        id,
       },
     });
 

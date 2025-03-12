@@ -15,7 +15,6 @@ import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
-import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AuthController {
@@ -88,10 +87,9 @@ export class AuthController {
   @Post('refreshtoken')
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Req() req, @Res({ passthrough: true }) res: Response) {
-    const { username, email } = req.user;
+    const { id } = req.user;
     const accessToken = await this.authService.generateAccessToken({
-      username,
-      email,
+      id,
     });
 
     const tokens = {
