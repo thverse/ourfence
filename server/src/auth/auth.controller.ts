@@ -4,18 +4,18 @@ import {
   Get,
   Post,
   Req,
-  Request,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { SignInDto, SignOutDto, SignUpDto } from './dto/auth.dto';
+import { SignInDto, SignUpDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt.refresh.guard';
 import { LocalGuard } from './guards/local.guard';
 import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { AuthRequest } from './types/auth.type';
+import { JwtGuard } from './guards/jwt.guard';
 
 @Controller()
 export class AuthController {
@@ -57,6 +57,16 @@ export class AuthController {
     return result;
   }
 
+  @Post('signout')
+  @UseGuards(JwtGuard)
+  async signOut(@Res() res: Response, @Req() req: AuthRequest) {
+    const result = await this.authService.signOut(req.user.id);
+
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.status(200).json({ result });
+  }
+
   @Get('google-signin')
   @UseGuards(GoogleAuthGuard)
   async googleAuth() {}
@@ -64,24 +74,11 @@ export class AuthController {
   @Get('google-redirect')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    const { user, tokens } = await this.authService.signInByGoogle(req.user);
+    const { tokens } = await this.authService.signInByGoogle(req.user);
 
     this.authService.setTokenCookies(res, tokens);
 
-    const { password, refreshToken, ...result } = user;
-
     return res.redirect('http://localhost:3000/');
-  }
-
-  @Post('signout')
-  @UseGuards(LocalGuard)
-  async signOut(
-    @Body() dto: SignOutDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    return await this.authService.signOut(dto);
   }
 
   @Post('refreshtoken')

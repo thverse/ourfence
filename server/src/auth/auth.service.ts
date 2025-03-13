@@ -6,7 +6,6 @@ import {
   GoogleAccountCreateDto,
   SignInByGoogleDto,
   SignInDto,
-  SignOutDto,
 } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
@@ -37,7 +36,6 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(payload);
 
     //DB에 refreshToken 저장
-    console.log('저장', refreshToken);
     await this.userSerive.update(user.id, { refreshToken });
 
     return {
@@ -74,17 +72,15 @@ export class AuthService {
     };
   }
 
-  async signOut(dto: SignOutDto) {
-    const user = await this.userSerive.findOneByUsername(dto.username);
-
-    //DB에 저장된 refreshToken 삭제
-    if (user) {
-      return await this.userSerive.removeRefreshToken(user.id);
-    }
+  async signOut(userId: number) {
+    const user = await this.userSerive.findOneById(userId);
 
     if (!user) {
       throw new NotFoundException('Not found user.');
     }
+
+    //DB에 저장된 refreshToken 삭제
+    return await this.userSerive.removeRefreshToken(userId);
   }
 
   async generateAccessToken(payload: JwtCreatePayload) {
@@ -115,10 +111,10 @@ export class AuthService {
     return googleAccount;
   }
 
-  async findGoogleAccountByUserId(id: number) {
+  async findGoogleAccountByUserId(userId: number) {
     const googleAccount = await this.prismaService.googleAccount.findUnique({
       where: {
-        id,
+        id: userId,
       },
     });
 

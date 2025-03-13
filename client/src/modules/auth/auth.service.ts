@@ -18,8 +18,6 @@ type User = {
 };
 type AuthResponse = {
   user: User;
-  accessToken: string;
-  refreshToken: string;
 };
 
 export const authService = {
@@ -36,8 +34,8 @@ export const authService = {
     return response.data;
   },
 
-  tokenVerify: async () => {
-    const response = await apiClient.post<boolean>("/api/token-verify");
+  signOut: async () => {
+    const response = await apiClient.post<AuthResponse>("/api/signout");
     return response.data;
   },
 
@@ -45,8 +43,4 @@ export const authService = {
   //     const response = await apiClient.get<User>('/auth/profile');
   //     return response.data;
   //   },
-
-  logout: async () => {
-    await apiClient.post("/auth/logout");
-  },
 };

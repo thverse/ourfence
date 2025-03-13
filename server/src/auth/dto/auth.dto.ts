@@ -26,14 +26,6 @@ export class SignInByGoogleDto {
   @IsEmail()
   email: string;
 }
-export class SignOutDto {
-  @IsString()
-  username: string;
-
-  @IsString()
-  password: string;
-}
-
 export class GoogleAccountCreateDto {
   @IsOptional()
   @IsNumber()

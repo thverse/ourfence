@@ -8,7 +8,6 @@ import { AxiosError } from "axios";
 export function useSignUp() {
   const router = useRouter();
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: authService.signUp,
     onSuccess: (data) => {
@@ -35,6 +34,22 @@ export function useSignIn() {
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data?.message || "Sign ip failed");
+    },
+  });
+}
+
+export function useSignOut() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: authService.signOut,
+    onSuccess: () => {
+      queryClient.setQueryData(["user"], null);
+      router.push("/");
+      toast.success("You have successfully signed out of your account!");
+    },
+    onError: (error: AxiosError<any>) => {
+      toast.error(error.response?.data?.message || "Sign out failed");
     },
   });
 }
