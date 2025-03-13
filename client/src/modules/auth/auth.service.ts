@@ -21,7 +21,7 @@ type AuthResponse = {
 };
 
 export const authService = {
-  signIn: async (condition: SignInCondition) => {
+  signIn: async function (condition: SignInCondition) {
     const response = await apiClient.post<AuthResponse>(
       "/api/signin",
       condition
@@ -29,13 +29,18 @@ export const authService = {
     return response.data;
   },
 
-  signUp: async (data: SignUpCondition) => {
+  signUp: async function (data: SignUpCondition) {
     const response = await apiClient.post<AuthResponse>("/api/signup", data);
     return response.data;
   },
 
-  signOut: async () => {
+  signOut: async function () {
     const response = await apiClient.post<AuthResponse>("/api/signout");
+    return response.data;
+  },
+
+  refreshtokenValidate: async function () {
+    const response = await apiClient.post<AuthResponse>("/api/refreshtoken");
     return response.data;
   },
 

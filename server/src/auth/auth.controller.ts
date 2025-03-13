@@ -100,4 +100,17 @@ export class AuthController {
 
     return accessToken;
   }
+
+  @Post('refreshtoken-validate')
+  @UseGuards(JwtRefreshGuard)
+  async refreshtokenValidate(
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (req.user) {
+      return true;
+    }
+
+    return false;
+  }
 }

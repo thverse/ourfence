@@ -137,7 +137,8 @@ export class UserService {
       throw new UnauthorizedException('Please check your username or email.');
     }
 
-    if (!(await compare(dto.password, user.password))) {
+    const isPasswordWrong = !(await compare(dto.password, user.password));
+    if (isPasswordWrong) {
       throw new UnauthorizedException('Please check your password');
     }
 

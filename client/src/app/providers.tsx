@@ -7,6 +7,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { usePathname } from "next/navigation";
 import { createContext, useContext } from "react";
 // import "@/lib/process-refresh";
 
@@ -15,10 +16,17 @@ const queryClient = new QueryClient();
 const UserContext = createContext<UseQueryResult<any, Error> | null>(null);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const userQuery = useUser();
+  const currentPath = usePathname();
+  const excludedPaths = ["/signin", "/signup"];
+
+  //제외된 경로에서는 userQuery 실행 X
+  const isEnabled = !excludedPaths.includes(currentPath);
+  const userQuery = useUser({ enabled: isEnabled });
+
   return (
     <UserContext.Provider value={userQuery}>{children}</UserContext.Provider>
   );
+  return <>{children}</>;
 }
 
 export function useUserContext() {

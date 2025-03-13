@@ -33,6 +33,7 @@ export function useSignIn() {
       toast.success("Welcome Back! Account signed in successfully.");
     },
     onError: (error: AxiosError<any>) => {
+      console.log(error);
       toast.error(error.response?.data?.message || "Sign ip failed");
     },
   });

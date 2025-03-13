@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -21,6 +25,7 @@ export class AuthService {
 
   async signIn(dto: SignInDto) {
     const { username, password } = dto;
+
     const user = await this.userSerive.validateUser({
       username,
       password,
