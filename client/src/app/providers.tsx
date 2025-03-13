@@ -26,7 +26,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   return (
     <UserContext.Provider value={userQuery}>{children}</UserContext.Provider>
   );
-  return <>{children}</>;
 }
 
 export function useUserContext() {

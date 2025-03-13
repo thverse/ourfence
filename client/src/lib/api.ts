@@ -9,6 +9,7 @@ export const apiClient = axios.create({
 const excludedUrls = [
   `/api/signup`, // 회원가입 path
   `/api/signin`, // 로그인 path
+  `/api/signout`, // 로그아웃 path
 ];
 
 // 요청 실패 시 인터셉터 설정
