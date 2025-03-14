@@ -3,11 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import { Providers } from "../components/providers";
-import LeftSideBar from "@/components/layout/leftSideBar";
-import MainContainer from "@/components/layout/mainContainer";
-import TopBar from "@/components/layout/topBar";
-import RightSideBar from "@/components/layout/rightSideBar";
-import BottomBar from "@/components/layout/BottomBar";
+import LeftSideBar from "@/components/layout/LeftSideBar";
+import RightSideBar from "@/components/layout/RightSideBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,16 +32,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <main className="flex flex-row">
-            <LeftSideBar />
-            <MainContainer>
-              <TopBar />
+          <div className="flex justify-between max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl xxl:max-w-screen-xxl mx-auto ">
+            <div className="px-2 xsm:px-4 xxl:px-8 ">
+              <LeftSideBar />
+            </div>
+            <main className="flex-1 lg:min-w-[600px] border-x-[2px] border-gray-200 ">
               {children}
-            </MainContainer>
-            <RightSideBar />
-            <ToastContainer />
-          </main>
-          <BottomBar />
+            </main>
+            <div className="hidden flex-1 lg:flex ml-4 md:ml-8 bg-green-200">
+              <RightSideBar />
+            </div>
+          </div>
+          <ToastContainer />
         </Providers>
       </body>
     </html>
