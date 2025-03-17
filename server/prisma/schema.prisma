@@ -90,20 +90,20 @@ model PostImage {
 }
 
 model Comment {
-    id Int @id @default(autoincrement())
-    postId Int @map("post_id")
-    userId Int @map("user_id")
-    content String
-    createdAt DateTime? @default(now()) @map("created_at")
-    updatedAt DateTime? @updatedAt @map("updated_at")
-    deletedAt DateTime? @map("deleted_at")
-    post Post @relation("comments", fields: [postId], references: [id])
-    user User @relation("comments", fields: [userId], references: [id])
-
-    @@map("comment")
+  id Int @id @default(autoincrement()) // 고유 ID
+  userId Int       
+  postId  Int        
+  parentId Int?       
+  content String      
+  createdAt DateTime     @default(now())           
+  updatedAt DateTime     @updatedAt                  
+  deletedAt DateTime? @map("deleted_at")
+  user User @relation("comments",fields: [userId], references: [id]) 
+  post Post @relation("comments",fields: [postId], references: [id]) 
+  parent Comment? @relation("CommentReplies", fields: [parentId], references: [id]) 
+  replies Comment[] @relation("CommentReplies") 
 }
 model Follow {
-    id Int @id @default(autoincrement()) 
     followerId Int         
     followingId Int         
     created_at DateTime @default(now()) 
@@ -112,6 +112,7 @@ model Follow {
     follower User @relation("Followers", fields: [followerId], references: [id]) 
     following User @relation("Followings", fields: [followingId], references: [id]) 
 
+    @@id([followerId, followingId]) 
     @@map("follow")
 
 }
