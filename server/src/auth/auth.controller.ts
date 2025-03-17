@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Req,
   Res,
@@ -83,6 +84,7 @@ export class AuthController {
 
   @Post('refreshtoken')
   @UseGuards(JwtRefreshGuard)
+  @HttpCode(200)
   async refreshToken(
     @Req() req: AuthRequest,
     @Res({ passthrough: true }) res: Response,

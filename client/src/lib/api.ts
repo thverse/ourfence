@@ -1,5 +1,6 @@
 import { authService } from "@/modules/auth/auth.service";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -30,16 +31,16 @@ apiClient.interceptors.response.use(
           { withCredentials: true }
         );
 
-        // 2️⃣ 만약 리프레시 토큰이 없거나 만료되었다면 로그아웃 처리
+        // 리프레시 토큰이 없거나 만료되었다면 로그아웃 처리
         if (refreshResponse.status !== 200) {
-          console.warn("Refresh token is invalid or expired.");
+          toast.error("Refresh token is invalid or expired.");
           throw error;
         }
 
         // 재요청 (Access Token이 갱신되었으므로 다시 호출)
         return await apiClient.request(error.config);
       } catch (refreshError) {
-        console.error("Token refresh failed", refreshError);
+        toast.error("Token refresh failed");
         throw refreshError;
       }
     }

@@ -29,7 +29,6 @@ export class UserController {
   @Get('/profile')
   @UseGuards(JwtGuard)
   async getUserProfile(@Req() req: AuthRequest) {
-    console.log('profile requested');
     const { refreshToken, ...result } = await this.userService.findOneById(
       req.user.id,
     );

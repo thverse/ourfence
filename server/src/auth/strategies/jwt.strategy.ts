@@ -10,8 +10,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          console.log(request.cookies);
-
           if (!request.cookies.accessToken) {
             throw new UnauthorizedException('Token not exists');
           }
