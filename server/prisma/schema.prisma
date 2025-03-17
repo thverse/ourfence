@@ -22,10 +22,13 @@ model User {
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
-  googleAccount GoogleAccount?
-  post Post[]
-  comment Comment[]
-  follow Follow[]
+  googleAccount GoogleAccount? @relation("google_account")
+  posts Post[] @relation("posts") 
+  likes Like[] @relation("likes") 
+  comments Comment[] @relation("comments") 
+  notifications Notification[] @relation("notifications") 
+  followers Follow[] @relation("Followers") 
+  followings Follow[] @relation("Followings") 
 
   @@map("user")
 }
@@ -39,7 +42,7 @@ model GoogleAccount {
     createdAt DateTime? @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    user User? @relation(fields: [userId], references: [id])
+    user User? @relation("google_account",fields: [userId], references: [id])
 
     @@map("google_account")
 }
@@ -51,24 +54,26 @@ model Post {
     createdAt DateTime? @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    postList PostLike[]
-    postImage PostImage[]
-    comment Comment[]
-    user User @relation(fields: [userId], references: [id])
+    likes Like[] @relation("likes") 
+    postImages PostImage[] @relation("post_images") 
+    comments Comment[] @relation("comments") 
+    user User @relation("posts", fields: [userId], references: [id])
 
     @@map("post")
 }
 
-model PostLike {
-    id Int @id @default(autoincrement())
-    postId Int @map("post_id")
-    userId Int @map("user_id")
-    createdAt DateTime? @default(now()) @map("created_at")
-    updatedAt DateTime? @updatedAt @map("updated_at")
+model Like {
+    id Int @id @default(autoincrement()) 
+    postId Int         
+    userId Int        
+    createdAt DateTime @default(now()) 
+    pdatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    post Post @relation(fields: [postId], references: [id])
+    post Post @relation("likes", fields: [postId], references: [id]) 
+    user User @relation("likes", fields: [userId], references: [id]) 
 
-    @@map("post_like")
+    @@map("like")
+
 }
 
 model PostImage {
@@ -79,7 +84,7 @@ model PostImage {
     createdAt DateTime? @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    post Post @relation(fields: [postId], references: [id])
+    post Post @relation("post_images", fields: [postId], references: [id])
 
     @@map("post_image")
 }
@@ -92,21 +97,35 @@ model Comment {
     createdAt DateTime? @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    post Post @relation(fields: [postId], references: [id])
-    user User @relation(fields: [userId], references: [id])
+    post Post @relation("comments", fields: [postId], references: [id])
+    user User @relation("comments", fields: [userId], references: [id])
 
     @@map("comment")
 }
-
 model Follow {
-    id Int @id @default(autoincrement())
-    userId Int @map("user_id")
-    followedUserId Int @map("followed_id")
-    createdAt DateTime? @default(now()) @map("created_at")
+    id Int @id @default(autoincrement()) 
+    followerId Int         
+    followingId Int         
+    created_at DateTime @default(now()) 
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    user User @relation(fields: [userId], references: [id])
+    follower User @relation("Followers", fields: [followerId], references: [id]) 
+    following User @relation("Followings", fields: [followingId], references: [id]) 
 
     @@map("follow")
+
 }
 
+model Notification {
+  id Int @id @default(autoincrement()) 
+  userId Int      
+  type String      
+  content String     
+  referenceId Int        
+  isRead Boolean @default(false)
+  created_at DateTime @default(now()) 
+  user User @relation("notifications", fields: [userId], references: [id]) 
+
+  @@map("notification")
+
+}
