@@ -40,7 +40,7 @@ export default function RootLayout({
         <Providers>
           <div className="flex justify-center min-h-screen px-4">
             {/* 전체 컨테이너 */}
-            <div className="flex w-full max-w-7xl">
+            <div className="flex w-full max-w-7xl mx-auto">
               {/* 왼쪽 사이드바 */}
               <LeftSideBar />
               {/* 중앙 피드 */}

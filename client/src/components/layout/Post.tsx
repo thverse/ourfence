@@ -9,15 +9,23 @@ const user = {
 };
 
 const postInfo = {
+  content: "안녕하세요 이것은 ...!!",
   imgUrl: "/testbg.jpg",
+  createdAt: "2 hours ago",
 };
 
 const Post = () => {
   return (
     <div className="p-4 flex gap-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
-      <Avatar className="w-12 h-12">
-        <AvatarImage src={user.profileImage} alt={user.name} />
+      <Avatar>
+        <AvatarImage
+          src={user.profileImage}
+          alt={user.name}
+          width={12}
+          height={12}
+          className="rounded-full"
+        />
         <AvatarFallback>{user.name[0]}</AvatarFallback>
       </Avatar>
 
@@ -28,14 +36,20 @@ const Post = () => {
           <div className="flex items-center gap-2">
             <span className="font-semibold">{user.name}</span>
             <span className="text-gray-500">
-              @{user.username} · {1212}
+              @{user.username} · {postInfo.createdAt}
             </span>
           </div>
         </div>
 
         {/* 포스트 내용 */}
-        <p className="mt-2 mb-2 text-gray-900">{12}</p>
-        <Image src={postInfo.imgUrl} width={500} height={500} alt="" />
+        <p className="mt-2 mb-2 text-gray-900">{postInfo.content}</p>
+        <Image
+          src={postInfo.imgUrl}
+          width={500}
+          height={500}
+          style={{ borderRadius: "10px" }}
+          alt=""
+        />
 
         {/* 액션 버튼 (좋아요, 리트윗, 댓글, 공유) */}
         <div className="flex mt-3 gap-10 text-gray-500">
