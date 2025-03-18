@@ -12,15 +12,34 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Camera, Image } from "lucide-react";
 
-const PostBox = () => {
-  const [inputValue, setInputValue] = useState("");
+//모달 활성화시 스크롤바로 인한 화면 흔들림 방지 코드
+function useDisableScroll(open: boolean) {
+  useEffect(() => {
+    if (open) {
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.marginRight = `${scrollbarWidth}px`;
+    } else {
+      const handleTransitionEnd = () => {
+        document.documentElement.style.overflow = "";
+        document.documentElement.style.marginRight = "";
+        document.removeEventListener("transitionend", handleTransitionEnd);
+      };
+      document.addEventListener("transitionend", handleTransitionEnd);
+    }
+  }, [open]);
+}
 
+const PostBox = () => {
+  const [open, setOpen] = useState(false);
+  useDisableScroll(open);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="text-2xl rounded-full h-10">Post</Button>
       </DialogTrigger>

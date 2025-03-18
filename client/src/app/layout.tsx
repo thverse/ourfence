@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-import { Providers } from "../components/providers";
 import LeftSideBar from "@/components/layout/LeftSideBar";
 import RightSideBar from "@/components/layout/RightSideBar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -12,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Bell, Home, MessageSquare, Plus, Search, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import Post from "@/components/layout/Post";
 import { usePathname } from "next/navigation";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,15 +40,15 @@ export default function RootLayout({
   const isAuthPage =
     pathname.startsWith("/signin") || pathname.startsWith("/signup");
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-y-scroll">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <Providers>
           {isAuthPage ? (
             <div>{children}</div>
           ) : (
-            <div className="flex justify-center min-h-screen px-4">
+            <div className="flex justify-center min-h-screen overflow-hidden">
               {/* 전체 컨테이너 */}
               <div className="flex w-full max-w-7xl mx-auto">
                 {/* 왼쪽 사이드바 */}

@@ -69,23 +69,23 @@ const LeftSideBar = () => {
       <nav className="flex flex-col gap-8 p-5 items-start">
         <Link href="/">
           <Button variant="ghost" className="flex gap-2 text-2xl">
-            <Home size={20} /> HOME
+            <Home size={20} /> Home
           </Button>
         </Link>
         <Button variant="ghost" className="flex gap-2 text-2xl">
-          <Search size={20} /> EXPORE
+          <Search size={20} /> Explore
         </Button>
         <Link href="/notification">
           <Button variant="ghost" className="flex gap-2 text-2xl">
-            <Bell size={20} /> NOTIFICATION
+            <Bell size={20} /> Notifications
           </Button>
         </Link>
         <Button variant="ghost" className="flex gap-2 text-2xl">
-          <MessageSquare size={20} /> MESSAGE
+          <MessageSquare size={20} /> Messages
         </Button>
         <Link href="/about">
           <Button variant="ghost" className="flex gap-2 text-2xl">
-            <User size={20} /> PROFILE
+            <User size={20} /> Profile
           </Button>
         </Link>
       </nav>
