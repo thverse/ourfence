@@ -67,21 +67,27 @@ const LeftSideBar = () => {
       </div>
       {/* LEFT-NAVBAR */}
       <nav className="flex flex-col gap-8 p-5 items-start">
-        <Button variant="ghost" className="flex gap-2 text-2xl">
-          <Home size={20} /> HOME
-        </Button>
+        <Link href="/">
+          <Button variant="ghost" className="flex gap-2 text-2xl">
+            <Home size={20} /> HOME
+          </Button>
+        </Link>
         <Button variant="ghost" className="flex gap-2 text-2xl">
           <Search size={20} /> EXPORE
         </Button>
-        <Button variant="ghost" className="flex gap-2 text-2xl">
-          <Bell size={20} /> NOTIFICATION
-        </Button>
+        <Link href="/notification">
+          <Button variant="ghost" className="flex gap-2 text-2xl">
+            <Bell size={20} /> NOTIFICATION
+          </Button>
+        </Link>
         <Button variant="ghost" className="flex gap-2 text-2xl">
           <MessageSquare size={20} /> MESSAGE
         </Button>
-        <Button variant="ghost" className="flex gap-2 text-2xl">
-          <User size={20} /> PROFILE
-        </Button>
+        <Link href="/about">
+          <Button variant="ghost" className="flex gap-2 text-2xl">
+            <User size={20} /> PROFILE
+          </Button>
+        </Link>
       </nav>
       <PostBox />
     </aside>
