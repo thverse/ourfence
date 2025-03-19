@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Image, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface PostDialogProps {
   title?: string;
@@ -77,7 +77,8 @@ export default function PostDialog({
                 <div className="flex-1">
                   <textarea
                     placeholder="무슨 일이 일어나고 있나요?"
-                    className="w-full resize-none focus:outline-none text-lg min-h-[200px] autofocus"
+                    className="w-full resize-none focus:outline-none text-lg min-h-[200px]"
+                    autoFocus
                   />
                 </div>
               </div>

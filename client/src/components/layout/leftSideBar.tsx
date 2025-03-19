@@ -4,7 +4,7 @@ import { Bell, Home, MessageSquare, Search, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import PostDialog from "../PostDialog";
+import PostDialog from "@/modules/posts/components/PostDialog";
 
 const user = {
   name: "기마디",

@@ -1,6 +1,12 @@
 import Image from "next/image";
 import { Heart, MessageSquare } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../components/ui/avatar";
+import { Input } from "../../../components/ui/input";
+import CommentSection from "@/modules/comments/components/CommentSection";
 
 const user = {
   name: "기마무개",
@@ -41,7 +47,7 @@ const Post = () => {
           src={postInfo.imgUrl}
           width={500}
           height={500}
-          style={{ borderRadius: "10px" }}
+          className="rounded-2xl w-full"
           alt=""
         />
 
@@ -56,44 +62,10 @@ const Post = () => {
             <span>45</span>
           </button>
         </div>
+        <CommentSection />
       </div>
     </div>
   );
 };
-// const Post = () => {
-//   return (
-//     <div className="p-4 border-y-[1px] border-gray-200">
-//       {/* POST CONTENT */}
-//       <div className="flex gap-4">
-//         {/* AVATAR */}
-//         <div className="relative w-10 h-10 rounded-full overflow-hidden">
-//           <Image
-//             src="/avatar.png"
-//             width={100}
-//             height={100}
-//             alt="User avatar"
-//             priority
-//           />
-//         </div>
-//         {/* CONTENT */}
-//         <div className="flex-1">
-//           {/* TOP */}
-//           <div className="flex">
-//             <div className="flex items-center gap-2 flex-wrap">
-//               <span className="text-base font-bold">best1m</span>
-//               <span>1 day ago</span>
-//             </div>
-//           </div>
-//           {/* TEXT & MEDIA */}
-//           <p>
-//             Lorem Ipsum is simply dummy text of the printing and typesetting
-//             industry. Lorem Ipsum has been the industry's standard dummy text
-//           </p>
-//           <Image src="/testbg.jpg" width={500} height={500} alt="" />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
 
 export default Post;

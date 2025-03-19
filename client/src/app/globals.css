@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 라우팅 될때 페이지 레이아웃 밀리는 증상 방지 */
 html {
   width: calc(100vw - 12px);
   overflow-x: hidden;
