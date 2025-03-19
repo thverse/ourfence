@@ -1,8 +1,6 @@
 import Feed from "@/components/layout/Feed";
 import TopBar from "@/components/layout/TopBar";
-import { SignOutButton } from "@/modules/auth/components/signOutButton";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import { SignOutButton } from "@/modules/auth/components/SignOutButton";
 
 export default function Home() {
   return (

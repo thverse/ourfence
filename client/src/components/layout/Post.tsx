@@ -18,7 +18,7 @@ const Post = () => {
   return (
     <div className="p-4 flex gap-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
-      <Avatar>
+      <Avatar className="z-0">
         <AvatarImage src={user.profileImage} alt={user.name} />
         <AvatarFallback>{user.name[0]}</AvatarFallback>
       </Avatar>

@@ -56,7 +56,7 @@ const LeftSideBar = () => {
         <Button variant="ghost" className="flex gap-2 text-2xl">
           <Search size={20} /> Explore
         </Button>
-        <Link href="/notification">
+        <Link href="/notifications">
           <Button variant="ghost" className="flex gap-2 text-2xl">
             <Bell size={20} /> Notifications
           </Button>
