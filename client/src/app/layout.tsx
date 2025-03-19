@@ -12,7 +12,7 @@ import { Bell, Home, MessageSquare, Plus, Search, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,15 +40,15 @@ export default function RootLayout({
   const isAuthPage =
     pathname.startsWith("/signin") || pathname.startsWith("/signup");
   return (
-    <html lang="en" className="overflow-y-scroll">
+    <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
           {isAuthPage ? (
             <div>{children}</div>
           ) : (
-            <div className="flex justify-center min-h-screen overflow-hidden">
+            <div className="flex justify-center min-h-screen">
               {/* 전체 컨테이너 */}
               <div className="flex w-full max-w-7xl mx-auto">
                 {/* 왼쪽 사이드바 */}

@@ -1,29 +1,10 @@
-import {
-  Bell,
-  Calendar,
-  Home,
-  Inbox,
-  MessageSquare,
-  Search,
-  Settings,
-  User,
-} from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../ui/sidebar";
+"use client";
+
+import { Bell, Home, MessageSquare, Search, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import PostBox from "../PostBox";
+import PostDialog from "../PostDialog";
 
 const user = {
   name: "기마디",
@@ -89,7 +70,7 @@ const LeftSideBar = () => {
           </Button>
         </Link>
       </nav>
-      <PostBox />
+      <PostDialog />
     </aside>
   );
 };
