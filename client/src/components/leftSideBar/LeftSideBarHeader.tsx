@@ -24,24 +24,18 @@ const LeftSideBarHeader = () => {
         <div className="font-bold pt-2">{user.name}</div>
       </div>
       <div className="flex justify-between items-center pt-5 pb-5 w-full">
-        <div className="flex flex-col items-center cursor-pointer">
-          <Link href="/">
-            <div className="font-bold text-xl">1</div>
-            <div>posts</div>
-          </Link>
-        </div>
-        <div className="flex flex-col items-center cursor-pointer">
-          <Link href="/followers">
-            <div className="font-bold text-xl">1</div>
-            <div>followers</div>
-          </Link>
-        </div>
-        <div className="flex flex-col items-center cursor-pointer">
-          <Link href="/following">
-            <div className="font-bold text-xl">1</div>
-            <div>following</div>
-          </Link>
-        </div>
+        <Link href="/" className="flex flex-col items-center">
+          <div className="font-bold text-xl">1</div>
+          <div>posts</div>
+        </Link>
+        <Link href="/followers" className="flex flex-col items-center">
+          <div className="font-bold text-xl">1</div>
+          <div>followers</div>
+        </Link>
+        <Link href="/following" className="flex flex-col items-center">
+          <div className="font-bold text-xl">1</div>
+          <div>following</div>
+        </Link>
       </div>
     </div>
   );

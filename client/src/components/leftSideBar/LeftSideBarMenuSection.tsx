@@ -14,11 +14,6 @@ const LeftSideBarMenuItems = [
     icon: Bell,
     path: "/notifications",
   },
-  {
-    title: "Connections",
-    icon: UserCheck,
-    path: "/connections",
-  },
 ];
 
 const LeftSideBarMenuSection = () => {
