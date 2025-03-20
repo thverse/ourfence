@@ -1,0 +1,1 @@
+type TopBarItemType = "myPosts" | "followingsPosts";

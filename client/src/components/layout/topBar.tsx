@@ -1,18 +1,23 @@
 "use client";
+import { useTopBarStore } from "@/app/store";
 import clsx from "clsx";
 import Link from "next/link";
 import { useState } from "react";
 
 const TopBar = () => {
-  const [activeTab, setActiveTab] = useState<"myPosts" | "followingsPosts">(
-    "myPosts"
-  );
+  const { setSelectTopBarItem } = useTopBarStore();
+  const [activeTab, setActiveTab] = useState<TopBarItemType>("myPosts");
+
+  const handleActiveTab = (value: TopBarItemType) => {
+    setActiveTab(value);
+    setSelectTopBarItem(value);
+  };
 
   return (
     <div className="flex font-bold border-b-[1px] h-14 border-gray-200 top-0 sticky bg-white bg-opacity-90 z-10">
       <div
         className="flex items-center justify-center h-full text-center flex-1 cursor-pointer hover:bg-gray-200"
-        onClick={() => setActiveTab("myPosts")}
+        onClick={() => handleActiveTab("myPosts")}
       >
         <span
           className={clsx(
@@ -25,7 +30,7 @@ const TopBar = () => {
       </div>
       <div
         className="flex items-center justify-center h-full text-center flex-1 cursor-pointer hover:bg-gray-200"
-        onClick={() => setActiveTab("followingsPosts")}
+        onClick={() => handleActiveTab("followingsPosts")}
       >
         <span
           className={clsx(
