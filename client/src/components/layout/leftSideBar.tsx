@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import PostDialog from "@/modules/posts/components/PostDialog";
+import LeftSideBarMenuSection from "../leftSideBar/LeftSideBarMenuSection";
 
 const user = {
   name: "기마디",
@@ -46,31 +47,7 @@ const LeftSideBar = () => {
           </div>
         </div>
       </div>
-      {/* LEFT-NAVBAR */}
-      <nav className="flex flex-col gap-8 p-5 items-start">
-        <Link href="/">
-          <Button variant="ghost" className="flex gap-2 text-2xl">
-            <Home size={20} /> Home
-          </Button>
-        </Link>
-        <Button variant="ghost" className="flex gap-2 text-2xl">
-          <Search size={20} /> Explore
-        </Button>
-        <Link href="/notifications">
-          <Button variant="ghost" className="flex gap-2 text-2xl">
-            <Bell size={20} /> Notifications
-          </Button>
-        </Link>
-        <Button variant="ghost" className="flex gap-2 text-2xl">
-          <MessageSquare size={20} /> Messages
-        </Button>
-        <Link href="/about">
-          <Button variant="ghost" className="flex gap-2 text-2xl">
-            <User size={20} /> Profile
-          </Button>
-        </Link>
-      </nav>
-      <PostDialog />
+      <LeftSideBarMenuSection />
     </aside>
   );
 };
