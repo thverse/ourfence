@@ -1,4 +1,5 @@
 "use client";
+import clsx from "clsx";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -8,29 +9,31 @@ const TopBar = () => {
   );
 
   return (
-    <div className="p-4 flex font-bold border-b-[1px] border-gray-200 top-0 sticky bg-white bg-opacity-90 z-10">
+    <div className="flex font-bold border-b-[1px] h-14 border-gray-200 top-0 sticky bg-white bg-opacity-90 z-10">
       <div
-        className="text-center flex-1 items-center cursor-pointer"
+        className="flex items-center justify-center h-full text-center flex-1 cursor-pointer hover:bg-gray-200"
         onClick={() => setActiveTab("myPosts")}
       >
         <span
-          className={
-            activeTab === "myPosts" ? "pb-3 border-b-4 border-blue-200" : ""
-          }
+          className={clsx(
+            "p-4 border-b-4",
+            activeTab === "myPosts" ? " border-blue-300" : "border-transparent"
+          )}
         >
           My Posts
         </span>
       </div>
       <div
-        className="text-center flex-1 items-center cursor-pointer"
+        className="flex items-center justify-center h-full text-center flex-1 cursor-pointer hover:bg-gray-200"
         onClick={() => setActiveTab("followingsPosts")}
       >
         <span
-          className={
+          className={clsx(
+            "p-4 border-b-4",
             activeTab === "followingsPosts"
-              ? "pb-3 border-b-4 border-blue-200"
-              : ""
-          }
+              ? " border-blue-300"
+              : "border-transparent"
+          )}
         >
           Following
         </span>
