@@ -1,7 +1,7 @@
 import React from "react";
 import LeftSideBarMenuItem from "./LeftSideBarMenuItem";
 import { Bell, Home, UserCheck } from "lucide-react";
-import PostDialog from "@/modules/posts/components/PostDialog";
+import PostDialog from "@/modules/post/components/PostDialog";
 
 const LeftSideBarMenuItems = [
   {

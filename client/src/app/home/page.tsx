@@ -1,13 +1,8 @@
-import Feed from "@/components/layout/Feed";
-import TopBar from "@/components/layout/TopBar";
+"use client";
+
 import { SignOutButton } from "@/modules/auth/components/SignOutButton";
+import MainContent from "@/components/layout/MainContent";
 
 export default function Home() {
-  return (
-    <div>
-      <TopBar />
-      <Feed />
-      <SignOutButton />
-    </div>
-  );
+  return <MainContent />;
 }
