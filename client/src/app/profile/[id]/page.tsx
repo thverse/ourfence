@@ -1,7 +1,16 @@
+"use client";
+
 import TabBar from "@/components/TabBar";
-import React from "react";
+import React, { useEffect } from "react";
+import { useTabBarStore } from "@/app/store";
 
 const ProfilePage = () => {
+  const { setSelectedTabId } = useTabBarStore();
+
+  useEffect(() => {
+    setSelectedTabId("posts");
+  }, [setSelectedTabId]);
+
   const profileTabs = [
     {
       id: "posts",
