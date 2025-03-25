@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
-interface TopBarState {
-  selectedTopBarItem: TopBarItemType;
-  setSelectTopBarItem: (item: TopBarItemType) => void;
+interface TabBarState {
+  selectedTabId: string;
+  setSelectedTabId: (id: string) => void;
 }
 
-export const useTopBarStore = create<TopBarState>((set) => ({
-  selectedTopBarItem: "myPosts",
-  setSelectTopBarItem: (item) => set((state) => ({ selectedTopBarItem: item })),
+export const useTabBarStore = create<TabBarState>((set) => ({
+  selectedTabId: "",
+  setSelectedTabId: (id: string) => set({ selectedTabId: id }),
 }));

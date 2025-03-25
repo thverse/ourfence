@@ -1,28 +1,27 @@
-import { useTopBarStore } from "@/app/store";
+"use client";
+
+import { useTabBarStore } from "@/app/store";
 import Post from "../../post/components/Post";
 import { useEffect } from "react";
 
-const getPostList = (type: TopBarItemType) => {
-  //탭 이동시 스크롤 위치는 맨위로 고정
+const Feed = () => {
+  const { selectedTabId } = useTabBarStore();
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [type]);
-  return type === "myPosts" ? (
-    <>
+  }, [selectedTabId]);
+
+  if (selectedTabId !== "myPosts") {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
       <Post />
       <Post />
       <Post />
-    </>
-  ) : (
-    ""
+    </div>
   );
-};
-
-const Feed = () => {
-  const { selectedTopBarItem } = useTopBarStore();
-  const postList = getPostList(selectedTopBarItem);
-
-  return <>{postList}</>;
 };
 
 export default Feed;
