@@ -6,21 +6,16 @@ import { useEffect } from "react";
 import TabBar from "@/components/TabBar";
 
 const Feed = () => {
-  const { selectedTabId, setSelectedTabId } = useTabBarStore();
-  console.log(selectedTabId);
+  const { selectedTabId } = useTabBarStore();
   const tabBarItems = [
     { id: "myPosts", label: "내 게시물" },
     { id: "followingsPosts", label: "팔로잉 게시물" },
   ];
 
+  //탭 변경시 스크롤 맨 위로 이동
   useEffect(() => {
-    if (!selectedTabId || selectedTabId !== "myPosts") {
-      setSelectedTabId("myPosts");
-    }
     window.scrollTo(0, 0);
-  }, []);
-
-  // if (selectedTabId !== "myPosts") return null;
+  }, [selectedTabId]);
 
   return (
     <div>
@@ -30,9 +25,15 @@ const Feed = () => {
         className="top-0 sticky"
       />
       <div className="flex flex-col gap-4">
-        <Post />
-        <Post />
-        <Post />
+        {selectedTabId === "myPosts" ? (
+          <div>
+            <Post />
+            <Post />
+            <Post />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

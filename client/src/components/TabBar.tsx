@@ -3,6 +3,7 @@
 import { useTabBarStore } from "@/app/store";
 import { TabBarProps } from "@/types/tabBarType";
 import clsx from "clsx";
+import { useEffect } from "react";
 
 const TabBar = ({ items, initialActiveTab, className }: TabBarProps) => {
   const { selectedTabId, setSelectedTabId } = useTabBarStore();
@@ -12,11 +13,11 @@ const TabBar = ({ items, initialActiveTab, className }: TabBarProps) => {
     setSelectedTabId(tabId);
   };
 
-  // 초기 탭이 없을 때만 설정
-  if (!selectedTabId) {
+  // 컴포넌트 마운트 시 한 번만 실행
+  useEffect(() => {
     const initialTab = initialActiveTab || items[0].id;
     setSelectedTabId(initialTab);
-  }
+  }, []);
 
   return (
     <div
