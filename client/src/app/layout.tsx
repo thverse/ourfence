@@ -54,7 +54,7 @@ export default function RootLayout({
                 {/* 왼쪽 사이드바 */}
                 <LeftSideBar />
                 {/* 중앙 피드 */}
-                <main className="flex-1 max-w-2xl mx-auto border-l border-r">
+                <main className="flex-1 max-w-2xl border-l border-r">
                   {children}
                 </main>
 

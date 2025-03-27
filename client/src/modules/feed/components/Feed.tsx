@@ -2,7 +2,7 @@
 
 import { useTabBarStore } from "@/app/store";
 import Post from "../../post/components/Post";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
 
 const Feed = () => {
@@ -13,7 +13,7 @@ const Feed = () => {
   ];
 
   //탭 변경시 스크롤 맨 위로 이동
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [selectedTabId]);
 
