@@ -15,12 +15,12 @@ import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
 import { PostResponse } from 'shared';
 
+@UseGuards(JwtGuard)
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  @UseGuards(JwtGuard)
   async create(
     @Req() req: AuthRequest,
     @Body() createPostDto: CreatePostDto,
@@ -39,7 +39,6 @@ export class PostController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtGuard)
   update(
     @Param('id') id: string,
     @Req() req: AuthRequest,
@@ -49,7 +48,6 @@ export class PostController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard)
   remove(
     @Param('id') id: string,
     @Req() req: AuthRequest,
