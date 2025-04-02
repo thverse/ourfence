@@ -110,12 +110,6 @@ export class UserService {
   }
 
   async removeRefreshToken(id: number): Promise<User> {
-    const user = await this.findOneById(id);
-
-    if (!user) {
-      throw new NotFoundException('Not found user');
-    }
-
     return await this.prismaService.user.update({
       where: { id },
       data: { refreshToken: null },

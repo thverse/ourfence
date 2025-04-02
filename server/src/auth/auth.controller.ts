@@ -59,7 +59,7 @@ export class AuthController {
 
   @Post('signout')
   @UseGuards(JwtGuard)
-  async signOut(@Res() res: Response, @Req() req: AuthRequest) {
+  async signOut(@Res() res: Response, @Req() req: AuthRequest): Promise<void> {
     const result = await this.authService.signOut(req.user.id);
 
     res.clearCookie('accessToken');
@@ -73,7 +73,7 @@ export class AuthController {
 
   @Get('google-redirect')
   @UseGuards(GoogleAuthGuard)
-  async googleAuthRedirect(@Req() req, @Res() res: Response) {
+  async googleAuthRedirect(@Req() req, @Res() res: Response): Promise<void> {
     const { tokens } = await this.authService.signInByGoogle(req.user);
 
     this.authService.setTokenCookies(res, tokens);

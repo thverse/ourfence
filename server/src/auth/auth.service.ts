@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { GoogleAccount, User } from '@prisma/client';
 import { Response } from 'express';
 import {
   GoogleAccountCreateDto,
@@ -13,6 +14,7 @@ import {
 } from 'src/auth/dto/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
+import { AuthSignInResponse, AuthSignOutResponse } from './types/auth.type';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +25,7 @@ export class AuthService {
     private readonly prismaService: PrismaService,
   ) {}
 
-  async signIn(dto: SignInDto) {
+  async signIn(dto: SignInDto): Promise<AuthSignInResponse> {
     const { username, password } = dto;
 
     const user = await this.userSerive.validateUser({
@@ -52,7 +54,7 @@ export class AuthService {
     };
   }
 
-  async signInByGoogle(dto: SignInByGoogleDto) {
+  async signInByGoogle(dto: SignInByGoogleDto): Promise<AuthSignInResponse> {
     const { id } = dto;
 
     const payload = {
@@ -77,7 +79,7 @@ export class AuthService {
     };
   }
 
-  async signOut(userId: number) {
+  async signOut(userId: number): Promise<AuthSignOutResponse> {
     const user = await this.userSerive.findOneById(userId);
 
     if (!user) {
@@ -85,10 +87,15 @@ export class AuthService {
     }
 
     //DB에 저장된 refreshToken 삭제
-    return await this.userSerive.removeRefreshToken(userId);
+    await this.userSerive.removeRefreshToken(userId);
+
+    return {
+      success: true,
+      message: 'Sign out successfully.',
+    };
   }
 
-  async generateAccessToken(payload: JwtCreatePayload) {
+  async generateAccessToken(payload: JwtCreatePayload): Promise<string> {
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: this.configService.get<string>('JWT_EXPIRES_IN'),
       secret: this.configService.get<string>('JWT_SECRET_KEY'),
@@ -97,7 +104,7 @@ export class AuthService {
     return accessToken;
   }
 
-  async generateRefreshToken(payload: JwtCreatePayload) {
+  async generateRefreshToken(payload: JwtCreatePayload): Promise<string> {
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRES_IN'),
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_KEY'),
@@ -106,7 +113,9 @@ export class AuthService {
     return refreshToken;
   }
 
-  async createGoogleAccount(dto: GoogleAccountCreateDto) {
+  async createGoogleAccount(
+    dto: GoogleAccountCreateDto,
+  ): Promise<GoogleAccount> {
     const googleAccount = await this.prismaService.googleAccount.create({
       data: {
         ...dto,
@@ -116,21 +125,7 @@ export class AuthService {
     return googleAccount;
   }
 
-  async findGoogleAccountByUserId(userId: number) {
-    const googleAccount = await this.prismaService.googleAccount.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!googleAccount) {
-      throw new NotFoundException('Not found google account.');
-    }
-
-    return googleAccount;
-  }
-
-  async findGoogleAccountByEmail(email: string) {
+  async findGoogleAccountByEmail(email: string): Promise<GoogleAccount | null> {
     try {
       const googleAccount = await this.prismaService.googleAccount.findUnique({
         where: {
@@ -139,11 +134,11 @@ export class AuthService {
       });
       return googleAccount;
     } catch (error) {
-      throw new NotFoundException('Not found google account.');
+      return null;
     }
   }
 
-  setTokenCookies(res: Response, tokens: SetTokenCookies) {
+  setTokenCookies(res: Response, tokens: SetTokenCookies): void {
     if (tokens.accessToken) {
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
@@ -159,7 +154,5 @@ export class AuthService {
         sameSite: 'lax',
       });
     }
-
-    return res;
   }
 }
