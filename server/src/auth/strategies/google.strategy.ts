@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth20';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../auth.service';
-import randomString from 'src/utils/common';
+import randomString from 'src/utils/util';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {

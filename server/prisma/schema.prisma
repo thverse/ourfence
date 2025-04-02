@@ -19,7 +19,7 @@ model User {
   email String @unique
   password String
   refreshToken String? @db.VarChar(255)
-  createdAt DateTime? @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
   googleAccount GoogleAccount? @relation("google_account")
@@ -39,7 +39,7 @@ model GoogleAccount {
     name String @map("name")
     email String @map("email") @unique
     image String @map("image") @db.VarChar(255)
-    createdAt DateTime? @default(now()) @map("created_at")
+    createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     user User? @relation("google_account",fields: [userId], references: [id])
@@ -51,7 +51,7 @@ model Post {
     id Int @id @default(autoincrement())
     userId Int @map("user_id")
     content String
-    createdAt DateTime? @default(now()) @map("created_at")
+    createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     likes Like[] @relation("likes") 
@@ -67,7 +67,7 @@ model Like {
     postId Int         
     userId Int        
     createdAt DateTime @default(now()) 
-    pdatedAt DateTime? @updatedAt @map("updated_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     post Post @relation("likes", fields: [postId], references: [id]) 
     user User @relation("likes", fields: [userId], references: [id]) 
@@ -81,7 +81,7 @@ model PostImage {
     postId Int @map("post_id")
     url String
     type String
-    createdAt DateTime? @default(now()) @map("created_at")
+    createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
     post Post @relation("post_images", fields: [postId], references: [id])
@@ -96,7 +96,7 @@ model Comment {
   parentId Int?       
   content String      
   createdAt DateTime     @default(now())           
-  updatedAt DateTime     @updatedAt                  
+  updatedAt DateTime?     @updatedAt                  
   deletedAt DateTime? @map("deleted_at")
   user User @relation("comments",fields: [userId], references: [id]) 
   post Post @relation("comments",fields: [postId], references: [id]) 

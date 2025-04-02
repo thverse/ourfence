@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { SignInDto, SignUpDto } from './dto/auth.dto';
@@ -17,7 +18,8 @@ import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { AuthRequest } from './types/auth.type';
 import { JwtGuard } from './guards/jwt.guard';
-
+import { AuthResponse, AuthRefreshResponse } from 'shared';
+import { ExcludeFieldsInterceptor } from 'src/interceptors/excludeFields.interceptor';
 @Controller()
 export class AuthController {
   constructor(
@@ -26,10 +28,11 @@ export class AuthController {
   ) {}
 
   @Post('signup')
+  @UseInterceptors(new ExcludeFieldsInterceptor(['password', 'refreshToken']))
   async signUp(
     @Body() dto: SignUpDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<AuthResponse> {
     const user = await this.userService.create(dto);
     const { tokens } = await this.authService.signIn({
       username: user.username,
@@ -38,9 +41,7 @@ export class AuthController {
 
     this.authService.setTokenCookies(res, tokens);
 
-    const { password, refreshToken, ...result } = user;
-
-    return result;
+    return user;
   }
 
   @Post('signin')
@@ -48,14 +49,12 @@ export class AuthController {
   async signIn(
     @Body() dto: SignInDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<AuthResponse> {
     const { user, tokens } = await this.authService.signIn(dto);
 
     this.authService.setTokenCookies(res, tokens);
 
-    const { password, refreshToken, ...result } = user;
-
-    return result;
+    return user;
   }
 
   @Post('signout')
@@ -88,7 +87,7 @@ export class AuthController {
   async refreshToken(
     @Req() req: AuthRequest,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<AuthRefreshResponse> {
     const { id } = req.user;
     const accessToken = await this.authService.generateAccessToken({
       id,
@@ -98,21 +97,25 @@ export class AuthController {
       accessToken,
       refreshToken: null,
     };
+
     this.authService.setTokenCookies(res, tokens);
 
-    return accessToken;
+    return {
+      success: true,
+      message: 'Access token has been refreshed successfully',
+    };
   }
 
-  @Post('refreshtoken-validate')
-  @UseGuards(JwtRefreshGuard)
-  async refreshtokenValidate(
-    @Req() req: AuthRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    if (req.user) {
-      return true;
-    }
+  // @Post('refreshtoken-validate')
+  // @UseGuards(JwtRefreshGuard)
+  // async refreshtokenValidate(
+  //   @Req() req: AuthRequest,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   if (req.user) {
+  //     return true;
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 }

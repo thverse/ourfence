@@ -7,41 +7,43 @@ import {
   Param,
   Delete,
   UseGuards,
-  Res,
   Req,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserCreateDto } from './dto/user.dto';
+import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
 import { AuthRequest } from 'src/auth/types/auth.type';
+import { UserResponse } from 'shared';
+import { ExcludeFieldsInterceptor } from 'src/interceptors/excludeFields.interceptor';
 
 @Controller('user')
+@UseInterceptors(new ExcludeFieldsInterceptor(['password', 'refreshToken']))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() userCreateDto: UserCreateDto) {
-    return this.userService.create(userCreateDto);
+  async create(@Body() userCreateDto: UserCreateDto): Promise<UserResponse> {
+    return await this.userService.create(userCreateDto);
   }
 
   @Get('/profile')
   @UseGuards(JwtGuard)
-  async getUserProfile(@Req() req: AuthRequest) {
-    const { refreshToken, ...result } = await this.userService.findOneById(
-      req.user.id,
-    );
-    return result;
+  async getUserProfile(@Req() req: AuthRequest): Promise<UserResponse> {
+    return await this.userService.getUserProfile(req.user.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: any) {
-    return this.userService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UserUpdateDto,
+  ): Promise<UserResponse> {
+    return await this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(JwtGuard)
+  async remove(@Param('id') id: string): Promise<UserResponse> {
+    return await this.userService.remove(+id);
   }
 }

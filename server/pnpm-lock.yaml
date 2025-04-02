@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  shared: link:..\shared
+
 importers:
 
   .:
@@ -53,6 +56,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      shared:
+        specifier: link:../shared
+        version: link:../shared
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.2.0

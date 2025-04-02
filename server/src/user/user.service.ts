@@ -13,12 +13,12 @@ import {
   ValidateUserDto,
 } from './dto/user.dto';
 import { User } from '@prisma/client';
-
+import { UserResponse } from 'shared';
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(dto: UserCreateDto) {
+  async create(dto: UserCreateDto): Promise<User> {
     //중복 검사
     await this.duplicateCheckUser(dto);
 
@@ -31,7 +31,7 @@ export class UserService {
     return createdUser;
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     const result = await this.prismaService.user.findMany();
     return result;
   }
@@ -43,24 +43,30 @@ export class UserService {
           username,
         },
       });
-
       return user;
     } catch (error) {
-      throw new NotFoundException('User not found.');
+      return null;
     }
   }
 
-  async findOneById(id: number) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id },
-    });
-
-    if (user) {
-      const { password, ...result } = user;
-      return result;
+  async getUserProfile(id: number): Promise<User> {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException('Not found user');
     }
 
-    throw new NotFoundException('User not found.');
+    return user;
+  }
+
+  async findOneById(id: number): Promise<User | null> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { id },
+      });
+      return user;
+    } catch (error) {
+      return null;
+    }
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
@@ -70,14 +76,13 @@ export class UserService {
           email,
         },
       });
-
       return user;
     } catch (error) {
-      throw new NotFoundException('User not found.');
+      return null;
     }
   }
 
-  async update(id: number, userUpdateDto: UserUpdateDto) {
+  async update(id: number, userUpdateDto: UserUpdateDto): Promise<User> {
     const { username, email, password, refreshToken } = userUpdateDto;
     let condition;
     if (username) {
@@ -90,6 +95,12 @@ export class UserService {
       condition = { refreshToken };
     }
 
+    const user = await this.findOneById(id);
+
+    if (!user) {
+      throw new NotFoundException('Not found user');
+    }
+
     return await this.prismaService.user.update({
       where: {
         id,
@@ -98,24 +109,32 @@ export class UserService {
     });
   }
 
-  async removeRefreshToken(id: number) {
-    try {
-      const updatedUser = await this.prismaService.user.update({
-        where: {
-          id,
-        },
-        data: { refreshToken: null },
-      });
+  async removeRefreshToken(id: number): Promise<User> {
+    const user = await this.findOneById(id);
 
-      const { password, ...result } = updatedUser;
-      return result;
-    } catch (error) {
-      new NotFoundException('Not found user');
+    if (!user) {
+      throw new NotFoundException('Not found user');
     }
+
+    return await this.prismaService.user.update({
+      where: { id },
+      data: { refreshToken: null },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<User> {
+    const user = await this.findOneById(id);
+
+    if (!user) {
+      throw new NotFoundException('Not found user');
+    }
+
+    return await this.prismaService.user.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   }
 
   async duplicateCheckUser(
@@ -130,7 +149,7 @@ export class UserService {
     }
   }
 
-  async validateUser(dto: ValidateUserDto) {
+  async validateUser(dto: ValidateUserDto): Promise<User> {
     const user = await this.findOneByUsername(dto.username);
 
     if (!user) {
