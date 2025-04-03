@@ -30,6 +30,7 @@ export class PostController {
 
   @Get()
   findAll(): Promise<PostResponse[]> {
+    console.log('findAll');
     return this.postService.findAll();
   }
 
