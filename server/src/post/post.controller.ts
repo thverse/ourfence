@@ -8,24 +8,29 @@ import {
   Delete,
   UseGuards,
   Req,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
 import { PostResponse } from 'shared';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 5 }]))
   async create(
     @Req() req: AuthRequest,
     @Body() createPostDto: CreatePostDto,
+    @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<PostResponse> {
-    return await this.postService.create(req.user.id, createPostDto);
+    return await this.postService.create(createPostDto, files);
   }
 
   @Get()

@@ -2,12 +2,31 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { Post } from '@prisma/client';
+import { UploadService } from 'src/upload/upload.service';
 @Injectable()
 export class PostService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly uploadService: UploadService,
+  ) {}
 
-  async create(userId: number, createPostDto: CreatePostDto): Promise<Post> {
-    const { content, images } = createPostDto;
+  async create(
+    createPostDto: CreatePostDto,
+    files: { files: Express.Multer.File[] },
+  ): Promise<Post> {
+    const { content, userId } = createPostDto;
+
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const uploadedFiles = files
+      ? await this.uploadService.uploadFiles(files?.files)
+      : [];
 
     return await this.prismaService.post.create({
       data: {
@@ -15,9 +34,9 @@ export class PostService {
         userId,
         postImages: {
           create:
-            images?.map((image) => ({
-              url: image.url,
-              type: image.type,
+            uploadedFiles?.map((file) => ({
+              url: file.url,
+              type: file.type,
             })) || [],
         },
       },
