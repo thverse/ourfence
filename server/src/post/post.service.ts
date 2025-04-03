@@ -25,7 +25,7 @@ export class PostService {
     }
 
     const uploadedFiles = files
-      ? await this.uploadService.uploadFiles(files?.files)
+      ? await this.uploadService.uploadFiles(files?.files, userId)
       : [];
 
     return await this.prismaService.post.create({
