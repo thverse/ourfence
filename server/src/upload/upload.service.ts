@@ -9,14 +9,14 @@ interface UploadFile {
 
 @Injectable()
 export class UploadService {
-  private uploadPath = join(__dirname, '..', '..', 'uploadFiles');
+  private uploadPath = join(__dirname, '..', '..', 'uploadedFiles');
 
   async uploadFile(file: Express.Multer.File): Promise<UploadFile> {
     const filePath = join(this.uploadPath, file.originalname);
     await writeFile(filePath, file.buffer);
 
     return {
-      url: `/uploadFiles/${file.originalname}`,
+      url: `/uploadedFiles/${file.originalname}`,
       type: file.mimetype,
     };
   }

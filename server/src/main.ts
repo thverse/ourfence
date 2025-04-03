@@ -18,7 +18,7 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api');
   app.use(cookieParser());
-  app.use('/uploads', express.static(join(__dirname, '..', 'uploadFiles')));
+  app.use('/assets', express.static(join(__dirname, '..', 'uploadedFiles')));
   app.enableCors({
     origin: ['http://localhost:3000'],
     credentials: true,
