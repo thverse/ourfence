@@ -24,8 +24,13 @@ export class PostService {
       throw new NotFoundException('User not found.');
     }
 
+    //Local
+    // const uploadedFiles = files
+    //   ? await this.uploadService.uploadFiles(files?.files, userId)
+    //   : [];
+
     const uploadedFiles = files
-      ? await this.uploadService.uploadFiles(files?.files, userId)
+      ? await this.uploadService.uploadFilesByCloudinary(files?.files, userId)
       : [];
 
     return await this.prismaService.post.create({

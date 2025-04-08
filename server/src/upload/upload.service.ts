@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { extname, join } from 'path';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { ConfigService } from '@nestjs/config';
+import { Readable } from 'stream';
 
 interface UploadFile {
   url: string;
@@ -9,6 +12,14 @@ interface UploadFile {
 
 @Injectable()
 export class UploadService {
+  constructor(private readonly configService: ConfigService) {
+    cloudinary.config({
+      cloud_name: this.configService.get('CLOUDINARY_CLOUD_NAME'),
+      api_key: this.configService.get('CLOUDINARY_API_KEY'),
+      api_secret: this.configService.get('CLOUDINARY_API_SECRET'),
+    });
+  }
+
   private async uploadFile(
     file: Express.Multer.File,
     userId: number,
@@ -31,6 +42,42 @@ export class UploadService {
     if (!files?.length) return null;
     return await Promise.all(
       files.map((file) => this.uploadFile(file, userId)),
+    );
+  }
+
+  async uploadFileByCloudinary(
+    file: Express.Multer.File,
+    userId: number,
+  ): Promise<UploadApiResponse> {
+    const streamUpload = (fileBuffer: Buffer): Promise<UploadApiResponse> => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            public_id: this.generateFileName(userId, file.originalname),
+            resource_type: 'image',
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result as UploadApiResponse);
+          },
+        );
+
+        // 버퍼를 스트림으로 변환 후 Cloudinary로 pipe
+        Readable.from(fileBuffer).pipe(uploadStream);
+      });
+    };
+
+    const result = await streamUpload(file.buffer);
+    return result;
+  }
+
+  async uploadFilesByCloudinary(
+    files: Express.Multer.File[],
+    userId: number,
+  ): Promise<UploadFile[] | null> {
+    if (!files?.length) return null;
+    return await Promise.all(
+      files.map((file) => this.uploadFileByCloudinary(file, userId)),
     );
   }
 
