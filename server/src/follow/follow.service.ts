@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Follow } from '@prisma/client';
+import { UserService } from 'src/user/user.service';
+import { FolloweeNotFoundException } from './exceptions/followeeNotFound.exception';
 @Injectable()
 export class FollowService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private userService: UserService,
+  ) {}
 
   async followUser(followerId: number, followingId: number): Promise<Follow> {
     if (followerId === followingId) {
       throw new Error('자기 자신을 팔로우할 수 없습니다.');
+    }
+
+    const followerUser = await this.userService.findOneById(followerId);
+    const followingUser = await this.userService.findOneById(followingId);
+
+    if (!followerUser || !followingUser) {
+      throw new FolloweeNotFoundException();
     }
 
     return await this.prisma.follow.create({

@@ -19,7 +19,7 @@ import { GoogleAuthGuard } from './guards/google.guard';
 import { AuthRequest } from './types/auth.type';
 import { JwtGuard } from './guards/jwt.guard';
 import { AuthResponse, AuthRefreshResponse } from 'shared';
-import { ExcludeFieldsInterceptor } from 'src/interceptors/excludeFields.interceptor';
+import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 @Controller()
 export class AuthController {
   constructor(

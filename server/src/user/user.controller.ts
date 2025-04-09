@@ -15,7 +15,7 @@ import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthRequest } from 'src/auth/types/auth.type';
 import { UserResponse } from 'shared';
-import { ExcludeFieldsInterceptor } from 'src/interceptors/excludeFields.interceptor';
+import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 
 @Controller('user')
 @UseInterceptors(new ExcludeFieldsInterceptor(['password', 'refreshToken']))
