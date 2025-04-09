@@ -15,10 +15,7 @@ export class FollowService {
       throw new Error('자기 자신을 팔로우할 수 없습니다.');
     }
 
-    const followerUser = await this.userService.findOneById(followerId);
-    const followingUser = await this.userService.findOneById(followingId);
-
-    if (!followerUser || !followingUser) {
+    if (!(await this.isExistFollowee(followerId, followingId))) {
       throw new FolloweeNotFoundException();
     }
 
@@ -71,11 +68,21 @@ export class FollowService {
     }));
   }
 
-  async getFollowerCount(userId: number) {
+  async getFollowerCount(userId: number): Promise<number> {
     return await this.prisma.follow.count({ where: { followingId: userId } });
   }
 
-  async getFollowingCount(userId: number) {
+  async getFollowingCount(userId: number): Promise<number> {
     return await this.prisma.follow.count({ where: { followerId: userId } });
+  }
+
+  private async isExistFollowee(
+    followerId: number,
+    followingId: number,
+  ): Promise<boolean> {
+    const followerUser = await this.userService.findOneById(followerId);
+    const followingUser = await this.userService.findOneById(followingId);
+
+    return !followerUser && !followingUser;
   }
 }
