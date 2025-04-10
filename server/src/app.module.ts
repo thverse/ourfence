@@ -7,8 +7,16 @@ import { PrismaService } from './prisma/prisma.service';
 import { PostModule } from './post/post.module';
 import { UploadModule } from './upload/upload.module';
 import { FollowModule } from './follow/follow.module';
+import { LikeModule } from './like/like.module';
 @Module({
-  imports: [UserModule, AuthModule, PostModule, UploadModule, FollowModule],
+  imports: [
+    UserModule,
+    AuthModule,
+    PostModule,
+    UploadModule,
+    FollowModule,
+    LikeModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

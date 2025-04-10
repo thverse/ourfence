@@ -4,6 +4,7 @@ import { Follow } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { FollowNotFoundException } from './exceptions/followNotFound.exception';
 import { FollowYourselfForbiddenException } from './exceptions/followYourselfForbidden.exception';
+import { CreateFollowDto, DeleteFollowDto } from './dto/follow.dto';
 @Injectable()
 export class FollowService {
   constructor(
@@ -11,7 +12,9 @@ export class FollowService {
     private userService: UserService,
   ) {}
 
-  async followUser(followerId: number, followingId: number): Promise<Follow> {
+  async followUser(createFollowDto: CreateFollowDto): Promise<Follow> {
+    const { followerId, followingId } = createFollowDto;
+
     if (followerId === followingId) {
       throw new FollowYourselfForbiddenException();
     }
@@ -25,11 +28,8 @@ export class FollowService {
     });
   }
 
-  async unfollowUser(
-    followerId: number,
-    followingId: number,
-  ): Promise<boolean> {
-    console.log(followerId, followingId);
+  async unfollowUser(deleteFollowDto: DeleteFollowDto): Promise<boolean> {
+    const { followerId, followingId } = deleteFollowDto;
     if (await this.isExistFollowee(followerId, followingId)) {
       throw new FollowNotFoundException();
     }

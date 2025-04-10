@@ -8,6 +8,7 @@ import {
   FollowResponse,
   UnfollowResponse,
 } from 'shared';
+import { CreateFollowDto, DeleteFollowDto } from './dto/follow.dto';
 
 @Controller('follow')
 export class FollowController {
@@ -15,21 +16,16 @@ export class FollowController {
 
   @Post()
   async follow(
-    @Body() body: { followerId: number; followingId: number },
+    @Body() createfollowDto: CreateFollowDto,
   ): Promise<FollowResponse> {
-    const { followerId, followingId } = body;
-    return this.followService.followUser(followerId, followingId);
+    return this.followService.followUser(createfollowDto);
   }
 
   @Delete()
   async unfollow(
-    @Body() body: { followerId: number; followingId: number },
+    @Body() deleteFollowDto: DeleteFollowDto,
   ): Promise<UnfollowResponse> {
-    const { followerId, followingId } = body;
-    const result = await this.followService.unfollowUser(
-      followerId,
-      followingId,
-    );
+    const result = await this.followService.unfollowUser(deleteFollowDto);
 
     return {
       isSuccess: result,
