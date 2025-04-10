@@ -38,7 +38,7 @@ export class FollowService {
       where: { followerId, followingId },
     });
 
-    return result.count > 0 ? true : false;
+    return result.count > 0;
   }
 
   async getFollowers(userId: number): Promise<Follow[]> {

@@ -10,7 +10,7 @@ export class PostService {
     private readonly uploadService: UploadService,
   ) {}
 
-  async create(
+  async createPost(
     createPostDto: CreatePostDto,
     files: { files: Express.Multer.File[] },
   ): Promise<Post> {
@@ -52,7 +52,7 @@ export class PostService {
     });
   }
 
-  async findAll(): Promise<Post[]> {
+  async getPosts(): Promise<Post[]> {
     return await this.prismaService.post.findMany({
       include: {
         user: true,
@@ -70,7 +70,7 @@ export class PostService {
     });
   }
 
-  async findOne(id: number): Promise<Post> {
+  async getPost(id: number): Promise<Post> {
     const post = await this.prismaService.post.findUnique({
       where: { id },
       include: {
@@ -92,14 +92,13 @@ export class PostService {
     return post;
   }
 
-  async update(
+  async updatePost(
     id: number,
     userId: number,
     updatePostDto: UpdatePostDto,
   ): Promise<Post> {
     const { content, images } = updatePostDto;
 
-    // Check if post exists and belongs to user
     const post = await this.prismaService.post.findUnique({
       where: { id },
       select: { userId: true },
@@ -129,7 +128,7 @@ export class PostService {
     });
   }
 
-  async remove(id: number, userId: number): Promise<Post> {
+  async deletePost(id: number, userId: number): Promise<Post> {
     // Check if post exists and belongs to user
     const post = await this.prismaService.post.findUnique({
       where: { id },

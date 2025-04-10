@@ -8,6 +8,7 @@ import { PostModule } from './post/post.module';
 import { UploadModule } from './upload/upload.module';
 import { FollowModule } from './follow/follow.module';
 import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
 @Module({
   imports: [
     UserModule,
@@ -16,6 +17,7 @@ import { LikeModule } from './like/like.module';
     UploadModule,
     FollowModule,
     LikeModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

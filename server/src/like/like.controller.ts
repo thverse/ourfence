@@ -9,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { CreateLikeDto, DeleteLikeDto } from './dto/like.dto';
-import { DeleteLikeResponse, likeCountResponse, likeResponse } from 'shared';
+import { DeleteLikeResponse, likeCountResponse, LikeResponse } from 'shared';
 
 @Controller('like')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
   @Post()
-  async like(@Body() createLikeDto: CreateLikeDto): Promise<likeResponse> {
+  async like(@Body() createLikeDto: CreateLikeDto): Promise<LikeResponse> {
     return await this.likeService.likePost(createLikeDto);
   }
 

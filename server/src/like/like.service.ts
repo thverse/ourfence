@@ -21,7 +21,7 @@ export class LikeService {
       where: { userId, postId },
     });
 
-    return result.count > 0 ? true : false;
+    return result.count > 0;
   }
 
   async getLikePostCount(postId: number): Promise<number> {

@@ -25,39 +25,38 @@ export class PostController {
 
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 5 }]))
-  async create(
+  async createPost(
     @Req() req: AuthRequest,
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<PostResponse> {
-    return await this.postService.create(createPostDto, files);
+    return await this.postService.createPost(createPostDto, files);
   }
 
   @Get()
-  findAll(): Promise<PostResponse[]> {
-    console.log('findAll');
-    return this.postService.findAll();
+  getPosts(): Promise<PostResponse[]> {
+    return this.postService.getPosts();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<PostResponse> {
-    return this.postService.findOne(+id);
+  getPost(@Param('id') id: number): Promise<PostResponse> {
+    return this.postService.getPost(+id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  updatePost(
+    @Param('id') id: number,
     @Req() req: AuthRequest,
     @Body() updatePostDto: UpdatePostDto,
   ): Promise<PostResponse> {
-    return this.postService.update(+id, req.user.id, updatePostDto);
+    return this.postService.updatePost(id, req.user.id, updatePostDto);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id') id: string,
+  deletePost(
+    @Param('id') id: number,
     @Req() req: AuthRequest,
   ): Promise<PostResponse> {
-    return this.postService.remove(+id, req.user.id);
+    return this.postService.deletePost(id, req.user.id);
   }
 }
