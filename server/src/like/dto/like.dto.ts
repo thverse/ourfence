@@ -5,6 +5,15 @@ export class CreateLikeDto {
   @Type(() => Number)
   @IsNotEmpty()
   @IsNumber()
+  postId: number;
+}
+
+export class DeleteLikeDto extends CreateLikeDto {}
+
+export class GetLikeDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
   userId: number;
 
   @Type(() => Number)
@@ -13,4 +22,9 @@ export class CreateLikeDto {
   postId: number;
 }
 
-export class DeleteLikeDto extends CreateLikeDto {}
+export class GetLikeCountDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  postId: number;
+}

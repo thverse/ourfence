@@ -73,7 +73,7 @@ model Like {
     user User @relation("likes", fields: [userId], references: [id]) 
 
     @@map("like")
-
+    @@unique([userId, postId])
 }
 
 model PostImage {
@@ -112,9 +112,8 @@ model Follow {
     follower User @relation("Followers", fields: [followerId], references: [id]) 
     following User @relation("Followings", fields: [followingId], references: [id]) 
 
-    @@id([followerId, followingId]) 
     @@map("follow")
-
+    @@unique([followerId, followingId])
 }
 
 model Notification {

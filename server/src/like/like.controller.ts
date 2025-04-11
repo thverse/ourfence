@@ -1,38 +1,38 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, UseGuards } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { CreateLikeDto, DeleteLikeDto } from './dto/like.dto';
+import { CreateLikeDto, DeleteLikeDto, GetLikeCountDto } from './dto/like.dto';
 import { DeleteLikeResponse, likeCountResponse, LikeResponse } from 'shared';
-
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { User } from 'src/common/decorators/user.decorator';
+@UseGuards(JwtGuard)
 @Controller('like')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
   @Post()
-  async like(@Body() createLikeDto: CreateLikeDto): Promise<LikeResponse> {
-    return await this.likeService.likePost(createLikeDto);
+  async like(
+    @User('id') userId: number,
+    @Body() createLikeDto: CreateLikeDto,
+  ): Promise<LikeResponse> {
+    return await this.likeService.likePost(userId, createLikeDto);
   }
 
   @Delete()
   async deleteLike(
+    @User('id') userId: number,
     @Body() deleteLikeDto: DeleteLikeDto,
   ): Promise<DeleteLikeResponse> {
     return {
-      isSuccess: await this.likeService.deleteLikePost(deleteLikeDto),
+      isSuccess: await this.likeService.deleteLikePost(userId, deleteLikeDto),
     };
   }
 
-  @Get(':id')
-  async getLikeCount(@Param('id') postId: number): Promise<likeCountResponse> {
+  @Post('count')
+  async getLikeCount(
+    @Body() getLikeCountDto: GetLikeCountDto,
+  ): Promise<likeCountResponse> {
     return {
-      count: await this.likeService.getLikePostCount(postId),
+      count: await this.likeService.getLikePostCount(getLikeCountDto),
     };
   }
 }

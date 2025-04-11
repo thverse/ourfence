@@ -14,3 +14,12 @@ export class CreateFollowDto {
 }
 
 export class DeleteFollowDto extends CreateFollowDto {}
+
+export class GetFollowersByUserIdDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
+}
+
+export class GetFollowingByUserIdDto extends GetFollowersByUserIdDto {}

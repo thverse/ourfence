@@ -1,21 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateLikeDto, DeleteLikeDto } from './dto/like.dto';
+import {
+  CreateLikeDto,
+  DeleteLikeDto,
+  GetLikeCountDto,
+  GetLikeDto,
+} from './dto/like.dto';
 import { Like } from '@prisma/client';
+import { LikeNotFoundException } from './exceptions/likeNotFound.exception';
 
 @Injectable()
 export class LikeService {
   constructor(private readonly prismaService: PrismaService) {}
-  async likePost(createLikeDto: CreateLikeDto): Promise<Like> {
-    const { userId, postId } = createLikeDto;
+  async likePost(userId: number, createLikeDto: CreateLikeDto): Promise<Like> {
+    const { postId } = createLikeDto;
 
     return await this.prismaService.like.create({
       data: { userId, postId },
     });
   }
 
-  async deleteLikePost(deleteLikeDto: DeleteLikeDto): Promise<boolean> {
-    const { userId, postId } = deleteLikeDto;
+  // private async getLike(getLikeDto: GetLikeDto): Promise<Like> {
+  //   const { userId, postId } = getLikeDto;
+  //   const like = await this.prismaService.like.findUnique({
+  //     where: { userId_postId: { userId, postId } },
+  //   });
+
+  //   if (!like) {
+  //     throw new LikeNotFoundException();
+  //   }
+
+  //   return like;
+  // }
+
+  async deleteLikePost(
+    userId: number,
+    deleteLikeDto: DeleteLikeDto,
+  ): Promise<boolean> {
+    const { postId } = deleteLikeDto;
 
     const result = await this.prismaService.like.deleteMany({
       where: { userId, postId },
@@ -24,7 +46,8 @@ export class LikeService {
     return result.count > 0;
   }
 
-  async getLikePostCount(postId: number): Promise<number> {
+  async getLikePostCount(getLikeCountDto: GetLikeCountDto): Promise<number> {
+    const { postId } = getLikeCountDto;
     return await this.prismaService.like.count({ where: { postId } });
   }
 }
