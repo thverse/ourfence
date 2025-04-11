@@ -9,8 +9,10 @@ import { UploadModule } from './upload/upload.module';
 import { FollowModule } from './follow/follow.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
+import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [
+    PrismaModule,
     UserModule,
     AuthModule,
     PostModule,
@@ -20,6 +22,6 @@ import { CommentModule } from './comment/comment.module';
     CommentModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

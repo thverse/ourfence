@@ -9,11 +9,22 @@ import {
 import { Like } from '@prisma/client';
 import { AlreadyLikedException } from './exceptions/alreadyLiked.exception';
 import { LikeNotFoundException } from './exceptions/likeNotFound.exception';
+import { PostService } from 'src/post/post.service';
+import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 @Injectable()
 export class LikeService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly postService: PostService,
+  ) {}
   async likePost(userId: number, createLikeDto: CreateLikeDto): Promise<Like> {
     const { postId } = createLikeDto;
+
+    const post = await this.postService.getPost(postId);
+
+    if (!post) {
+      throw new PostNotFoundException(postId);
+    }
 
     if (await this.isExistLike({ userId, postId })) {
       throw new AlreadyLikedException(postId);
