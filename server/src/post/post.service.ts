@@ -104,9 +104,9 @@ export class PostService {
     });
   }
 
-  async getPost(id: number): Promise<Post> {
+  async getPost(postId: number): Promise<Post> {
     const post = await this.prismaService.post.findUnique({
-      where: { id },
+      where: { id: postId },
       include: {
         user: true,
         postImages: true,

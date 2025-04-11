@@ -14,6 +14,7 @@ import {
   DeleteCommentDto,
 } from './dto/comment.dto';
 import { CommentResponse, CommentsResponse } from 'shared';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('comment')
 export class CommentController {
@@ -21,16 +22,15 @@ export class CommentController {
 
   @Post()
   async createComment(
+    @User('userId') userId: number,
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentResponse> {
-    return await this.commentService.createComment(createCommentDto);
+    return await this.commentService.createComment(userId, createCommentDto);
   }
 
   @Get()
-  async getComments(
-    @Param('userId') userId: number,
-  ): Promise<CommentsResponse> {
-    return await this.commentService.getCommentsByUserId(userId);
+  async getComments(@User('userId') userId: number): Promise<CommentsResponse> {
+    return await this.commentService.getCommentsByUserId({ userId });
   }
 
   @Patch()
@@ -42,8 +42,9 @@ export class CommentController {
 
   @Delete()
   async deleteComment(
+    @User('userId') userId: number,
     @Body() deleteCommentDto: DeleteCommentDto,
   ): Promise<CommentResponse> {
-    return await this.commentService.deleteComment(deleteCommentDto);
+    return await this.commentService.deleteComment(userId, deleteCommentDto);
   }
 }

@@ -5,11 +5,6 @@ export class CreateCommentDto {
   @Type(() => Number)
   @IsNotEmpty()
   @IsNumber()
-  userId: number;
-
-  @Type(() => Number)
-  @IsNotEmpty()
-  @IsNumber()
   postId: number;
 
   @IsOptional()
@@ -36,4 +31,11 @@ export class DeleteCommentDto {
   @IsNotEmpty()
   @IsNumber()
   commentId: number;
+}
+
+export class GetCommentsDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
 }
