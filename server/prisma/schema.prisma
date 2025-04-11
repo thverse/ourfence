@@ -73,7 +73,7 @@ model Like {
     user User @relation("likes", fields: [userId], references: [id]) 
 
     @@map("like")
-    @@unique([userId, postId])
+    @@unique([userId, postId], name: "userId_postId")
 }
 
 model PostImage {

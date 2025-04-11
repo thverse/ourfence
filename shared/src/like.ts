@@ -7,9 +7,7 @@ export type LikeResponse = {
   deletedAt: Date | null;
 };
 
-export type DeleteLikeResponse = {
-  isSuccess: boolean;
-};
+export type DeleteLikeResponse = LikeResponse;
 
 export type likeCountResponse = {
   count: number;

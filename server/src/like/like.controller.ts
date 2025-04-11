@@ -22,9 +22,7 @@ export class LikeController {
     @User('id') userId: number,
     @Body() deleteLikeDto: DeleteLikeDto,
   ): Promise<DeleteLikeResponse> {
-    return {
-      isSuccess: await this.likeService.deleteLikePost(userId, deleteLikeDto),
-    };
+    return await this.likeService.deleteLikePost(userId, deleteLikeDto);
   }
 
   @Post('count')
