@@ -10,15 +10,22 @@ import {
   Req,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
+import {
+  CreatePostDto,
+  UpdatePostDto,
+  DeletePostDto,
+  GetPostsDto,
+} from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
 import { PostResponse } from 'shared';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { User } from 'src/common/decorators/user.decorator';
 
-// @UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
@@ -26,37 +33,45 @@ export class PostController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 5 }]))
   async createPost(
-    @Req() req: AuthRequest,
+    @User('id') userId: number,
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<PostResponse> {
-    return await this.postService.createPost(createPostDto, files);
+    return await this.postService.createPost(userId, createPostDto, files);
   }
 
-  @Get()
-  getPosts(): Promise<PostResponse[]> {
-    return this.postService.getPosts();
+  @Get('me')
+  getMyPosts(@User('id') userId: number): Promise<PostResponse[]> {
+    console.log(userId);
+    return this.postService.getMyPosts(userId);
   }
 
-  @Get(':id')
-  getPost(@Param('id') id: number): Promise<PostResponse> {
-    return this.postService.getPost(+id);
+  @Post('by-users')
+  getUsersPosts(
+    @User('id') userId: number,
+    @Body() getPostsDto: GetPostsDto,
+  ): Promise<PostResponse[]> {
+    return this.postService.getUsersPosts(userId, getPostsDto);
   }
 
-  @Patch(':id')
+  // @Get(':id')
+  // getPost(@Param('id') id: number): Promise<PostResponse> {
+  //   return this.postService.getPost(+id);
+  // }
+
+  @Patch()
   updatePost(
-    @Param('id') id: number,
-    @Req() req: AuthRequest,
+    @User('id') userId: number,
     @Body() updatePostDto: UpdatePostDto,
   ): Promise<PostResponse> {
-    return this.postService.updatePost(id, req.user.id, updatePostDto);
+    return this.postService.updatePost(userId, updatePostDto);
   }
 
-  @Delete(':id')
+  @Delete()
   deletePost(
-    @Param('id') id: number,
-    @Req() req: AuthRequest,
+    @User('id') userId: number,
+    @Body() deletePostDto: DeletePostDto,
   ): Promise<PostResponse> {
-    return this.postService.deletePost(id, req.user.id);
+    return this.postService.deletePost(userId, deletePostDto);
   }
 }

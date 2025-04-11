@@ -28,17 +28,21 @@ export class FollowService {
     });
   }
 
-  async unfollowUser(deleteFollowDto: DeleteFollowDto): Promise<boolean> {
+  async unfollowUser(deleteFollowDto: DeleteFollowDto): Promise<Follow> {
     const { followerId, followingId } = deleteFollowDto;
     if (await this.isExistFollowee(followerId, followingId)) {
       throw new FollowNotFoundException();
     }
 
-    const result = await this.prisma.follow.deleteMany({
-      where: { followerId, followingId },
+    const result = await this.prisma.follow.delete({
+      where: { followerId_followingId: { followerId, followingId } },
     });
 
-    return result.count > 0;
+    if (!result) {
+      throw new FollowNotFoundException();
+    }
+
+    return result;
   }
 
   async getFollowers(userId: number): Promise<Follow[]> {

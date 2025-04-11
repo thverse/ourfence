@@ -17,12 +17,12 @@ async function bootstrap() {
     }),
   );
   app.setGlobalPrefix('api');
-  app.use(cookieParser());
   app.use('/assets', express.static(join(__dirname, '..', 'assets')));
   app.enableCors({
     origin: ['http://localhost:3000'],
     credentials: true,
   });
+  app.use(cookieParser());
 
   await app.listen(process.env.PORT ?? 4000);
 }

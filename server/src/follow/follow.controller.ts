@@ -24,12 +24,8 @@ export class FollowController {
   @Delete()
   async unfollow(
     @Body() deleteFollowDto: DeleteFollowDto,
-  ): Promise<UnfollowResponse> {
-    const result = await this.followService.unfollowUser(deleteFollowDto);
-
-    return {
-      isSuccess: result,
-    };
+  ): Promise<FollowResponse> {
+    return await this.followService.unfollowUser(deleteFollowDto);
   }
 
   @Get('followers/:userId')

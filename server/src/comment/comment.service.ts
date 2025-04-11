@@ -6,6 +6,7 @@ import {
 } from './dto/comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Comment } from '@prisma/client';
+import { CommentNotFoundException } from './exceptions/commentNotFound.exception';
 
 @Injectable()
 export class CommentService {
@@ -60,10 +61,15 @@ export class CommentService {
 
   async deleteComment(deleteCommentDto: DeleteCommentDto): Promise<Comment> {
     const { commentId } = deleteCommentDto;
-    return await this.prismaService.comment.delete({
+    const result = await this.prismaService.comment.delete({
       where: {
         id: commentId,
       },
     });
+
+    if (!result) {
+      throw new CommentNotFoundException(commentId);
+    }
+    return result;
   }
 }

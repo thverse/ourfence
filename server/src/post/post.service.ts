@@ -1,8 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
+import {
+  CreatePostDto,
+  DeletePostDto,
+  GetPostsDto,
+  UpdatePostDto,
+} from './dto/post.dto';
 import { Post } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
+import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
 @Injectable()
 export class PostService {
   constructor(
@@ -11,17 +17,22 @@ export class PostService {
   ) {}
 
   async createPost(
+    userId: number,
     createPostDto: CreatePostDto,
     files: { files: Express.Multer.File[] },
   ): Promise<Post> {
-    const { content, userId } = createPostDto;
+    const { content } = createPostDto;
+
+    if (!userId) {
+      throw new UserNotFoundException(userId);
+    }
 
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
     });
 
     if (!user) {
-      throw new NotFoundException('User not found.');
+      throw new UserNotFoundException(userId);
     }
 
     //Local
@@ -52,8 +63,11 @@ export class PostService {
     });
   }
 
-  async getPosts(): Promise<Post[]> {
+  async getMyPosts(userId: number): Promise<Post[]> {
     return await this.prismaService.post.findMany({
+      where: {
+        userId,
+      },
       include: {
         user: true,
         postImages: true,
@@ -63,6 +77,26 @@ export class PostService {
             comments: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getUsersPosts(
+    userId: number,
+    getPostsDto: GetPostsDto,
+  ): Promise<Post[]> {
+    const { userIds, page, limit } = getPostsDto;
+
+    return await this.prismaService.post.findMany({
+      where: {
+        userId: { in: userIds },
+      },
+      include: {
+        user: { select: { username: true } },
+        postImages: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -93,14 +127,13 @@ export class PostService {
   }
 
   async updatePost(
-    id: number,
     userId: number,
     updatePostDto: UpdatePostDto,
   ): Promise<Post> {
-    const { content, images } = updatePostDto;
+    const { postId, content, images } = updatePostDto;
 
     const post = await this.prismaService.post.findUnique({
-      where: { id },
+      where: { id: postId },
       select: { userId: true },
     });
 
@@ -109,7 +142,7 @@ export class PostService {
     }
 
     return await this.prismaService.post.update({
-      where: { id },
+      where: { id: postId },
       data: {
         content,
         postImages: {
@@ -128,10 +161,14 @@ export class PostService {
     });
   }
 
-  async deletePost(id: number, userId: number): Promise<Post> {
+  async deletePost(
+    userId: number,
+    deletePostDto: DeletePostDto,
+  ): Promise<Post> {
     // Check if post exists and belongs to user
+    const { postId } = deletePostDto;
     const post = await this.prismaService.post.findUnique({
-      where: { id },
+      where: { id: postId },
       select: { userId: true },
     });
 
@@ -140,7 +177,7 @@ export class PostService {
     }
 
     return await this.prismaService.post.delete({
-      where: { id },
+      where: { id: postId },
     });
   }
 }
