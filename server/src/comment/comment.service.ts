@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
+import {
+  CreateCommentDto,
+  UpdateCommentDto,
+  DeleteCommentDto,
+} from './dto/comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Comment } from '@prisma/client';
 
@@ -7,7 +11,7 @@ import { Comment } from '@prisma/client';
 export class CommentService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+  async createComment(createCommentDto: CreateCommentDto): Promise<Comment> {
     const { userId, postId, parentId, content } = createCommentDto;
 
     const comment = await this.prismaService.comment.create({
@@ -42,15 +46,24 @@ export class CommentService {
     });
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async updateComment(updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    const { commentId, content } = updateCommentDto;
+
+    const comment = await this.prismaService.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: { content },
+    });
+    return comment;
   }
 
-  async updateComment(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
-
-  async deleteComment(id: number) {
-    return `This action removes a #${id} comment`;
+  async deleteComment(deleteCommentDto: DeleteCommentDto): Promise<Comment> {
+    const { commentId } = deleteCommentDto;
+    return await this.prismaService.comment.delete({
+      where: {
+        id: commentId,
+      },
+    });
   }
 }

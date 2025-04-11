@@ -21,4 +21,19 @@ export class CreateCommentDto {
   content: string;
 }
 
-export class UpdateCommentDto extends CreateCommentDto {}
+export class UpdateCommentDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  commentId: number;
+
+  @IsNotEmpty()
+  content: string;
+}
+
+export class DeleteCommentDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  commentId: number;
+}

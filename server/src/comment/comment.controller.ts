@@ -8,7 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
+import {
+  CreateCommentDto,
+  UpdateCommentDto,
+  DeleteCommentDto,
+} from './dto/comment.dto';
 import { CommentResponse, CommentsResponse } from 'shared';
 
 @Controller('comment')
@@ -19,26 +23,27 @@ export class CommentController {
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentResponse> {
-    return await this.commentService.create(createCommentDto);
+    return await this.commentService.createComment(createCommentDto);
   }
 
   @Get()
   async getComments(
     @Param('userId') userId: number,
   ): Promise<CommentsResponse> {
-    return this.commentService.getCommentsByUserId(userId);
+    return await this.commentService.getCommentsByUserId(userId);
   }
 
-  @Patch(':id')
+  @Patch()
   async updateComment(
-    @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
-  ) {
-    return this.commentService.updateComment(+id, updateCommentDto);
+  ): Promise<CommentResponse> {
+    return await this.commentService.updateComment(updateCommentDto);
   }
 
-  @Delete(':id')
-  async deleteComment(@Param('id') id: string) {
-    return this.commentService.deleteComment(+id);
+  @Delete()
+  async deleteComment(
+    @Body() deleteCommentDto: DeleteCommentDto,
+  ): Promise<CommentResponse> {
+    return await this.commentService.deleteComment(deleteCommentDto);
   }
 }
