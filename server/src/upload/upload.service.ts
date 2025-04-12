@@ -83,7 +83,7 @@ export class UploadService {
 
   private generateFileName(userId: number, filename: string): string {
     const timestamp = Date.now();
-    const extension = extname(filename).toLowerCase();
-    return `${userId}-${timestamp}${extension}`;
+    // const extension = extname(filename).toLowerCase();
+    return `${userId}-${timestamp}`;
   }
 }
