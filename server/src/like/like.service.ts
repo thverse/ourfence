@@ -6,16 +6,18 @@ import {
   GetLikeCountDto,
   GetLikeDto,
 } from './dto/like.dto';
-import { Like } from '@prisma/client';
+import { Like, NotificationType } from '@prisma/client';
 import { AlreadyLikedException } from './exceptions/alreadyLiked.exception';
 import { LikeNotFoundException } from './exceptions/likeNotFound.exception';
 import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
+import { NotificationGateway } from 'src/notification/notification.gateway';
 @Injectable()
 export class LikeService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly postService: PostService,
+    private readonly notificationGateway: NotificationGateway,
   ) {}
   async likePost(userId: number, createLikeDto: CreateLikeDto): Promise<Like> {
     const { postId } = createLikeDto;
@@ -30,9 +32,40 @@ export class LikeService {
       throw new AlreadyLikedException(postId);
     }
 
-    return await this.prismaService.like.create({
+    const like = await this.prismaService.like.create({
       data: { userId, postId },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+        post: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
+
+    //자신의 게시글이 아닐 경우에만 알림 생성
+    if (post.userId !== userId) {
+      const notification = await this.prismaService.notification.create({
+        data: {
+          type: NotificationType.LIKE,
+          userId: post.userId, // 게시글 작성자에게 알림
+          content: `${like.user.username}님이 회원님의 게시글을 좋아합니다.`,
+          referenceId: postId,
+        },
+      });
+
+      await this.notificationGateway.sendNotification(
+        like.post.userId,
+        notification,
+      );
+    }
+
+    return like;
   }
 
   private async isExistLike(getLikeDto: GetLikeDto): Promise<Like | null> {

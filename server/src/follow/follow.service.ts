@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Follow } from '@prisma/client';
+import { Follow, NotificationType } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { FollowNotFoundException } from './exceptions/followNotFound.exception';
 import { FollowYourselfForbiddenException } from './exceptions/followYourselfForbidden.exception';
 import { CreateFollowDto, DeleteFollowDto } from './dto/follow.dto';
+import { NotificationGateway } from 'src/notification/notification.gateway';
 @Injectable()
 export class FollowService {
   constructor(
-    private prisma: PrismaService,
+    private prismaService: PrismaService,
     private userService: UserService,
+    private readonly notificationGateway: NotificationGateway,
   ) {}
 
   async followUser(createFollowDto: CreateFollowDto): Promise<Follow> {
@@ -23,9 +25,26 @@ export class FollowService {
       throw new FollowNotFoundException();
     }
 
-    return await this.prisma.follow.create({
+    const follow = await this.prismaService.follow.create({
       data: { followerId, followingId },
+      include: {
+        follower: true,
+        following: true,
+      },
     });
+
+    const notification = await this.prismaService.notification.create({
+      data: {
+        type: NotificationType.FOLLOW,
+        userId: followingId, // 팔로우 받는 사람에게 알림
+        content: `${follow.follower.username}님이 회원님을 팔로우하기 시작했습니다.`,
+        referenceId: followerId,
+      },
+    });
+
+    await this.notificationGateway.sendNotification(followingId, notification);
+
+    return follow;
   }
 
   async unfollowUser(deleteFollowDto: DeleteFollowDto): Promise<Follow> {
@@ -34,7 +53,7 @@ export class FollowService {
       throw new FollowNotFoundException();
     }
 
-    const result = await this.prisma.follow.delete({
+    const result = await this.prismaService.follow.delete({
       where: { followerId_followingId: { followerId, followingId } },
     });
 
@@ -46,7 +65,7 @@ export class FollowService {
   }
 
   async getFollowers(userId: number): Promise<Follow[]> {
-    const followers = await this.prisma.follow.findMany({
+    const followers = await this.prismaService.follow.findMany({
       where: { followingId: userId },
     });
 
@@ -54,7 +73,7 @@ export class FollowService {
   }
 
   async getFollowing(userId: number): Promise<Follow[]> {
-    const following = await this.prisma.follow.findMany({
+    const following = await this.prismaService.follow.findMany({
       where: { followerId: userId },
     });
 
@@ -62,11 +81,15 @@ export class FollowService {
   }
 
   async getFollowerCount(userId: number): Promise<number> {
-    return await this.prisma.follow.count({ where: { followingId: userId } });
+    return await this.prismaService.follow.count({
+      where: { followingId: userId },
+    });
   }
 
   async getFollowingCount(userId: number): Promise<number> {
-    return await this.prisma.follow.count({ where: { followerId: userId } });
+    return await this.prismaService.follow.count({
+      where: { followerId: userId },
+    });
   }
 
   private async isExistFollowee(

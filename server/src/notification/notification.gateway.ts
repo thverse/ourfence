@@ -10,9 +10,10 @@ import { Server, Socket } from 'socket.io';
 import { NotificationService } from './notification.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
 import { MarkAsReadNotificationDto } from './dto/notification.dto';
+import { Notification } from '@prisma/client';
 @WebSocketGateway({
   cors: {
-    origin: 'https://localhost:3000', // 클라이언트 URL
+    origin: '*', // 클라이언트 URL
     credentials: true, // 쿠키 사용을 위해 필수
   },
 })
@@ -27,6 +28,7 @@ export class NotificationGateway
   constructor(private readonly notificationService: NotificationService) {}
 
   async handleConnection(client: Socket) {
+    console.log('Client connected');
     try {
       // 쿠키에서 유저 정보 추출
       const userId = client.handshake.auth.userId;
@@ -71,7 +73,7 @@ export class NotificationGateway
     }
   }
 
-  async sendNotification(userId: number, notification: any) {
+  async sendNotification(userId: number, notification: Notification) {
     const socketId = this.userSocketMap.get(userId);
     if (socketId) {
       this.server.to(socketId).emit('notification', notification);
