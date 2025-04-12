@@ -10,6 +10,7 @@ import { FollowModule } from './follow/follow.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { NotificationModule } from './notification/notification.module';
 @Module({
   imports: [
     PrismaModule,
@@ -20,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
     FollowModule,
     LikeModule,
     CommentModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

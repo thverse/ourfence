@@ -37,6 +37,7 @@ export class CommentService {
         parentId,
         content,
       },
+
       include: {
         user: {
           select: {
@@ -45,6 +46,7 @@ export class CommentService {
         },
       },
     });
+
     return comment;
   }
 
