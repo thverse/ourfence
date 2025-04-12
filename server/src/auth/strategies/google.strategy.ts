@@ -39,10 +39,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     //구글 계정 로그인시도때 사용한 구글 이메일로 가입한 일반 계정이 존재한다면 구글 계정과 자동 연결
     //일반 계정이 존재하지 않는다면 구글 계정 정보를 바탕으로 정보 기입 후 가입
 
-    let user = await this.userService.findOneByEmail(emails[0].value);
+    let user = await this.userService.getUserByEmail(emails[0].value);
 
     if (!user) {
-      user = await this.userService.create({
+      user = await this.userService.createUser({
         username: `Google${id}`,
         password: randomString(),
         email: emails[0].value,

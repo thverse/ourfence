@@ -43,7 +43,7 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(payload);
 
     //DB에 refreshToken 저장
-    await this.userSerive.update(user.id, { refreshToken });
+    await this.userSerive.updateUser(user.id, { refreshToken });
 
     return {
       user,
@@ -66,7 +66,7 @@ export class AuthService {
 
     const refreshToken = await this.generateRefreshToken(payload);
 
-    const user = await this.userSerive.update(id, {
+    const user = await this.userSerive.updateUser(id, {
       refreshToken,
     });
 
@@ -80,14 +80,14 @@ export class AuthService {
   }
 
   async signOut(userId: number): Promise<AuthSignOutResponse> {
-    const user = await this.userSerive.findOneById(userId);
+    const user = await this.userSerive.getUserById(userId);
 
     if (!user) {
       throw new NotFoundException('Not found user.');
     }
 
     //DB에 저장된 refreshToken 삭제
-    await this.userSerive.removeRefreshToken(userId);
+    await this.userSerive.deleteRefreshToken(userId);
 
     return {
       success: true,

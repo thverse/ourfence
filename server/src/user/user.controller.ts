@@ -16,6 +16,7 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthRequest } from 'src/auth/types/auth.type';
 import { UserResponse } from 'shared';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('user')
 @UseInterceptors(new ExcludeFieldsInterceptor(['password', 'refreshToken']))
@@ -24,7 +25,7 @@ export class UserController {
 
   @Post()
   async create(@Body() userCreateDto: UserCreateDto): Promise<UserResponse> {
-    return await this.userService.create(userCreateDto);
+    return await this.userService.createUser(userCreateDto);
   }
 
   @Get('/profile')
@@ -35,15 +36,15 @@ export class UserController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @User('id') userId: number,
     @Body() updateUserDto: UserUpdateDto,
   ): Promise<UserResponse> {
-    return await this.userService.update(+id, updateUserDto);
+    return await this.userService.updateUser(userId, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtGuard)
-  async remove(@Param('id') id: string): Promise<UserResponse> {
-    return await this.userService.remove(+id);
+  async remove(@User('id') userId: number): Promise<UserResponse> {
+    return await this.userService.deleteUser(userId);
   }
 }

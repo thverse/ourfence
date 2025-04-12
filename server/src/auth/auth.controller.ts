@@ -33,7 +33,7 @@ export class AuthController {
     @Body() dto: SignUpDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponse> {
-    const user = await this.userService.create(dto);
+    const user = await this.userService.createUser(dto);
     const { tokens } = await this.authService.signIn({
       username: user.username,
       password: dto.password,

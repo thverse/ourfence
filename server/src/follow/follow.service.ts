@@ -96,8 +96,8 @@ export class FollowService {
     followerId: number,
     followingId: number,
   ): Promise<boolean> {
-    const followerUser = await this.userService.findOneById(followerId);
-    const followingUser = await this.userService.findOneById(followingId);
+    const followerUser = await this.userService.getUserById(followerId);
+    const followingUser = await this.userService.getUserById(followingId);
 
     return !followerUser || !followingUser;
   }
