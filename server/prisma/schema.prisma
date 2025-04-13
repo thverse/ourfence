@@ -36,20 +36,19 @@ model User {
 
 model UserProfile {
   id Int @id @default(autoincrement())
-  userId Int @map("user_id")
+  userId Int @unique @map("user_id")
   nickname String @map("nickname")
-  profileUrl String? @map("profile_url")
-  coverUrl String? @map("cover_url")
+  profileImageUrl String? @map("profile_image_url")
+  coverImageUrl String? @map("cover_image_url")
   bio String? @map("bio")
   location String? @map("location")
   websiteUrl String? @map("website_url")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
-  user User @relation("user_profile", fields: [userId], references: [id])
+  user User @relation("user_profile", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profile")
-  @@unique([userId])
 }
 
 
@@ -82,6 +81,19 @@ model Post {
     @@map("post")
 }
 
+model PostImage {
+    id Int @id @default(autoincrement())
+    postId Int @map("post_id")
+    url String
+    type String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime? @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+    post Post @relation("post_images", fields: [postId], references: [id])
+
+    @@map("post_image")
+}
+
 model Like {
     id Int @id @default(autoincrement()) 
     postId Int         
@@ -96,18 +108,7 @@ model Like {
     @@unique([userId, postId], name: "userId_postId")
 }
 
-model PostImage {
-    id Int @id @default(autoincrement())
-    postId Int @map("post_id")
-    url String
-    type String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime? @updatedAt @map("updated_at")
-    deletedAt DateTime? @map("deleted_at")
-    post Post @relation("post_images", fields: [postId], references: [id])
 
-    @@map("post_image")
-}
 
 model Comment {
   id Int @id @default(autoincrement()) 

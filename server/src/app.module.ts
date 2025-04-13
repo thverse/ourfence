@@ -11,6 +11,7 @@ import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { NotificationModule } from './notification/notification.module';
+import { SearchModule } from './search/search.module';
 @Module({
   imports: [
     PrismaModule,
@@ -22,6 +23,7 @@ import { NotificationModule } from './notification/notification.module';
     LikeModule,
     CommentModule,
     NotificationModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
