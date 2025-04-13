@@ -25,6 +25,14 @@ export class UserService {
       data: {
         ...dto,
         password: await hash(dto.password, 10),
+        userProfile: {
+          create: {
+            nickname: dto.nickname,
+          },
+        },
+      },
+      include: {
+        userProfile: true,
       },
     });
     return createdUser;

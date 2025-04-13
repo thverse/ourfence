@@ -45,6 +45,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       user = await this.userService.createUser({
         username: `Google${id}`,
         password: randomString(),
+        nickname: displayName,
         email: emails[0].value,
       });
     }

@@ -8,6 +8,9 @@ export class UserCreateDto {
   email: string;
 
   @IsString()
+  nickname: string;
+
+  @IsString()
   password: string;
 }
 export class UserUpdateDto {
