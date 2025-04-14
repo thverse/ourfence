@@ -1,72 +1,76 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Image as ImageIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { postCreateSchema, type PostCreateFormData } from "../schema";
 
 interface PostCreateModalProps {
-  title?: string;
-  description?: string;
   buttonText?: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm?: (formData: FormData) => void;
 }
 
 export default function PostCreateModal({
-  title = "Dialog",
-  description = "설명을 여기에 입력하세요.",
   buttonText = "post",
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  onConfirm,
 }: PostCreateModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const form = useForm<PostCreateFormData>({
+    resolver: zodResolver(postCreateSchema),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    clearErrors,
+  } = form;
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    const container = img.parentElement;
+    if (container) {
+      if (ratio > 1) {
+        container.className =
+          "relative w-full aspect-video overflow-hidden rounded-lg";
+      } else {
+        container.className =
+          "relative w-full aspect-square overflow-hidden rounded-lg";
+      }
+    }
+  };
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // 이미지 파일인지 확인
-      if (!file.type.startsWith("image/")) {
-        alert("이미지 파일만 업로드 가능합니다.");
-        return;
-      }
-
-      // 파일 크기 체크 (예: 5MB)
-      if (file.size > 10 * 1024 * 1024) {
-        alert("파일 크기는 10MB 이하여야 합니다.");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      const blobUrl = URL.createObjectURL(file); // base64 대신 Blob URL 생성
+      setSelectedImage(blobUrl); // 미리보기용 이미지로 설정
+      setValue("image", file);
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsOpen(false);
-    setSelectedImage(null);
   };
 
   const removeImage = () => {
-    setSelectedImage(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setSelectedImage(null);
+    setValue("image", undefined);
+    clearErrors("image");
   };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsOpen(false);
-        setSelectedImage(null);
       }
     };
 
@@ -75,6 +79,8 @@ export default function PostCreateModal({
       window.addEventListener("keydown", handleKeyDown);
     } else {
       document.documentElement.style.overflow = "";
+      removeImage();
+      form.reset();
     }
 
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -96,7 +102,10 @@ export default function PostCreateModal({
               onClick={() => setIsOpen(false)}
             ></div>
 
-            <div className="bg-white p-4 rounded-lg shadow-lg z-10 w-full max-w-xl">
+            <form
+              onSubmit={onSubmit}
+              className="bg-white p-4 rounded-lg shadow-lg z-10 w-full max-w-xl"
+            >
               <div className="flex justify-end">
                 <X
                   onClick={() => setIsOpen(false)}
@@ -111,12 +120,21 @@ export default function PostCreateModal({
 
                 <div className="flex-1">
                   <textarea
+                    {...register("content")}
                     placeholder="무슨 일이 일어나고 있나요?"
                     className="w-full resize-none focus:outline-none text-lg min-h-[200px]"
                     autoFocus
                   />
-
-                  {/* 선택된 이미지 미리보기 */}
+                  {errors.content && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.content.message}
+                    </p>
+                  )}
+                  {errors.image && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.image.message}
+                    </p>
+                  )}
                   {selectedImage && (
                     <div className="relative mt-4">
                       <div className="relative w-full overflow-hidden rounded-lg">
@@ -125,24 +143,14 @@ export default function PostCreateModal({
                           alt="Selected image"
                           width={0}
                           height={0}
-                          sizes="100vw"
                           className="w-full h-auto max-h-[500px] object-contain"
-                          onLoadingComplete={(img) => {
-                            const ratio = img.naturalWidth / img.naturalHeight;
-                            const container = img.parentElement;
-                            if (container) {
-                              if (ratio > 1) {
-                                container.className =
-                                  "relative w-full aspect-video overflow-hidden rounded-lg";
-                              } else {
-                                container.className =
-                                  "relative w-full aspect-square overflow-hidden rounded-lg";
-                              }
-                            }
-                          }}
+                          sizes="100vw"
+                          onLoad={handleImageLoad}
                         />
                       </div>
+
                       <button
+                        type="button"
                         onClick={removeImage}
                         className="absolute top-2 right-2 p-1 rounded-full bg-black/50 text-white hover:bg-black/70"
                       >
@@ -154,7 +162,6 @@ export default function PostCreateModal({
               </div>
 
               <div className="flex justify-between items-center pt-4">
-                {/* 파일 입력 숨기기 */}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -163,19 +170,19 @@ export default function PostCreateModal({
                   className="hidden"
                 />
 
-                {/* 이미지 업로드 버튼 */}
                 <button
+                  type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center gap-2 text-gray-500 hover:text-gray-600"
                 >
                   <ImageIcon className="w-5 h-5" />
                 </button>
 
-                <Button type="submit" onClick={handleSubmit}>
-                  post
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "게시 중..." : "게시"}
                 </Button>
               </div>
-            </div>
+            </form>
           </div>,
           document.body
         )}
