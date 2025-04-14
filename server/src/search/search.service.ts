@@ -20,6 +20,7 @@ export class SearchService {
           ],
           deletedAt: null,
         },
+
         include: {
           userProfile: true,
           _count: {

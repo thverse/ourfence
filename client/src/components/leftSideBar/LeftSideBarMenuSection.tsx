@@ -1,7 +1,7 @@
 import React from "react";
 import LeftSideBarMenuItem from "./LeftSideBarMenuItem";
 import { Bell, Home, UserCheck } from "lucide-react";
-import PostDialog from "@/modules/post/components/PostDialog";
+import PostCreateModal from "@/modules/post/components/PostCreateModal";
 import { useUser } from "@/modules/user/hooks/useUser";
 import { SignOutButton } from "@/modules/auth/components/SignOutButton";
 
@@ -39,7 +39,7 @@ const LeftSideBarMenuSection = () => {
             />
           );
         })}
-        <PostDialog />
+        <PostCreateModal />
       </nav>
 
       <div className="flex justify-end">
