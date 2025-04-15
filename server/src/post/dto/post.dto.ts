@@ -11,9 +11,16 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
 export class CreatePostDto {
+  @IsNotEmpty()
   @IsString()
   content: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  files?: Express.Multer.File[];
 }
 
 export class UpdatePostDto {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Image as ImageIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postCreateSchema, type PostCreateFormData } from "../schema";
-
+import { usePostCreate } from "../hooks/usePostCreate";
 interface PostCreateModalProps {
   buttonText?: string;
 }
@@ -31,9 +31,11 @@ export default function PostCreateModal({
     clearErrors,
   } = form;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+  const { createPost, isLoading, isSuccess } = usePostCreate();
+
+  const onSubmit = (data: PostCreateFormData) => {
+    createPost(data);
+  };
 
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
@@ -86,6 +88,14 @@ export default function PostCreateModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      setIsOpen(false);
+      form.reset();
+      removeImage();
+    }
+  }, [isSuccess]);
+
   return (
     <>
       <Button
@@ -103,7 +113,7 @@ export default function PostCreateModal({
             ></div>
 
             <form
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               className="bg-white p-4 rounded-lg shadow-lg z-10 w-full max-w-xl"
             >
               <div className="flex justify-end">
@@ -178,8 +188,8 @@ export default function PostCreateModal({
                   <ImageIcon className="w-5 h-5" />
                 </button>
 
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "게시 중..." : "게시"}
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "게시 중..." : "게시"}
                 </Button>
               </div>
             </form>

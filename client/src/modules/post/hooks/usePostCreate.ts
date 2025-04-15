@@ -1,18 +1,23 @@
 // hooks/usePostCreate.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { createPost } from "../post.service";
-import { PostCreatePayload } from "../types/post";
-
-export const usePostCreate = () => {
+import { PostCreateFormData } from "../schema";
+import { postService } from "../post.service";
+export const usePostCreate = (onSuccess?: () => void, onError?: () => void) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: (postCreatePayload: PostCreatePayload) =>
-      createPost(postCreatePayload),
+  const { mutate, isPending, isSuccess } = useMutation({
+    mutationFn: (postCreateFormData: PostCreateFormData) => {
+      const formData = new FormData();
+      formData.append("content", postCreateFormData.content);
+      if (postCreateFormData.image) {
+        formData.append("files", postCreateFormData.image);
+      }
+      return postService.createPost(formData);
+    },
     onSuccess: (data) => {
       // 캐시된 게시물 목록 갱신
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // queryClient.invalidateQueries({ queryKey: ["posts"] });
 
       // 성공 메시지 표시
       toast.success("게시물이 작성되었습니다.");
@@ -26,5 +31,6 @@ export const usePostCreate = () => {
   return {
     createPost: mutate,
     isLoading: isPending,
+    isSuccess: isSuccess,
   };
 };
