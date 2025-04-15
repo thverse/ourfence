@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  images: {
+    domains: ["res.cloudinary.com", "utfs.io"],
+  },
 };
 
 export default nextConfig;

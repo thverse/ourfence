@@ -3,9 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { PostCreateFormData } from "../schema";
 import { postService } from "../post.service";
-export const usePostCreate = (onSuccess?: () => void, onError?: () => void) => {
+export const usePostCreate = () => {
   const queryClient = useQueryClient();
-
   const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: (postCreateFormData: PostCreateFormData) => {
       const formData = new FormData();
@@ -17,7 +16,7 @@ export const usePostCreate = (onSuccess?: () => void, onError?: () => void) => {
     },
     onSuccess: (data) => {
       // 캐시된 게시물 목록 갱신
-      // queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["postList"] });
 
       // 성공 메시지 표시
       toast.success("게시물이 작성되었습니다.");

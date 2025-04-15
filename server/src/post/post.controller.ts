@@ -40,18 +40,12 @@ export class PostController {
     return await this.postService.createPost(userId, createPostDto, files);
   }
 
-  @Get('me')
-  getMyPosts(@User('id') userId: number): Promise<PostResponse[]> {
-    console.log(userId);
-    return this.postService.getMyPosts(userId);
-  }
-
-  @Post('by-users')
-  getUsersPosts(
+  @Post('post_list')
+  async getUsersPosts(
     @User('id') userId: number,
     @Body() getPostsDto: GetPostsDto,
   ): Promise<PostResponse[]> {
-    return this.postService.getUsersPosts(userId, getPostsDto);
+    return await this.postService.getUsersPosts(userId, getPostsDto);
   }
 
   // @Get(':id')
@@ -60,18 +54,18 @@ export class PostController {
   // }
 
   @Patch()
-  updatePost(
+  async updatePost(
     @User('id') userId: number,
     @Body() updatePostDto: UpdatePostDto,
   ): Promise<PostResponse> {
-    return this.postService.updatePost(userId, updatePostDto);
+    return await this.postService.updatePost(userId, updatePostDto);
   }
 
   @Delete()
-  deletePost(
+  async deletePost(
     @User('id') userId: number,
     @Body() deletePostDto: DeletePostDto,
   ): Promise<PostResponse> {
-    return this.postService.deletePost(userId, deletePostDto);
+    return await this.postService.deletePost(userId, deletePostDto);
   }
 }

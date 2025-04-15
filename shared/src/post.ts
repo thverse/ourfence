@@ -24,5 +24,9 @@ export interface PostResponse {
     id: number;
     username: string;
     email: string;
+    userProfile: {
+      id: number;
+      profileImage: string;
+    };
   };
 }

@@ -4,14 +4,11 @@ import {
   IsArray,
   IsNumber,
   IsNotEmpty,
-  IsEnum,
-  Max,
-  Min,
-  ArrayMaxSize,
   ArrayMinSize,
+  IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
+import { CursorPaginationDto } from 'src/common/dtos/common.dto';
 export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
@@ -53,21 +50,17 @@ export class PostImageDto {
   type: string;
 }
 
-export class GetPostsDto {
+export enum PostType {
+  ALL = 'ALL',
+  USER = 'USER',
+}
+
+export class GetPostsDto extends CursorPaginationDto {
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(20)
   @IsNumber({}, { each: true })
   userIds: number[];
 
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(50)
-  limit?: number = 20;
+  @IsEnum(PostType)
+  type: PostType;
 }

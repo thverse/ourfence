@@ -4,6 +4,8 @@ import { useTabBarStore } from "@/app/store";
 import Post from "../../post/components/Post";
 import { useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
+import { usePostList } from "../../post/hooks/usePostList";
+import { PostType } from "../../post/types/post";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
@@ -11,6 +13,11 @@ const Feed = () => {
     { id: "myPosts", label: "내 게시물" },
     { id: "followingsPosts", label: "팔로잉 게시물" },
   ];
+
+  const { data: postList } = usePostList({
+    type: PostType.USER,
+    userIds: [2],
+  });
 
   //탭 변경시 스크롤 맨 위로 이동
   useLayoutEffect(() => {
@@ -27,9 +34,9 @@ const Feed = () => {
       <div className="flex flex-col gap-4">
         {selectedTabId === "myPosts" ? (
           <div>
-            <Post />
-            <Post />
-            <Post />
+            {postList?.map((post) => (
+              <Post key={post.id} post={post} />
+            ))}
           </div>
         ) : (
           ""

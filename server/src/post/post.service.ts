@@ -4,11 +4,14 @@ import {
   CreatePostDto,
   DeletePostDto,
   GetPostsDto,
+  PostType,
   UpdatePostDto,
 } from './dto/post.dto';
 import { Post } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
+import { PostResponse } from 'shared';
+
 @Injectable()
 export class PostService {
   constructor(
@@ -88,20 +91,52 @@ export class PostService {
     userId: number,
     getPostsDto: GetPostsDto,
   ): Promise<Post[]> {
-    const { userIds, page, limit } = getPostsDto;
+    const { userIds, type, cursor, limit } = getPostsDto;
 
-    return await this.prismaService.post.findMany({
-      where: {
+    let condition = {};
+
+    if (type === PostType.USER) {
+      condition = {
         userId: { in: userIds },
+      };
+    }
+
+    const posts = await this.prismaService.post.findMany({
+      where: {
+        ...condition,
+        createdAt: {
+          gt: cursor ? new Date(cursor) : undefined,
+        },
       },
       include: {
-        user: { select: { username: true } },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            userProfile: {
+              select: {
+                id: true,
+                profileImageUrl: true,
+              },
+            },
+          },
+        },
         postImages: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
+      take: limit,
     });
+
+    return posts;
   }
 
   async getPost(postId: number): Promise<Post> {

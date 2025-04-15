@@ -6,6 +6,9 @@ import { useTabBarStore } from "@/app/store";
 import SectionHeader from "@/components/SectionHeader";
 import Post from "@/modules/post/components/Post";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
+import Feed from "@/modules/feed/components/Feed";
+import { usePostList } from "@/modules/post/hooks/usePostList";
+import { PostType } from "@/modules/post/types/post";
 
 const ProfilePage = () => {
   const { setSelectedTabId } = useTabBarStore();
@@ -28,6 +31,11 @@ const ProfilePage = () => {
       label: "댓글",
     },
   ];
+
+  const { data: postList } = usePostList({
+    type: PostType.USER,
+    userIds: [2],
+  });
 
   return (
     <div>
@@ -64,9 +72,9 @@ const ProfilePage = () => {
       <TabBar items={profileTabs} initialActiveTab="posts" />
 
       <div className="divide-y">
-        <Post />
-        <Post />
-        <Post />
+        {postList?.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
       </div>
     </div>
   );
