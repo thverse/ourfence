@@ -21,10 +21,12 @@ import {
 } from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
-import { PostMutationResponse, PostListResponse } from 'shared';
+import { PostMutationResponse, PostResponse } from 'shared';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { User } from 'src/common/decorators/user.decorator';
+import { Prisma } from '@prisma/client';
 
+type input = Prisma.UserProfileCreateInput;
 @UseGuards(JwtGuard)
 @Controller('post')
 export class PostController {
@@ -41,11 +43,11 @@ export class PostController {
   }
 
   @Post('post_list')
-  async getUsersPosts(
+  async getPostList(
     @User('id') userId: number,
     @Body() getPostsDto: GetPostsDto,
-  ): Promise<PostListResponse[]> {
-    return await this.postService.getUsersPosts(userId, getPostsDto);
+  ): Promise<PostResponse[]> {
+    return await this.postService.getPostList(userId, getPostsDto);
   }
 
   // @Get(':id')

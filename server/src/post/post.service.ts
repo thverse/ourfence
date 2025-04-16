@@ -10,7 +10,7 @@ import {
 import { Post } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
-import { PostMutationResponse, PostListResponse } from 'shared';
+import { PostMutationResponse, PostResponse } from 'shared';
 
 @Injectable()
 export class PostService {
@@ -66,10 +66,10 @@ export class PostService {
     });
   }
 
-  async getUsersPosts(
+  async getPostList(
     userId: number,
     getPostsDto: GetPostsDto,
-  ): Promise<PostListResponse[]> {
+  ): Promise<PostResponse[]> {
     const { userIds, type, cursor, limit } = getPostsDto;
 
     let condition = {};
@@ -102,6 +102,7 @@ export class PostService {
           },
         },
         postImages: true,
+        comments: true,
         _count: {
           select: {
             likes: true,

@@ -12,7 +12,24 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    domains: ["res.cloudinary.com", "utfs.io"],
+    remotePatterns: [
+      //로컬 테스트를 위한 http 설정
+      {
+        protocol: "http",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

@@ -6,11 +6,11 @@ import {
   AvatarImage,
 } from "../../../components/ui/avatar";
 import { Input } from "../../../components/ui/input";
-import CommentSection from "@/modules/comments/components/CommentSection";
+import CommentSection from "@/modules/comment/components/CommentSection";
 import { useState } from "react";
 import PostImageModal from "./PostImageModal";
-import { PostResponse } from "shared";
 import { timeAgo } from "@/lib/utils";
+import { PostResponse } from "shared";
 const user = {
   name: "기마무개",
   username: "kim",

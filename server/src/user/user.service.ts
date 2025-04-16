@@ -26,15 +26,23 @@ export class UserService {
         username: dto.username,
         email: dto.email,
         password: await hash(dto.password, 10),
+        userProfile: {
+          create: {
+            nickname: dto.nickname,
+          },
+        },
+      },
+      include: {
+        userProfile: true,
       },
     });
 
-    await this.prismaService.userProfile.create({
-      data: {
-        userId: user.id,
-        nickname: dto.nickname,
-      },
-    });
+    // await this.prismaService.userProfile.create({
+    //   data: {
+    //     userId: user.id,
+    //     nickname: dto.nickname,
+    //   },
+    // });
 
     return user;
   }

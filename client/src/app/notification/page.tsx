@@ -1,5 +1,5 @@
 import SectionHeader from "@/components/SectionHeader";
-import NotificationItem from "@/modules/notifications/components/NotificationItem";
+import NotificationItem from "@/modules/notifications_/components/NotificationItem";
 import React from "react";
 
 export default function NotificationsPage() {

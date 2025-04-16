@@ -26,7 +26,7 @@ export interface PostMutationResponse {
     };
   };
 }
-export interface PostListResponse {
+export interface PostResponse {
   id: number;
   userId: number;
   content: string;
@@ -50,6 +50,13 @@ export interface PostListResponse {
       profileImageUrl: string | null;
     } | null;
   };
+  comments: {
+    id: number;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    deletedAt: Date | null;
+  }[];
   _count: {
     likes: number;
     comments: number;
