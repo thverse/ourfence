@@ -21,21 +21,22 @@ export class UserService {
     //중복 검사
     await this.duplicateCheckUser(dto);
 
-    const createdUser = await this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
-        ...dto,
+        username: dto.username,
+        email: dto.email,
         password: await hash(dto.password, 10),
-        userProfile: {
-          create: {
-            nickname: dto.nickname,
-          },
-        },
-      },
-      include: {
-        userProfile: true,
       },
     });
-    return createdUser;
+
+    await this.prismaService.userProfile.create({
+      data: {
+        userId: user.id,
+        nickname: dto.nickname,
+      },
+    });
+
+    return user;
   }
 
   async getUsers(): Promise<User[]> {

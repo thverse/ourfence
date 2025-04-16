@@ -21,7 +21,7 @@ import {
 } from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
-import { PostResponse } from 'shared';
+import { PostMutationResponse, PostListResponse } from 'shared';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { User } from 'src/common/decorators/user.decorator';
 
@@ -36,7 +36,7 @@ export class PostController {
     @User('id') userId: number,
     @Body() createPostDto: CreatePostDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ): Promise<PostResponse> {
+  ): Promise<PostMutationResponse> {
     return await this.postService.createPost(userId, createPostDto, files);
   }
 
@@ -44,7 +44,7 @@ export class PostController {
   async getUsersPosts(
     @User('id') userId: number,
     @Body() getPostsDto: GetPostsDto,
-  ): Promise<PostResponse[]> {
+  ): Promise<PostListResponse[]> {
     return await this.postService.getUsersPosts(userId, getPostsDto);
   }
 
@@ -57,7 +57,7 @@ export class PostController {
   async updatePost(
     @User('id') userId: number,
     @Body() updatePostDto: UpdatePostDto,
-  ): Promise<PostResponse> {
+  ): Promise<PostMutationResponse> {
     return await this.postService.updatePost(userId, updatePostDto);
   }
 
@@ -65,7 +65,7 @@ export class PostController {
   async deletePost(
     @User('id') userId: number,
     @Body() deletePostDto: DeletePostDto,
-  ): Promise<PostResponse> {
+  ): Promise<PostMutationResponse> {
     return await this.postService.deletePost(userId, deletePostDto);
   }
 }

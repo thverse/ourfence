@@ -63,6 +63,20 @@ export function SignUpForm({
                   )}
                 </div>
                 <div className="grid gap-2">
+                  <Label htmlFor="nickname">Nickname</Label>
+                  <Input
+                    id="nickname"
+                    placeholder="nickname"
+                    {...signUpField("nickname")}
+                    required
+                  />
+                  {errors.nickname && (
+                    <p className="text-sm text-destructive">
+                      {errors.nickname.message}
+                    </p>
+                  )}
+                </div>
+                <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"

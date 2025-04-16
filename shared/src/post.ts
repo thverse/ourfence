@@ -8,7 +8,7 @@ export interface PostImage {
   deletedAt?: Date | null;
 }
 
-export interface PostResponse {
+export interface PostMutationResponse {
   id: number;
   userId: number;
   content: string;
@@ -16,17 +16,42 @@ export interface PostResponse {
   updatedAt?: Date | null;
   deletedAt?: Date | null;
   postImages?: PostImage[];
-  _count?: {
-    likes: number;
-    comments: number;
-  };
   user?: {
     id: number;
     username: string;
     email: string;
     userProfile: {
       id: number;
-      profileImage: string;
+      profileImageUrl: string;
     };
+  };
+}
+export interface PostListResponse {
+  id: number;
+  userId: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  deletedAt: Date | null;
+  postImages: {
+    id: number;
+    url: string;
+    type: string;
+    postId: number;
+    createdAt: Date;
+    updatedAt: Date | null;
+  }[];
+  user: {
+    id: number;
+    username: string;
+    email: string;
+    userProfile: {
+      id: number;
+      profileImageUrl: string | null;
+    } | null;
+  };
+  _count: {
+    likes: number;
+    comments: number;
   };
 }
