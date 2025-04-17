@@ -2,11 +2,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { postService } from "../post.service";
 import { PostResponse } from "shared";
-import { PostType } from "../types/post";
+import { PostType } from "../types/post.type";
 
 interface UsePostListProps {
   type: PostType;
-  userIds: number[];
+  userIds: number[] | [];
   enabled?: boolean;
 }
 

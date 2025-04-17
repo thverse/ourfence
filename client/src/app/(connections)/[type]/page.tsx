@@ -25,9 +25,16 @@ const ConnectionsPage = async ({ params }: ConnetionsProps) => {
     return notFound();
   }
 
+  const getTitle = (type: string) => {
+    if (type === "followers") {
+      return "팔로워";
+    }
+    return "팔로잉";
+  };
+
   return (
     <div>
-      <SectionHeader pageTitle={type} />
+      <SectionHeader pageTitle={getTitle(type)} />
       <div className="p-4 flex gap-4 border-b border-gray-200">
         {/* 프로필 이미지 */}
         <Avatar className="z-0">

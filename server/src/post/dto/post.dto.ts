@@ -55,9 +55,8 @@ export enum PostType {
   USER = 'USER',
 }
 
-export class GetPostsDto extends CursorPaginationDto {
+export class GetPostListDto extends CursorPaginationDto {
   @IsArray()
-  @ArrayMinSize(1)
   @IsNumber({}, { each: true })
   userIds: number[];
 

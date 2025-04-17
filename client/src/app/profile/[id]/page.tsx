@@ -8,7 +8,7 @@ import Post from "@/modules/post/components/Post";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
 import Feed from "@/modules/feed/components/Feed";
 import { usePostList } from "@/modules/post/hooks/usePostList";
-import { PostType } from "@/modules/post/types/post";
+import { PostType } from "@/modules/post/types/post.type";
 
 const ProfilePage = () => {
   const { setSelectedTabId } = useTabBarStore();
@@ -40,7 +40,7 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <SectionHeader pageTitle="My Profile" />
+        <SectionHeader pageTitle="내 정보" />
 
         <div className="h-48 bg-gray-200"></div>
 

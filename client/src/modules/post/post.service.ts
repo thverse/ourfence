@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api";
-import { GetPostListPayload, PostCreatePayload } from "./types/post";
+import { GetPostListPayload, PostCreatePayload } from "./types/post.type";
 import { PostResponse } from "shared";
 
 export const postService = {

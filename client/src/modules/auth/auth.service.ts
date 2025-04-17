@@ -1,27 +1,9 @@
 import { apiClient } from "@/lib/api";
-
-type SignInCondition = {
-  username: string;
-  password: string;
-};
-
-type SignUpCondition = {
-  username: string;
-  email: string;
-  password: string;
-};
-
-type User = {
-  id: number;
-  username: string;
-  email: string;
-};
-type AuthResponse = {
-  user: User;
-};
+import { SignInPayload, SignUpPayload } from "./types/auth.type";
+import { AuthResponse } from "shared";
 
 export const authService = {
-  signIn: async function (condition: SignInCondition) {
+  signIn: async function (condition: SignInPayload) {
     const response = await apiClient.post<AuthResponse>(
       "/api/signin",
       condition
@@ -29,7 +11,7 @@ export const authService = {
     return response.data;
   },
 
-  signUp: async function (data: SignUpCondition) {
+  signUp: async function (data: SignUpPayload) {
     const response = await apiClient.post<AuthResponse>("/api/signup", data);
     return response.data;
   },

@@ -3,7 +3,7 @@ import {
   CreateCommentDto,
   UpdateCommentDto,
   DeleteCommentDto,
-  GetCommentsDto,
+  GetCommentListDto,
 } from './dto/comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Comment, NotificationType } from '@prisma/client';
@@ -11,6 +11,7 @@ import { CommentNotFoundException } from './exceptions/commentNotFound.exception
 import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
+import { CommentResponse } from 'shared';
 @Injectable()
 export class CommentService {
   constructor(
@@ -28,7 +29,7 @@ export class CommentService {
     const post = await this.postService.getPost(postId);
 
     if (!post) {
-      new PostNotFoundException(postId);
+      throw new PostNotFoundException(postId);
     }
 
     const comment = await this.prismaService.comment.create({
@@ -70,20 +71,37 @@ export class CommentService {
     return comment;
   }
 
-  async getCommentsByUserId(
-    getCommentsDto: GetCommentsDto,
-  ): Promise<Comment[]> {
-    const { userId } = getCommentsDto;
+  async getCommentList(
+    userId: number,
+    getCommentListDto: GetCommentListDto,
+  ): Promise<CommentResponse[]> {
+    const { postId, cursor, limit } = getCommentListDto;
     return await this.prismaService.comment.findMany({
       where: {
-        userId,
+        postId,
+        createdAt: {
+          gt: cursor ? new Date(cursor) : undefined,
+        },
       },
       include: {
-        post: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            userProfile: {
+              select: {
+                id: true,
+                profileImageUrl: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
+      take: limit,
     });
   }
 

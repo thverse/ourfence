@@ -33,14 +33,7 @@ export interface PostResponse {
   createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
-  postImages: {
-    id: number;
-    url: string;
-    type: string;
-    postId: number;
-    createdAt: Date;
-    updatedAt: Date | null;
-  }[];
+  postImages: PostImage[];
   user: {
     id: number;
     username: string;

@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   CreatePostDto,
   DeletePostDto,
-  GetPostsDto,
+  GetPostListDto,
   PostType,
   UpdatePostDto,
 } from './dto/post.dto';
@@ -68,9 +68,9 @@ export class PostService {
 
   async getPostList(
     userId: number,
-    getPostsDto: GetPostsDto,
+    getPostListDto: GetPostListDto,
   ): Promise<PostResponse[]> {
-    const { userIds, type, cursor, limit } = getPostsDto;
+    const { userIds, type, cursor, limit } = getPostListDto;
 
     let condition = {};
 

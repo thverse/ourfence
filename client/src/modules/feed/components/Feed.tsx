@@ -5,7 +5,8 @@ import Post from "../../post/components/Post";
 import { useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
 import { usePostList } from "../../post/hooks/usePostList";
-import { PostType } from "../../post/types/post";
+import { PostType } from "../../post/types/post.type";
+import { useUser } from "@/modules/user/hooks/useUser";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
@@ -14,9 +15,25 @@ const Feed = () => {
     { id: "followingsPosts", label: "팔로잉 게시물" },
   ];
 
+  const { data: user } = useUser();
+
+  const getUserIds = () => {
+    const userIds: number[] = [];
+    if (selectedTabId === "myPosts") {
+      if (user) {
+        userIds.push(user.id);
+      }
+    } else if (selectedTabId === "followingsPosts") {
+      if (user) {
+        userIds.push(user.id);
+      }
+    }
+    return userIds;
+  };
+
   const { data: postList } = usePostList({
     type: PostType.USER,
-    userIds: [2],
+    userIds: getUserIds(),
   });
 
   //탭 변경시 스크롤 맨 위로 이동

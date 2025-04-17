@@ -1,20 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import React from "react";
 import CommentInput from "./CommentInput";
 import CommentItem from "./CommentItem";
+import { useGetCommentList } from "../hooks/useCommentCreate";
 
-const user = {
-  name: "기마무개",
-  username: "kim",
-  profileImage: "/avatar.png",
-};
+interface CommentSectionProps {
+  postId: number;
+}
 
-const CommentSection = () => {
+const CommentSection = ({ postId }: CommentSectionProps) => {
+  const { data: commentList } = useGetCommentList(postId);
   return (
     <div className="flex flex-col gap-2 pt-3">
-      <CommentInput />
-      <CommentItem />
+      <CommentInput postId={postId} />
+      {commentList?.map((comment) => (
+        <CommentItem key={comment.id} comment={comment} />
+      ))}
     </div>
   );
 };

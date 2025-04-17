@@ -12,7 +12,7 @@ export const postCreateSchema = z.object({
   content: z
     .string()
     .min(1, "내용을 입력해주세요.")
-    .max(500, "최대 500자까지 입력 가능합니다."),
+    .max(200, "최대 200자까지 입력 가능합니다."),
   image: z
     .custom<File>()
     .optional()

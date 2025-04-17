@@ -11,22 +11,14 @@ import { useState } from "react";
 import PostImageModal from "./PostImageModal";
 import { timeAgo } from "@/lib/utils";
 import { PostResponse } from "shared";
-const user = {
-  name: "기마무개",
-  username: "kim",
-  profileImage: "/avatar.png",
-};
-
-const postInfo = {
-  content: "안녕하세요 이것은 ...!!",
-  imgUrl: "/testbg.jpg",
-  createdAt: "2 hours ago",
-};
+import { useUser } from "@/modules/user/hooks/useUser";
 
 const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { data: user } = useUser();
 
   const handleImageLoad = (img: HTMLImageElement) => {
     const ratio = img.naturalWidth / img.naturalHeight;
@@ -60,8 +52,11 @@ const Post = ({ post }: { post: PostResponse }) => {
     <div className="p-4 flex gap-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
       <Avatar className="z-0">
-        <AvatarImage src={user.profileImage} alt={user.name} />
-        <AvatarFallback>{user.name[0]}</AvatarFallback>
+        <AvatarImage
+          src={user?.userProfile?.profileImageUrl ?? ""}
+          alt={user?.username ?? ""}
+        />
+        <AvatarFallback>{user?.username[0]}</AvatarFallback>
       </Avatar>
 
       {/* 오른쪽 콘텐츠 영역 */}
@@ -69,7 +64,7 @@ const Post = ({ post }: { post: PostResponse }) => {
         {/* 사용자 정보 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold">{user.name}</span>
+            <span className="font-semibold">{user?.username}</span>
             <span className="text-gray-500">
               @{post.user?.username} · {timeAgo(post.createdAt)}
             </span>
@@ -117,8 +112,7 @@ const Post = ({ post }: { post: PostResponse }) => {
             <span>{post._count?.likes}</span>
           </button>
         </div>
-
-        <CommentSection />
+        <CommentSection postId={post.id} />
       </div>
 
       {/* 모달 컴포넌트 */}

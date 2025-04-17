@@ -17,7 +17,7 @@ import {
   CreatePostDto,
   UpdatePostDto,
   DeletePostDto,
-  GetPostsDto,
+  GetPostListDto,
 } from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
@@ -45,9 +45,9 @@ export class PostController {
   @Post('post_list')
   async getPostList(
     @User('id') userId: number,
-    @Body() getPostsDto: GetPostsDto,
+    @Body() getPostListDto: GetPostListDto,
   ): Promise<PostResponse[]> {
-    return await this.postService.getPostList(userId, getPostsDto);
+    return await this.postService.getPostList(userId, getPostListDto);
   }
 
   // @Get(':id')

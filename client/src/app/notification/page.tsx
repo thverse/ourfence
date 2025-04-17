@@ -1,12 +1,12 @@
 import SectionHeader from "@/components/SectionHeader";
-import NotificationItem from "@/modules/notifications_/components/NotificationItem";
+import NotificationItem from "@/modules/notification/components/NotificationItem";
 import React from "react";
 
-export default function NotificationsPage() {
+export default function NotificationPage() {
   return (
     <div>
       <div className="flex flex-col">
-        <SectionHeader pageTitle="Notifications" />
+        <SectionHeader pageTitle="알림" />
         <NotificationItem />
         <NotificationItem />
         <NotificationItem />

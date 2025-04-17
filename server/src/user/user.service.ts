@@ -13,6 +13,7 @@ import {
   ValidateUserDto,
 } from './dto/user.dto';
 import { User } from '@prisma/client';
+import { UserResponse, UserWithProfileResponse } from 'shared';
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -65,8 +66,13 @@ export class UserService {
     }
   }
 
-  async getUserProfile(id: number): Promise<User> {
-    const user = await this.getUserById(id);
+  async getUserProfile(id: number): Promise<UserWithProfileResponse> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: {
+        userProfile: true,
+      },
+    });
     if (!user) {
       throw new NotFoundException('Not found user');
     }

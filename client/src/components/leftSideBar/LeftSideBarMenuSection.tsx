@@ -10,17 +10,17 @@ const LeftSideBarMenuSection = () => {
 
   const LeftSideBarMenuItems = [
     {
-      title: "Home",
+      title: "홈",
       icon: Home,
       path: "/",
     },
     {
-      title: "Notifications",
+      title: "알림",
       icon: Bell,
-      path: "/notifications",
+      path: "/notification",
     },
     {
-      title: "Profile",
+      title: "내 정보",
       icon: UserCheck,
       path: `/profile/${user?.id}`,
     },

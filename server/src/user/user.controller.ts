@@ -14,7 +14,7 @@ import { UserService } from './user.service';
 import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthRequest } from 'src/auth/types/auth.type';
-import { UserResponse } from 'shared';
+import { UserResponse, UserWithProfileResponse } from 'shared';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 import { User } from 'src/common/decorators/user.decorator';
 
@@ -30,7 +30,9 @@ export class UserController {
 
   @Get('/profile')
   @UseGuards(JwtGuard)
-  async getUserProfile(@Req() req: AuthRequest): Promise<UserResponse> {
+  async getUserProfile(
+    @Req() req: AuthRequest,
+  ): Promise<UserWithProfileResponse> {
     return await this.userService.getUserProfile(req.user.id);
   }
 

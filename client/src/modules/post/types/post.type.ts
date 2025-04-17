@@ -11,7 +11,7 @@ export enum PostType {
 }
 
 export type GetPostListPayload = {
-  userIds: number[];
+  userIds: number[] | [];
   type: PostType;
   cursor: string;
   limit: number;

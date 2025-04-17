@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { CursorPaginationDto } from 'src/common/dtos/common.dto';
 
 export class CreateCommentDto {
   @Type(() => Number)
@@ -33,9 +34,9 @@ export class DeleteCommentDto {
   commentId: number;
 }
 
-export class GetCommentsDto {
+export class GetCommentListDto extends CursorPaginationDto {
   @Type(() => Number)
   @IsNotEmpty()
   @IsNumber()
-  userId: number;
+  postId: number;
 }

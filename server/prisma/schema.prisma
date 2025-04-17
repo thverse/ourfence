@@ -29,7 +29,7 @@ model User {
   notifications Notification[] @relation("notifications") 
   followers Follow[] @relation("Followers") 
   followings Follow[] @relation("Followings") 
-  userProfile UserProfile? @relation("user_profile")
+  userProfile UserProfile? @relation("user_profile") 
 
   @@map("user")
 }
@@ -46,7 +46,7 @@ model UserProfile {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
-  user User @relation("user_profile", fields: [userId], references: [id], onDelete: Cascade)
+   user User @relation("user_profile", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profile")
 }

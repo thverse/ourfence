@@ -6,45 +6,54 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import {
   CreateCommentDto,
   UpdateCommentDto,
   DeleteCommentDto,
+  GetCommentListDto,
 } from './dto/comment.dto';
-import { CommentResponse, CommentsResponse } from 'shared';
 import { User } from 'src/common/decorators/user.decorator';
+import { CommentMutationResponse, CommentResponse } from 'shared';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
   async createComment(
-    @User('userId') userId: number,
+    @User('id') userId: number,
     @Body() createCommentDto: CreateCommentDto,
-  ): Promise<CommentResponse> {
+  ): Promise<CommentMutationResponse> {
+    console.log(createCommentDto);
     return await this.commentService.createComment(userId, createCommentDto);
   }
 
   @Get()
-  async getComments(@User('userId') userId: number): Promise<CommentsResponse> {
-    return await this.commentService.getCommentsByUserId({ userId });
+  async getCommentList(
+    @User('id') userId: number,
+    @Query() getCommentListDto: GetCommentListDto,
+  ): Promise<CommentResponse[]> {
+    return await this.commentService.getCommentList(userId, getCommentListDto);
   }
 
   @Patch()
   async updateComment(
     @Body() updateCommentDto: UpdateCommentDto,
-  ): Promise<CommentResponse> {
+  ): Promise<CommentMutationResponse> {
     return await this.commentService.updateComment(updateCommentDto);
   }
 
   @Delete()
   async deleteComment(
-    @User('userId') userId: number,
+    @User('id') userId: number,
     @Body() deleteCommentDto: DeleteCommentDto,
-  ): Promise<CommentResponse> {
+  ): Promise<CommentMutationResponse> {
     return await this.commentService.deleteComment(userId, deleteCommentDto);
   }
 }

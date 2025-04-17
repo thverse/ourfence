@@ -1,8 +1,45 @@
 import { apiClient } from "@/lib/api";
+import { CommentResponse } from "shared";
+import {
+  CommentCreatePayload,
+  CommentUpdatePayload,
+  CommentDeletePayload,
+} from "../types/comment.type";
 
 export const commentService = {
-  getComments: async (postId: string) => {
-    const response = await apiClient.get(`/comments/${postId}`);
+  createComment: async (comment: CommentCreatePayload) => {
+    const response = await apiClient.post<CommentResponse>(
+      "/api/comment",
+      comment
+    );
+    return response.data;
+  },
+
+  updateComment: async (comment: CommentUpdatePayload) => {
+    const response = await apiClient.patch<CommentResponse>(
+      `/api/comment/${comment.commentId}`,
+      comment
+    );
+    return response.data;
+  },
+
+  deleteComment: async (comment: CommentDeletePayload) => {
+    const response = await apiClient.delete<CommentResponse>(
+      `/api/comment/${comment.commentId}`
+    );
+    return response.data;
+  },
+
+  getCommentList: async (postId: number) => {
+    const params = new URLSearchParams({
+      postId: postId.toString(),
+      cursor: "",
+      limit: "10",
+    });
+
+    const response = await apiClient.get<CommentResponse[]>(
+      `/api/comment?${params.toString()}`
+    );
     return response.data;
   },
 };
