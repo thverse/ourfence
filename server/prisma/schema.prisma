@@ -61,7 +61,7 @@ model GoogleAccount {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    user User? @relation("google_account",fields: [userId], references: [id])
+    user User? @relation("google_account",fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("google_account")
 }
@@ -76,7 +76,7 @@ model Post {
     likes Like[] @relation("likes") 
     postImages PostImage[] @relation("post_images") 
     comments Comment[] @relation("comments") 
-    user User @relation("posts", fields: [userId], references: [id])
+    user User @relation("posts", fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("post")
 }
@@ -89,7 +89,7 @@ model PostImage {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    post Post @relation("post_images", fields: [postId], references: [id])
+    post Post @relation("post_images", fields: [postId], references: [id], onDelete: Cascade)
 
     @@map("post_image")
 }
@@ -101,8 +101,8 @@ model Like {
     createdAt DateTime @default(now()) 
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    post Post @relation("likes", fields: [postId], references: [id]) 
-    user User @relation("likes", fields: [userId], references: [id]) 
+    post Post @relation("likes", fields: [postId], references: [id], onDelete: Cascade) 
+    user User @relation("likes", fields: [userId], references: [id], onDelete: Cascade) 
 
     @@map("like")
     @@unique([userId, postId], name: "userId_postId")
@@ -119,8 +119,8 @@ model Comment {
   createdAt DateTime     @default(now())           
   updatedAt DateTime?     @updatedAt                  
   deletedAt DateTime? @map("deleted_at")
-  user User @relation("comments",fields: [userId], references: [id]) 
-  post Post @relation("comments",fields: [postId], references: [id]) 
+  user User @relation("comments",fields: [userId], references: [id], onDelete: Cascade) 
+  post Post @relation("comments",fields: [postId], references: [id], onDelete: Cascade) 
   parent Comment? @relation("CommentReplies", fields: [parentId], references: [id]) 
   replies Comment[] @relation("CommentReplies") 
 }
