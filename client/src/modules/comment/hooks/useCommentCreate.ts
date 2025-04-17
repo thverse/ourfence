@@ -5,6 +5,7 @@ import {
   CommentUpdatePayload,
   CommentDeletePayload,
 } from "../types/comment.type";
+import { toast } from "react-toastify";
 
 export const useCommentCreate = () => {
   const queryClient = useQueryClient();
@@ -20,9 +21,11 @@ export const useCommentCreate = () => {
       queryClient.invalidateQueries({
         queryKey: ["commentList", commentCreatePayload.postId],
       });
+      toast.success("댓글이 작성되었습니다.");
     },
     onError: (error) => {
       console.error(error);
+      toast.error("댓글 작성에 실패했습니다.");
     },
   });
 
@@ -31,46 +34,4 @@ export const useCommentCreate = () => {
     isPending,
     isSuccess,
   };
-};
-
-export const useCommentUpdate = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (comment: CommentUpdatePayload) =>
-      commentService.updateComment(comment),
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({
-        queryKey: ["commentList", result.postId],
-      });
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-};
-
-export const useCommentDelete = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (comment: CommentDeletePayload) =>
-      commentService.deleteComment(comment),
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({
-        queryKey: ["commentList", result.postId],
-      });
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-};
-
-export const useGetCommentList = (postId: number) => {
-  return useQuery({
-    queryKey: ["commentList", postId],
-    queryFn: () => commentService.getCommentList(postId),
-    staleTime: 1000 * 60, // 1분
-    gcTime: 1000 * 60 * 5, // 5분
-    enabled: !!postId,
-  });
 };

@@ -1,6 +1,6 @@
 import CommentInput from "./CommentInput";
 import CommentItem from "./CommentItem";
-import { useGetCommentList } from "../hooks/useCommentCreate";
+import { useGetCommentList } from "../hooks/useCommentList";
 
 interface CommentSectionProps {
   postId: number;

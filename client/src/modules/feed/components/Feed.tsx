@@ -2,7 +2,7 @@
 
 import { useTabBarStore } from "@/app/store";
 import Post from "../../post/components/Post";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
 import { usePostList } from "../../post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
@@ -31,10 +31,17 @@ const Feed = () => {
     return userIds;
   };
 
-  const { data: postList } = usePostList({
+  const { data: postList, isFetched } = usePostList({
     type: PostType.USER,
     userIds: getUserIds(),
   });
+
+  //postList 가 조회되고 나서 스크롤 맨 위로 이동
+  useEffect(() => {
+    if (isFetched) {
+      window.scrollTo(0, 0);
+    }
+  }, [isFetched]);
 
   //탭 변경시 스크롤 맨 위로 이동
   useLayoutEffect(() => {

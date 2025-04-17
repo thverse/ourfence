@@ -24,8 +24,11 @@ export const commentService = {
   },
 
   deleteComment: async (comment: CommentDeletePayload) => {
+    const params = new URLSearchParams({
+      commentId: comment.commentId.toString(),
+    });
     const response = await apiClient.delete<CommentResponse>(
-      `/api/comment/${comment.commentId}`
+      `/api/comment?${params.toString()}`
     );
     return response.data;
   },

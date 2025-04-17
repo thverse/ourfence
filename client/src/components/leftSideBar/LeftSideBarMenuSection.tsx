@@ -39,7 +39,7 @@ const LeftSideBarMenuSection = () => {
             />
           );
         })}
-        <PostCreateModal />
+        <PostCreateModal buttonText="게시하기" />
       </nav>
 
       <div className="flex justify-end">

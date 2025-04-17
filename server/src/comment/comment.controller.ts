@@ -30,7 +30,6 @@ export class CommentController {
     @User('id') userId: number,
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentMutationResponse> {
-    console.log(createCommentDto);
     return await this.commentService.createComment(userId, createCommentDto);
   }
 
@@ -52,7 +51,7 @@ export class CommentController {
   @Delete()
   async deleteComment(
     @User('id') userId: number,
-    @Body() deleteCommentDto: DeleteCommentDto,
+    @Query() deleteCommentDto: DeleteCommentDto,
   ): Promise<CommentMutationResponse> {
     return await this.commentService.deleteComment(userId, deleteCommentDto);
   }

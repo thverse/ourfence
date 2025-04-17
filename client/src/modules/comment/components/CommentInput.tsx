@@ -9,15 +9,11 @@ import {
   type CommentCreateFormData,
 } from "../schemas/schema";
 import { toast } from "react-toastify";
-
-const user = {
-  name: "기마무개",
-  username: "kim",
-  profileImage: "/avatar.png",
-};
+import { useUser } from "@/modules/user/hooks/useUser";
 
 const CommentInput = ({ postId }: { postId: number }) => {
   const { createComment, isPending } = useCommentCreate();
+  const { data: user } = useUser();
 
   const form = useForm<CommentCreateFormData>({
     resolver: zodResolver(commentCreateSchema),
@@ -51,8 +47,11 @@ const CommentInput = ({ postId }: { postId: number }) => {
   return (
     <div className="flex w-full gap-2">
       <Avatar className="z-0">
-        <AvatarImage src={user.profileImage} alt={user.name} />
-        <AvatarFallback>{user.name[0]}</AvatarFallback>
+        <AvatarImage
+          src={user?.userProfile?.profileImageUrl ?? ""}
+          alt={user?.username ?? ""}
+        />
+        <AvatarFallback>{user?.username?.[0]}</AvatarFallback>
       </Avatar>
       <div className="flex-1">
         <form onSubmit={handleSubmit(onSubmit)}>
