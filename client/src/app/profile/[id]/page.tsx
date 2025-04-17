@@ -9,9 +9,11 @@ import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
 import Feed from "@/modules/feed/components/Feed";
 import { usePostList } from "@/modules/post/hooks/usePostList";
 import { PostType } from "@/modules/post/types/post.type";
+import { useUser } from "@/modules/user/hooks/useUser";
 
 const ProfilePage = () => {
-  const { setSelectedTabId } = useTabBarStore();
+  const { selectedTabId, setSelectedTabId } = useTabBarStore();
+  const { data: user } = useUser();
 
   useEffect(() => {
     setSelectedTabId("posts");
@@ -32,10 +34,31 @@ const ProfilePage = () => {
     },
   ];
 
-  const { data: postList } = usePostList({
+  const getUserIds = () => {
+    const userIds: number[] = [];
+    if (selectedTabId === "myPosts") {
+      if (user) {
+        userIds.push(user.id);
+      }
+    } else if (selectedTabId === "followingsPosts") {
+      if (user) {
+        userIds.push(user.id);
+      }
+    }
+    return userIds;
+  };
+
+  const { data: postList, isFetched } = usePostList({
     type: PostType.USER,
-    userIds: [2],
+    userIds: getUserIds(),
   });
+
+  //postList 가 조회되고 나서 스크롤 맨 위로 이동
+  useEffect(() => {
+    if (isFetched) {
+      window.scrollTo(0, 0);
+    }
+  }, [isFetched]);
 
   return (
     <div>

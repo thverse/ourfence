@@ -18,8 +18,6 @@ const Post = ({ post }: { post: PostResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data: user } = useUser();
-
   const handleImageLoad = (img: HTMLImageElement) => {
     const ratio = img.naturalWidth / img.naturalHeight;
     setAspectRatio(ratio);
@@ -53,10 +51,10 @@ const Post = ({ post }: { post: PostResponse }) => {
       {/* 프로필 이미지 */}
       <Avatar className="z-0">
         <AvatarImage
-          src={user?.userProfile?.profileImageUrl ?? ""}
-          alt={user?.username ?? ""}
+          src={post.user?.userProfile?.profileImageUrl ?? ""}
+          alt={post.user?.username ?? ""}
         />
-        <AvatarFallback>{user?.username[0]}</AvatarFallback>
+        <AvatarFallback>{post.user?.username[0]}</AvatarFallback>
       </Avatar>
 
       {/* 오른쪽 콘텐츠 영역 */}
@@ -64,7 +62,7 @@ const Post = ({ post }: { post: PostResponse }) => {
         {/* 사용자 정보 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold">{user?.username}</span>
+            <span className="font-semibold">{post.user?.username}</span>
             <span className="text-gray-500">
               @{post.user?.username} · {timeAgo(post.createdAt)}
             </span>
