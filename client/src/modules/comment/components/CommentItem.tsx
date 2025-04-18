@@ -7,7 +7,7 @@ import { useUser } from "@/modules/user/hooks/useUser";
 
 const CommentItem = ({ comment }: { comment: CommentResponse }) => {
   const { mutate: deleteComment } = useCommentDelete(comment.id);
-  const { data: user } = useUser();
+  const { data: user } = useUser({ userId: comment.user.id.toString() });
 
   return (
     <div className="flex w-full gap-2">

@@ -10,16 +10,19 @@ import Feed from "@/modules/feed/components/Feed";
 import { usePostList } from "@/modules/post/hooks/usePostList";
 import { PostType } from "@/modules/post/types/post.type";
 import { useUser } from "@/modules/user/hooks/useUser";
+import { useParams } from "next/navigation";
 
 const ProfilePage = () => {
+  const params = useParams();
+  const userId = params.id as string;
   const { selectedTabId, setSelectedTabId } = useTabBarStore();
-  const { data: user } = useUser();
+  const { data: user } = useUser({ userId });
 
   //프로필 페이지에 진입할 때마다 탭을 "myPosts"로 초기화
   //사용자가 다른 페이지에서 왔을 때도 항상 "myPosts" 탭이 선택되도록 보장
-  useEffect(() => {
-    setSelectedTabId("myPosts");
-  }, [setSelectedTabId]);
+  // useEffect(() => {
+  //   setSelectedTabId("myPosts");
+  // }, [setSelectedTabId]);
 
   const profileTabs = [
     {
@@ -98,8 +101,7 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <TabBar items={profileTabs} initialActiveTab="posts" />
-
+      <TabBar items={profileTabs} initialActiveTab="myPosts" />
       <div className="divide-y">
         {postList?.map((post) => (
           <Post key={post.id} post={post} />

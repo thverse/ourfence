@@ -9,14 +9,26 @@ import { compare, hash } from 'bcryptjs';
 import {
   DuplicateCheckUserDto,
   UserCreateDto,
+  UserProfileUpdateDto,
   UserUpdateDto,
   ValidateUserDto,
 } from './dto/user.dto';
-import { User } from '@prisma/client';
-import { UserResponse, UserWithProfileResponse } from 'shared';
+import { User, UserProfile, Prisma } from '@prisma/client';
+import {
+  UserProfileResponse,
+  UserResponse,
+  UserWithProfileResponse,
+} from 'shared';
+import { UploadService } from 'src/upload/upload.service';
+import { UserWithProfile } from './types/user.type';
+import { DuplicateNicknameException } from './exceptions/duplicateNickname.exception';
+
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   async createUser(dto: UserCreateDto): Promise<User> {
     //중복 검사
@@ -84,6 +96,20 @@ export class UserService {
     try {
       const user = await this.prismaService.user.findUnique({
         where: { id },
+      });
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async getUserByIdWithProfile(id: number): Promise<UserWithProfile | null> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { id },
+        include: {
+          userProfile: true,
+        },
       });
       return user;
     } catch (error) {
@@ -178,5 +204,93 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async updateUserProfile(
+    userId: number,
+    updateUserProfileDto: UserProfileUpdateDto,
+    image: { image: Express.Multer.File },
+  ): Promise<UserProfileResponse> {
+    const user = await this.getUserByIdWithProfile(userId);
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    // 프로필 업데이트를 위한 데이터 준비
+    const updateData: Partial<UserProfile> = {};
+
+    // 닉네임 업데이트
+    if (updateUserProfileDto.nickname) {
+      // 닉네임 중복 체크
+      const existingNickname = await this.prismaService.userProfile.findFirst({
+        where: {
+          nickname: updateUserProfileDto.nickname,
+          user: { id: { not: userId } },
+        },
+      });
+
+      if (existingNickname) {
+        throw new DuplicateNicknameException(updateUserProfileDto.nickname);
+      }
+      updateData.nickname = updateUserProfileDto.nickname;
+    }
+
+    // 자기소개 업데이트
+    if (updateUserProfileDto.bio !== undefined) {
+      updateData.bio = updateUserProfileDto.bio;
+    }
+
+    // 위치 업데이트
+    if (updateUserProfileDto.location !== undefined) {
+      updateData.location = updateUserProfileDto.location;
+    }
+
+    // 웹사이트 업데이트
+    if (updateUserProfileDto.websiteUrl !== undefined) {
+      updateData.websiteUrl = updateUserProfileDto.websiteUrl;
+    }
+
+    // 이미지 처리
+    if (image) {
+      try {
+        // 기존 이미지가 있다면 삭제
+        if (user.userProfile?.profileImageUrl) {
+          await this.uploadService.deleteFileByCloudinary(
+            user.userProfile.profileImageUrl,
+          );
+        }
+
+        // 새 이미지 업로드
+        const updatedImage = await this.uploadService.uploadFileByCloudinary(
+          image.image,
+          userId,
+        );
+        updateData.profileImageUrl = updatedImage.url;
+      } catch (error) {
+        throw new Error('이미지 처리 중 오류가 발생했습니다.');
+      }
+    }
+
+    try {
+      // 프로필 업데이트
+      const updatedProfile = await this.prismaService.userProfile.update({
+        where: { id: user.id },
+        data: updateData,
+      });
+
+      return {
+        id: updatedProfile.id,
+        nickname: updatedProfile.nickname,
+        bio: updatedProfile.bio,
+        profileImageUrl: updatedProfile.profileImageUrl,
+        coverImageUrl: updatedProfile.coverImageUrl,
+        location: updatedProfile.location,
+        websiteUrl: updatedProfile.websiteUrl,
+        createdAt: updatedProfile.createdAt,
+      };
+    } catch (error) {
+      throw new Error('프로필 업데이트 중 오류가 발생했습니다.');
+    }
   }
 }

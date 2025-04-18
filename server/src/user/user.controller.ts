@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserCreateDto, UserUpdateDto } from './dto/user.dto';
@@ -32,8 +33,16 @@ export class UserController {
   @UseGuards(JwtGuard)
   async getUserProfile(
     @Req() req: AuthRequest,
+    @Query('userId') targetUserId?: string,
   ): Promise<UserWithProfileResponse> {
-    return await this.userService.getUserProfile(req.user.id);
+    const requestUserId = req.user.id; // 토큰에서 추출한 userId
+
+    // targetUserId가 있고, 현재 로그인한 사용자의 ID와 다른 경우
+    if (targetUserId && requestUserId !== parseInt(targetUserId)) {
+      return this.userService.getUserProfile(parseInt(targetUserId));
+    }
+    // 자신의 프로필을 조회하는 경우
+    return this.userService.getUserProfile(requestUserId);
   }
 
   @Patch(':id')

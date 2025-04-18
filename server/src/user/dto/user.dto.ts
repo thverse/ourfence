@@ -63,3 +63,29 @@ export class DuplicateCheckUserDto {
   @IsEmail()
   email: string;
 }
+
+export class UserProfileUpdateDto {
+  @IsOptional()
+  @IsString()
+  nickname?: string;
+
+  @IsOptional()
+  @IsString()
+  profileImageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  coverImageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsString()
+  websiteUrl?: string;
+}

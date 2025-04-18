@@ -19,7 +19,7 @@ const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { data: user } = useUser();
+  const { data: user } = useUser({ userId: post.user.id.toString() });
 
   const { mutate: deletePost } = usePostDelete(post.id);
 

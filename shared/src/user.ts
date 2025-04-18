@@ -21,3 +21,16 @@ export interface UserWithProfileResponse {
   updatedAt?: Date | null;
   deletedAt?: Date | null;
 }
+
+export interface UserProfileResponse {
+  id: number;
+  nickname: string | null;
+  profileImageUrl: string | null;
+  coverImageUrl: string | null;
+  bio: string | null;
+  location: string | null;
+  websiteUrl: string | null;
+  createdAt: Date;
+  updatedAt?: Date | null;
+  deletedAt?: Date | null;
+}
