@@ -5,6 +5,7 @@ import { Strategy } from 'passport-google-oauth20';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../auth.service';
 import randomString from 'src/utils/util';
+import { GoogleProfile } from '../types/google.type';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -34,7 +35,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     refreshToken: string,
     profile: GoogleProfile,
   ) {
-    const { displayName, emails, photos, id } = profile;
+    const { displayName, emails, photos, id, name } = profile;
 
     //구글 계정 로그인시도때 사용한 구글 이메일로 가입한 일반 계정이 존재한다면 구글 계정과 자동 연결
     //일반 계정이 존재하지 않는다면 구글 계정 정보를 바탕으로 정보 기입 후 가입
@@ -43,9 +44,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
     if (!user) {
       user = await this.userService.createUser({
-        username: `Google${id}`,
+        username: `G${id.slice(-8)}`,
         password: randomString(),
-        nickname: displayName,
+        nickname: `G${id.slice(-8)}`,
         email: emails[0].value,
       });
     }
@@ -57,7 +58,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     if (!currentGoogleAccount) {
       currentGoogleAccount = await this.authService.createGoogleAccount({
         id: user.id,
-        name: displayName,
+        name: name.familyName + name.givenName,
         email: emails[0].value,
         image: photos[0].value,
       });

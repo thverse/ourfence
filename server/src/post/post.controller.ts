@@ -63,11 +63,11 @@ export class PostController {
     return await this.postService.updatePost(userId, updatePostDto);
   }
 
-  @Delete()
+  @Delete(':id')
   async deletePost(
     @User('id') userId: number,
-    @Body() deletePostDto: DeletePostDto,
+    @Param('id') postId: number,
   ): Promise<PostMutationResponse> {
-    return await this.postService.deletePost(userId, deletePostDto);
+    return await this.postService.deletePost(userId, { postId });
   }
 }

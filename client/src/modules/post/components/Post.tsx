@@ -12,11 +12,16 @@ import PostImageModal from "./PostImageModal";
 import { timeAgo } from "@/lib/utils";
 import { PostResponse } from "shared";
 import { useUser } from "@/modules/user/hooks/useUser";
+import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
+import { usePostDelete } from "../hooks/usePostDelete";
 
 const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { data: user } = useUser();
+
+  const { mutate: deletePost } = usePostDelete(post.id);
 
   const handleImageLoad = (img: HTMLImageElement) => {
     const ratio = img.naturalWidth / img.naturalHeight;
@@ -67,6 +72,16 @@ const Post = ({ post }: { post: PostResponse }) => {
               @{post.user?.username} · {timeAgo(post.createdAt)}
             </span>
           </div>
+          {post.user?.id === user?.id && (
+            <div className="flex flex-1 justify-end">
+              <DeleteAlertDialog
+                onDelete={deletePost}
+                title="게시물을 삭제하시겠습니까?"
+                description="이 작업은 되돌릴 수 없습니다. 게시물이 영구적으로
+                        삭제됩니다."
+              />
+            </div>
+          )}
         </div>
 
         {/* 포스트 내용 */}

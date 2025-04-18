@@ -15,13 +15,15 @@ const ProfilePage = () => {
   const { selectedTabId, setSelectedTabId } = useTabBarStore();
   const { data: user } = useUser();
 
+  //프로필 페이지에 진입할 때마다 탭을 "myPosts"로 초기화
+  //사용자가 다른 페이지에서 왔을 때도 항상 "myPosts" 탭이 선택되도록 보장
   useEffect(() => {
-    setSelectedTabId("posts");
+    setSelectedTabId("myPosts");
   }, [setSelectedTabId]);
 
   const profileTabs = [
     {
-      id: "posts",
+      id: "myPosts",
       label: "게시물",
     },
     {
@@ -40,7 +42,11 @@ const ProfilePage = () => {
       if (user) {
         userIds.push(user.id);
       }
-    } else if (selectedTabId === "followingsPosts") {
+    } else if (selectedTabId === "likes") {
+      if (user) {
+        userIds.push(user.id);
+      }
+    } else if (selectedTabId === "comments") {
       if (user) {
         userIds.push(user.id);
       }

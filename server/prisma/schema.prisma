@@ -46,7 +46,7 @@ model UserProfile {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
-   user User @relation("user_profile", fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation("user_profile", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profile")
 }
@@ -131,8 +131,8 @@ model Follow {
     created_at DateTime @default(now()) 
     updatedAt DateTime? @updatedAt @map("updated_at")
     deletedAt DateTime? @map("deleted_at")
-    follower User @relation("Followers", fields: [followerId], references: [id]) 
-    following User @relation("Followings", fields: [followingId], references: [id]) 
+    follower User @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade) 
+    following User @relation("Followings", fields: [followingId], references: [id], onDelete: Cascade) 
 
     @@map("follow")
     @@unique([followerId, followingId], name: "followerId_followingId")
@@ -153,7 +153,7 @@ model Notification {
   referenceId Int        
   isRead Boolean @default(false)
   created_at DateTime @default(now()) 
-  user User @relation("notifications", fields: [userId], references: [id]) 
+  user User @relation("notifications", fields: [userId], references: [id], onDelete: Cascade) 
 
   @@map("notification")
 
