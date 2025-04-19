@@ -14,7 +14,7 @@ import { PostResponse } from "shared";
 import { useUser } from "@/modules/user/hooks/useUser";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
 import { usePostDelete } from "../hooks/usePostDelete";
-
+import { useRouter } from "next/navigation";
 const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -22,6 +22,8 @@ const Post = ({ post }: { post: PostResponse }) => {
   const { data: user } = useUser({ userId: post.user.id.toString() });
 
   const { mutate: deletePost } = usePostDelete(post.id);
+
+  const router = useRouter();
 
   const handleImageLoad = (img: HTMLImageElement) => {
     const ratio = img.naturalWidth / img.naturalHeight;
@@ -54,7 +56,10 @@ const Post = ({ post }: { post: PostResponse }) => {
   return (
     <div className="p-4 flex gap-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
-      <Avatar className="z-0">
+      <Avatar
+        className="z-0 cursor-pointer hover:opacity-80"
+        onClick={() => router.push(`/profile/${post.user?.id}`)}
+      >
         <AvatarImage
           src={post.user?.userProfile?.profileImageUrl ?? ""}
           alt={post.user?.username ?? ""}
@@ -66,7 +71,10 @@ const Post = ({ post }: { post: PostResponse }) => {
       <div className="flex-1">
         {/* 사용자 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80"
+            onClick={() => router.push(`/profile/${post.user?.id}`)}
+          >
             <span className="font-semibold">{post.user?.username}</span>
             <span className="text-gray-500">
               @{post.user?.username} · {timeAgo(post.createdAt)}
