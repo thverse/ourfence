@@ -4,14 +4,13 @@ import {
   CreatePostDto,
   DeletePostDto,
   GetPostListDto,
-  PostType,
   UpdatePostDto,
 } from './dto/post.dto';
 import { Post } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
 import { PostMutationResponse, PostResponse } from 'shared';
-
+import { POST_TYPE_CONDITIONS } from './constants/post.constants';
 @Injectable()
 export class PostService {
   constructor(
@@ -70,15 +69,9 @@ export class PostService {
     userId: number,
     getPostListDto: GetPostListDto,
   ): Promise<PostResponse[]> {
-    const { userIds, type, cursor, limit } = getPostListDto;
+    const { type, cursor, limit } = getPostListDto;
 
-    let condition = {};
-
-    if (type === PostType.USER) {
-      condition = {
-        userId: { in: userIds },
-      };
-    }
+    const condition = POST_TYPE_CONDITIONS[type](userId);
 
     return await this.prismaService.post.findMany({
       where: {

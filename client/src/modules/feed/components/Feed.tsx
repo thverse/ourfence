@@ -5,8 +5,8 @@ import Post from "../../post/components/Post";
 import { useEffect, useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
 import { usePostList } from "../../post/hooks/usePostList";
-import { PostType } from "../../post/types/post.type";
 import { useUser } from "@/modules/user/hooks/useUser";
+import { PostType } from "../../post/types/post.type";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
@@ -15,25 +15,8 @@ const Feed = () => {
     { id: "followingsPosts", label: "팔로잉 게시물" },
   ];
 
-  const { data: user } = useUser();
-
-  const getUserIds = () => {
-    const userIds: number[] = [];
-    if (selectedTabId === "myPosts") {
-      if (user) {
-        userIds.push(user.id);
-      }
-    } else if (selectedTabId === "followingsPosts") {
-      if (user) {
-        userIds.push(user.id);
-      }
-    }
-    return userIds;
-  };
-
   const { data: postList, isFetched } = usePostList({
-    type: PostType.USER,
-    userIds: getUserIds(),
+    type: PostType.ME,
   });
 
   //postList 가 조회되고 나서 스크롤 맨 위로 이동

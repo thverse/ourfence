@@ -8,61 +8,43 @@ import Post from "@/modules/post/components/Post";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
 import Feed from "@/modules/feed/components/Feed";
 import { usePostList } from "@/modules/post/hooks/usePostList";
-import { PostType } from "@/modules/post/types/post.type";
 import { useUser } from "@/modules/user/hooks/useUser";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { UserIcon, ImageIcon } from "lucide-react";
+import { PostType } from "@/modules/post/types/post.type";
+
 const ProfilePage = () => {
   const params = useParams();
   const userId = params.id as string;
-  const { selectedTabId, setSelectedTabId } = useTabBarStore();
+  const { selectedTabId } = useTabBarStore();
   const { data: user } = useUser({ userId });
 
   const profileTabs = [
     {
-      id: "myPosts",
-      label: "게시물",
+      id: PostType.ME,
+      label: "내 게시물",
     },
     {
-      id: "likes",
+      id: PostType.LIKE,
       label: "좋아요",
     },
     {
-      id: "comments",
+      id: PostType.COMMENT,
       label: "댓글",
     },
   ];
 
-  const getUserIds = () => {
-    const userIds: number[] = [];
-    if (selectedTabId === "myPosts") {
-      if (user) {
-        userIds.push(user.id);
-      }
-    } else if (selectedTabId === "likes") {
-      if (user) {
-        userIds.push(user.id);
-      }
-    } else if (selectedTabId === "comments") {
-      if (user) {
-        userIds.push(user.id);
-      }
-    }
-    return userIds;
-  };
-
   const { data: postList, isFetched } = usePostList({
-    type: PostType.USER,
-    userIds: getUserIds(),
+    type: selectedTabId as PostType,
   });
 
-  //postList 가 조회되고 나서 스크롤 맨 위로 이동
+  //postList 가 조회된후 또는 탭 변경시 스크롤 맨 위로 이동
   useEffect(() => {
     if (isFetched) {
       window.scrollTo(0, 0);
     }
-  }, [isFetched]);
+  }, [isFetched, selectedTabId]);
 
   return (
     <div>
@@ -126,11 +108,21 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <TabBar items={profileTabs} initialActiveTab="myPosts" />
-      <div className="divide-y">
-        {postList?.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
+      <TabBar items={profileTabs} initialActiveTab={PostType.ME} />
+      {/* 고정 높이 컨테이너 추가 */}
+      <div className="min-h-[500px]">
+        {" "}
+        <div className="divide-y">
+          {postList?.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+          {/* 데이터가 없을 때 표시할 내용 */}
+          {postList?.length === 0 && (
+            <div className="flex items-center justify-center py-10 text-gray-500">
+              게시물이 없습니다.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

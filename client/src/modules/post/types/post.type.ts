@@ -1,3 +1,10 @@
+export enum PostType {
+  ME = "me",
+  LIKE = "like",
+  FOLLOW = "follow",
+  COMMENT = "comment",
+}
+
 export type PostCreatePayload = FormData;
 
 export type PostImageSize = {
@@ -5,13 +12,7 @@ export type PostImageSize = {
   height: number;
 };
 
-export enum PostType {
-  ALL = "ALL",
-  USER = "USER",
-}
-
 export type GetPostListPayload = {
-  userIds: number[] | [];
   type: PostType;
   cursor: string;
   limit: number;

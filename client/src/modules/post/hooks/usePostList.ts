@@ -6,21 +6,15 @@ import { PostType } from "../types/post.type";
 
 interface UsePostListProps {
   type: PostType;
-  userIds: number[] | [];
   enabled?: boolean;
 }
 
-export const usePostList = ({
-  type,
-  userIds,
-  enabled = true,
-}: UsePostListProps) => {
+export const usePostList = ({ type, enabled = true }: UsePostListProps) => {
   return useQuery<PostResponse[]>({
-    queryKey: ["postList", type, userIds],
+    queryKey: ["postList", type],
     queryFn: () =>
       postService.getPosts({
         type,
-        userIds,
         cursor: "",
         limit: 10,
       }),

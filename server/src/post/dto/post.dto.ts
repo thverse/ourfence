@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CursorPaginationDto } from 'src/common/dtos/common.dto';
+import { PostType } from '../types/post.type';
 export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
@@ -50,16 +51,7 @@ export class PostImageDto {
   type: string;
 }
 
-export enum PostType {
-  ALL = 'ALL',
-  USER = 'USER',
-}
-
 export class GetPostListDto extends CursorPaginationDto {
-  @IsArray()
-  @IsNumber({}, { each: true })
-  userIds: number[];
-
   @IsEnum(PostType)
   type: PostType;
 }
