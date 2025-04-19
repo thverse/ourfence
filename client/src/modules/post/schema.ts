@@ -18,7 +18,7 @@ export const postCreateSchema = z.object({
     .optional()
     .refine(
       (file) => !file || file.size <= MAX_FILE_SIZE,
-      `파일 크기는 10MB 이하여야 합니다.`
+      `파일 크기는 ${MAX_FILE_SIZE / 1024 / 1024}MB 이하여야 합니다.`
     )
     .refine(
       (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),

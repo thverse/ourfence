@@ -1,0 +1,1 @@
+export type ProfileUpdatePayload = FormData;

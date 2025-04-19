@@ -1,4 +1,10 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UserCreateDto {
   @IsString()
@@ -70,12 +76,9 @@ export class UserProfileUpdateDto {
   nickname?: string;
 
   @IsOptional()
-  @IsString()
-  profileImageUrl?: string;
-
-  @IsOptional()
-  @IsString()
-  coverImageUrl?: string;
+  @IsArray()
+  @IsString({ each: true })
+  images?: Express.Multer.File[];
 
   @IsOptional()
   @IsString()

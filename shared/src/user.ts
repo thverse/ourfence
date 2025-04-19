@@ -15,7 +15,15 @@ export interface UserWithProfileResponse {
   refreshToken?: string | null;
   userProfile: {
     id: number;
+    nickname: string | null;
+    bio: string | null;
     profileImageUrl: string | null;
+    coverImageUrl: string | null;
+    location: string | null;
+    websiteUrl: string | null;
+    createdAt: Date;
+    updatedAt?: Date | null;
+    deletedAt?: Date | null;
   } | null;
   createdAt: Date;
   updatedAt?: Date | null;

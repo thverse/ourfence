@@ -4,6 +4,9 @@ import { extname, join } from 'path';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
+import { UploadFileByCloudinaryPayload } from './types/upload.type';
+import { IMAGE_CONFIG } from './constants/upload.constant';
+import { ImageType } from './types/upload.type';
 
 interface UploadFile {
   url: string;
@@ -18,6 +21,44 @@ export class UploadService {
       api_key: this.configService.get('CLOUDINARY_API_KEY'),
       api_secret: this.configService.get('CLOUDINARY_API_SECRET'),
     });
+  }
+  async uploadFileByCloudinaryForUserProfile(
+    uploadFileByCloudinaryPayload: UploadFileByCloudinaryPayload,
+  ): Promise<UploadApiResponse> {
+    const { file, userId, type } = uploadFileByCloudinaryPayload;
+
+    const streamUpload = (fileBuffer: Buffer): Promise<UploadApiResponse> => {
+      return new Promise((resolve, reject) => {
+        const { folder, transformationValues } =
+          this.getImageUploadOptions(type);
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            public_id: this.generateFileName(userId, file.originalname),
+            resource_type: 'image',
+            folder,
+            transformation: [
+              transformationValues,
+              { quality: 'auto' },
+              { fetch_format: 'webp' },
+            ],
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result as UploadApiResponse);
+          },
+        );
+
+        // 버퍼를 스트림으로 변환 후 Cloudinary로 pipe
+        Readable.from(fileBuffer).pipe(uploadStream);
+      });
+    };
+
+    const result = await streamUpload(file.buffer);
+    return result;
+  }
+
+  private getImageUploadOptions(imageType: ImageType) {
+    return IMAGE_CONFIG[imageType];
   }
 
   async uploadFileByCloudinary(

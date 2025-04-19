@@ -22,6 +22,7 @@ import {
 import { UploadService } from 'src/upload/upload.service';
 import { UserWithProfile } from './types/user.type';
 import { DuplicateNicknameException } from './exceptions/duplicateNickname.exception';
+import { ImageType } from 'src/upload/types/upload.type';
 
 @Injectable()
 export class UserService {
@@ -209,7 +210,10 @@ export class UserService {
   async updateUserProfile(
     userId: number,
     updateUserProfileDto: UserProfileUpdateDto,
-    image: { image: Express.Multer.File },
+    images: {
+      profileImage: Express.Multer.File[];
+      coverImage: Express.Multer.File[];
+    },
   ): Promise<UserProfileResponse> {
     const user = await this.getUserByIdWithProfile(userId);
 
@@ -252,21 +256,45 @@ export class UserService {
     }
 
     // 이미지 처리
-    if (image) {
+    if (images.profileImage) {
       try {
-        // 기존 이미지가 있다면 삭제
-        if (user.userProfile?.profileImageUrl) {
-          await this.uploadService.deleteFileByCloudinary(
-            user.userProfile.profileImageUrl,
-          );
-        }
+        // 기존 이미지가 있다면 삭제 (추후 삭제 기능 추가 시 사용)
+        // if (user.userProfile?.profileImageUrl) {
+        //   await this.uploadService.deleteFileByCloudinary(
+        //     user.userProfile.profileImageUrl,
+        //   );
+        // }
 
         // 새 이미지 업로드
-        const updatedImage = await this.uploadService.uploadFileByCloudinary(
-          image.image,
-          userId,
-        );
+        const updatedImage =
+          await this.uploadService.uploadFileByCloudinaryForUserProfile({
+            file: images.profileImage[0],
+            userId,
+            type: ImageType.profileImage,
+          });
         updateData.profileImageUrl = updatedImage.url;
+      } catch (error) {
+        throw new Error('이미지 처리 중 오류가 발생했습니다.');
+      }
+    }
+
+    if (images.coverImage) {
+      try {
+        // 기존 이미지가 있다면 삭제 (추후 삭제 기능 추가 시 사용)
+        // if (user.userProfile?.coverImageUrl) {
+        //   await this.uploadService.deleteFileByCloudinary(
+        //     user.userProfile.coverImageUrl,
+        //   );
+        // }
+
+        // 새 이미지 업로드
+        const updatedImage =
+          await this.uploadService.uploadFileByCloudinaryForUserProfile({
+            file: images.coverImage[0],
+            userId,
+            type: ImageType.coverImage,
+          });
+        updateData.coverImageUrl = updatedImage.url;
       } catch (error) {
         throw new Error('이미지 처리 중 오류가 발생했습니다.');
       }

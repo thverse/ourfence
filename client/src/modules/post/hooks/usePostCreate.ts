@@ -12,6 +12,7 @@ export const usePostCreate = () => {
       if (postCreateFormData.image) {
         formData.append("files", postCreateFormData.image);
       }
+
       return postService.createPost(formData);
     },
     onSuccess: (data) => {
