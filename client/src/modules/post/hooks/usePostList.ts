@@ -12,12 +12,13 @@ interface UsePostListProps {
 export const usePostList = ({ type, enabled = true }: UsePostListProps) => {
   return useQuery<PostResponse[]>({
     queryKey: ["postList", type],
-    queryFn: () =>
-      postService.getPosts({
+    queryFn: () => {
+      return postService.getPosts({
         type,
         cursor: "",
         limit: 10,
-      }),
+      });
+    },
     enabled,
     staleTime: 1000 * 60, // 1분
     gcTime: 1000 * 60 * 5, // 5분

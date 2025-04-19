@@ -19,4 +19,7 @@ export const POST_TYPE_CONDITIONS: Record<PostType, PostConditionFunction> = {
   [PostType.COMMENT]: (userId) => ({
     comments: { some: { userId } },
   }),
+  [PostType.RECOMMEND]: (userId) => ({
+    //전체 불러오기후 서비스 함수에서 조건 추가
+  }),
 };

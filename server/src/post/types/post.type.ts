@@ -5,4 +5,5 @@ export enum PostType {
   LIKE = 'like',
   FOLLOW = 'follow',
   COMMENT = 'comment',
+  RECOMMEND = 'recommend',
 }

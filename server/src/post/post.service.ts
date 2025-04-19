@@ -6,11 +6,12 @@ import {
   GetPostListDto,
   UpdatePostDto,
 } from './dto/post.dto';
-import { Post } from '@prisma/client';
+import { Post, Prisma } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
 import { PostMutationResponse, PostResponse } from 'shared';
 import { POST_TYPE_CONDITIONS } from './constants/post.constants';
+import { PostType } from './types/post.type';
 @Injectable()
 export class PostService {
   constructor(
@@ -73,6 +74,25 @@ export class PostService {
 
     const condition = POST_TYPE_CONDITIONS[type](userId);
 
+    // RECOMMEND 타입일 때는 좋아요 수로 정렬
+    const orderBy =
+      type === PostType.RECOMMEND
+        ? [
+            {
+              likes: {
+                _count: Prisma.SortOrder.desc,
+              },
+            },
+            {
+              createdAt: Prisma.SortOrder.desc, // 같은 좋아요 수일 경우 최신순
+            },
+          ]
+        : [
+            {
+              createdAt: Prisma.SortOrder.desc,
+            },
+          ];
+
     return await this.prismaService.post.findMany({
       where: {
         ...condition,
@@ -103,9 +123,7 @@ export class PostService {
           },
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy,
       take: limit,
     });
   }

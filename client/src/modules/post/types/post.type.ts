@@ -3,6 +3,7 @@ export enum PostType {
   LIKE = "like",
   FOLLOW = "follow",
   COMMENT = "comment",
+  RECOMMEND = "recommend",
 }
 
 export type PostCreatePayload = FormData;
