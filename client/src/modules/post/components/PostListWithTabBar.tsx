@@ -5,23 +5,23 @@ import Post from "@/modules/post/components/Post";
 import TabBar from "@/components/TabBar";
 import { useTabBarStore } from "@/app/store";
 
-interface TabPostListProps {
+interface PostListWithTabBarProps {
   tabs: TabBarItem[];
   initialActiveTab: string;
-  postList?: PostResponse[];
+  postList: PostResponse[];
   isFetched?: boolean;
   emptyMessage?: string;
-  className?: string;
+  classNameForTabBar?: string;
 }
 
-const TabPostList = ({
+const PostListWithTabBar = ({
   tabs,
   initialActiveTab,
   postList,
   isFetched,
   emptyMessage = "게시물이 없습니다.",
-  className,
-}: TabPostListProps) => {
+  classNameForTabBar,
+}: PostListWithTabBarProps) => {
   const { selectedTabId } = useTabBarStore();
 
   useEffect(() => {
@@ -35,22 +35,18 @@ const TabPostList = ({
       <TabBar
         items={tabs}
         initialActiveTab={initialActiveTab}
-        className={className}
+        className={classNameForTabBar}
       />
-      <div className="min-h-[500px]">
-        <div className="divide-y">
-          {postList?.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
-          {postList?.length === 0 && (
-            <div className="flex items-center justify-center py-10 text-gray-500">
-              {emptyMessage}
-            </div>
-          )}
+      {postList?.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+      {postList?.length === 0 && (
+        <div className="flex items-center justify-center py-10 text-gray-500">
+          {emptyMessage}
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default TabPostList;
+export default PostListWithTabBar;

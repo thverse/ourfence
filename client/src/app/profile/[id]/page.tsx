@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { UserIcon, ImageIcon } from "lucide-react";
 import { PostType } from "@/modules/post/types/post.type";
+import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -20,7 +21,7 @@ const ProfilePage = () => {
   const { selectedTabId } = useTabBarStore();
   const { data: user } = useUserProfile({ userId });
 
-  const profileTabs = [
+  const tabBarItems = [
     {
       id: PostType.ME,
       label: "내 게시물",
@@ -109,17 +110,13 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <TabBar items={profileTabs} initialActiveTab={PostType.ME} />
-      {/* 고정 높이 컨테이너 추가 (포스트 없을시 높이 조절) */}
-      {postList?.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
-      {/* 데이터가 없을 때 표시할 내용 */}
-      {postList?.length === 0 && (
-        <div className="flex items-center justify-center py-10 text-gray-500">
-          게시물이 없습니다.
-        </div>
-      )}
+      <PostListWithTabBar
+        tabs={tabBarItems}
+        initialActiveTab={PostType.ME}
+        postList={postList}
+        isFetched={isFetched}
+        emptyMessage="게시물이 없습니다."
+      />
     </div>
   );
 };

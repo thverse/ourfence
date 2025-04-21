@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
 import { usePostListFromCurrentUser } from "../../post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
+import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
@@ -28,22 +29,14 @@ const Feed = () => {
   }, [isFetched, selectedTabId]);
 
   return (
-    <div>
-      <TabBar
-        items={tabBarItems}
-        initialActiveTab={tabBarItems[0].id}
-        className="top-0 sticky"
-      />
-      {postList?.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
-      {/* 데이터가 없을 때 표시할 내용 */}
-      {postList?.length === 0 && (
-        <div className="flex items-center justify-center py-10 text-gray-500">
-          게시물이 없습니다.
-        </div>
-      )}
-    </div>
+    <PostListWithTabBar
+      tabs={tabBarItems}
+      initialActiveTab={PostType.RECOMMEND}
+      postList={postList}
+      isFetched={isFetched}
+      emptyMessage="게시물이 없습니다."
+      classNameForTabBar="top-0 sticky"
+    />
   );
 };
 
