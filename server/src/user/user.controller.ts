@@ -48,11 +48,11 @@ export class UserController {
     @User('id') userId: number,
     @Query('userId') targetUserId?: string,
   ): Promise<UserWithProfileResponse> {
-    // targetUserId가 있고, 현재 로그인한 사용자의 ID와 다른 경우
+    // targetUserId가 있고, 현재 로그인한 사용자의 ID와 다른 경우 targetUserId로 조회
     if (targetUserId && userId !== parseInt(targetUserId)) {
       return this.userService.getUserProfile(parseInt(targetUserId));
     }
-    // 자신의 프로필을 조회하는 경우
+    // Query가 없는 경우 자신의 프로필을 조회
     return this.userService.getUserProfile(userId);
   }
 

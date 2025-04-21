@@ -19,7 +19,7 @@ const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { data: user } = useUser({ userId: post.user.id.toString() });
+  const { data: currentUser } = useUser();
 
   const { mutate: deletePost } = usePostDelete(post.id);
 
@@ -80,7 +80,7 @@ const Post = ({ post }: { post: PostResponse }) => {
               @{post.user?.username} · {timeAgo(post.createdAt)}
             </span>
           </div>
-          {post.user?.id === user?.id && (
+          {post.user?.id === currentUser?.id && (
             <div className="flex flex-1 justify-end">
               <DeleteAlertDialog
                 onDelete={deletePost}
