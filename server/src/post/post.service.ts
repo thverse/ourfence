@@ -77,8 +77,6 @@ export class PostService {
       ? parseInt(getPostListDto.targetUserId)
       : userId;
 
-    console.log(postAuthorId);
-
     const condition = POST_TYPE_CONDITIONS[type](postAuthorId);
 
     // RECOMMEND 타입일 때는 좋아요 수로 정렬

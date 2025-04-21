@@ -9,6 +9,7 @@ import { PostType } from "../../post/types/post.type";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
+
   const tabBarItems = [
     { id: PostType.RECOMMEND, label: "추천" },
     { id: PostType.FOLLOW, label: "팔로잉" },
@@ -33,13 +34,15 @@ const Feed = () => {
         initialActiveTab={tabBarItems[0].id}
         className="top-0 sticky"
       />
-      <div className="flex flex-col gap-4">
-        <div>
-          {postList?.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
+      {postList?.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+      {/* 데이터가 없을 때 표시할 내용 */}
+      {postList?.length === 0 && (
+        <div className="flex items-center justify-center py-10 text-gray-500">
+          게시물이 없습니다.
         </div>
-      </div>
+      )}
     </div>
   );
 };

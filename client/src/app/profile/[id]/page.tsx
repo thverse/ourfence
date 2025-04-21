@@ -111,20 +111,15 @@ const ProfilePage = () => {
 
       <TabBar items={profileTabs} initialActiveTab={PostType.ME} />
       {/* 고정 높이 컨테이너 추가 (포스트 없을시 높이 조절) */}
-      <div className="min-h-[500px]">
-        {" "}
-        <div className="divide-y">
-          {postList?.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
-          {/* 데이터가 없을 때 표시할 내용 */}
-          {postList?.length === 0 && (
-            <div className="flex items-center justify-center py-10 text-gray-500">
-              게시물이 없습니다.
-            </div>
-          )}
+      {postList?.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+      {/* 데이터가 없을 때 표시할 내용 */}
+      {postList?.length === 0 && (
+        <div className="flex items-center justify-center py-10 text-gray-500">
+          게시물이 없습니다.
         </div>
-      </div>
+      )}
     </div>
   );
 };
