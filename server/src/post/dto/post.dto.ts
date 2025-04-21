@@ -54,4 +54,8 @@ export class PostImageDto {
 export class GetPostListDto extends CursorPaginationDto {
   @IsEnum(PostType)
   type: PostType;
+
+  @IsOptional()
+  @IsString()
+  targetUserId?: string;
 }

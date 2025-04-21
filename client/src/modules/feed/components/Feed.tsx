@@ -4,8 +4,7 @@ import { useTabBarStore } from "@/app/store";
 import Post from "../../post/components/Post";
 import { useEffect, useLayoutEffect } from "react";
 import TabBar from "@/components/TabBar";
-import { usePostList } from "../../post/hooks/usePostList";
-import { useUser } from "@/modules/user/hooks/useUser";
+import { usePostListFromCurrentUser } from "../../post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
 
 const Feed = () => {
@@ -15,7 +14,7 @@ const Feed = () => {
     { id: PostType.FOLLOW, label: "팔로잉" },
   ];
 
-  const { data: postList, isFetched } = usePostList({
+  const { data: postList, isFetched } = usePostListFromCurrentUser({
     type: selectedTabId as PostType,
   });
 

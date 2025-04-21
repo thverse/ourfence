@@ -17,4 +17,5 @@ export type GetPostListPayload = {
   type: PostType;
   cursor: string;
   limit: number;
+  targetUserId?: string;
 };

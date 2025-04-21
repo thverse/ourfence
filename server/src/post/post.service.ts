@@ -72,7 +72,14 @@ export class PostService {
   ): Promise<PostResponse[]> {
     const { type, cursor, limit } = getPostListDto;
 
-    const condition = POST_TYPE_CONDITIONS[type](userId);
+    // targetUserId가 있는 경우 targetUserId로 조회
+    const postAuthorId = getPostListDto.targetUserId
+      ? parseInt(getPostListDto.targetUserId)
+      : userId;
+
+    console.log(postAuthorId);
+
+    const condition = POST_TYPE_CONDITIONS[type](postAuthorId);
 
     // RECOMMEND 타입일 때는 좋아요 수로 정렬
     const orderBy =

@@ -4,14 +4,20 @@ import { CommentResponse } from "shared";
 import { useCommentDelete } from "../hooks/useCommentDelete";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";
+import { useRouter } from "next/navigation";
+
 const CommentItem = ({ comment }: { comment: CommentResponse }) => {
   const { mutate: deleteComment } = useCommentDelete(comment.id);
   const { data: user } = useCurrentUser();
+  const router = useRouter();
 
   return (
     <div className="flex w-full gap-2">
       <div className="flex items-center justify-center">
-        <Avatar className="z-0">
+        <Avatar
+          className="z-0 cursor-pointer hover:opacity-80"
+          onClick={() => router.push(`/profile/${comment.user.id}`)}
+        >
           <AvatarImage
             src={comment.user.userProfile?.profileImageUrl ?? ""}
             alt={comment.user.username}

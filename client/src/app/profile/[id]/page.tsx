@@ -7,7 +7,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Post from "@/modules/post/components/Post";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
 import Feed from "@/modules/feed/components/Feed";
-import { usePostList } from "@/modules/post/hooks/usePostList";
+import { usePostListFromUser } from "@/modules/post/hooks/usePostList";
 import { useUserProfile } from "@/modules/user/hooks/useUser";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -35,8 +35,9 @@ const ProfilePage = () => {
     },
   ];
 
-  const { data: postList, isFetched } = usePostList({
+  const { data: postList, isFetched } = usePostListFromUser({
     type: selectedTabId as PostType,
+    targetUserId: userId,
   });
 
   //postList 가 조회된후 또는 탭 변경시 스크롤 맨 위로 이동
@@ -109,7 +110,7 @@ const ProfilePage = () => {
       </div>
 
       <TabBar items={profileTabs} initialActiveTab={PostType.ME} />
-      {/* 고정 높이 컨테이너 추가 */}
+      {/* 고정 높이 컨테이너 추가 (포스트 없을시 높이 조절) */}
       <div className="min-h-[500px]">
         {" "}
         <div className="divide-y">
