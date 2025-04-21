@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@/modules/user/hooks/useUser";
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import {
   QueryClient,
   QueryClientProvider,
@@ -21,7 +21,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   //제외된 경로에서는 userQuery 실행 X
   const isEnabled = !excludedPaths.includes(currentPath);
-  const userQuery = useUser({ enabled: isEnabled });
+  const userQuery = useCurrentUser({ enabled: isEnabled });
 
   return (
     <UserContext.Provider value={userQuery}>{children}</UserContext.Provider>

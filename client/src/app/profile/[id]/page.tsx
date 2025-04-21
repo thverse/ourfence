@@ -8,7 +8,7 @@ import Post from "@/modules/post/components/Post";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
 import Feed from "@/modules/feed/components/Feed";
 import { usePostList } from "@/modules/post/hooks/usePostList";
-import { useUser } from "@/modules/user/hooks/useUser";
+import { useUserProfile } from "@/modules/user/hooks/useUser";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { UserIcon, ImageIcon } from "lucide-react";
@@ -18,7 +18,7 @@ const ProfilePage = () => {
   const params = useParams();
   const userId = params.id as string;
   const { selectedTabId } = useTabBarStore();
-  const { data: user } = useUser({ userId });
+  const { data: user } = useUserProfile({ userId });
 
   const profileTabs = [
     {

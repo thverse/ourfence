@@ -3,11 +3,10 @@ import { timeAgo } from "@/lib/utils";
 import { CommentResponse } from "shared";
 import { useCommentDelete } from "../hooks/useCommentDelete";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
-import { useUser } from "@/modules/user/hooks/useUser";
-
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 const CommentItem = ({ comment }: { comment: CommentResponse }) => {
   const { mutate: deleteComment } = useCommentDelete(comment.id);
-  const { data: user } = useUser();
+  const { data: user } = useCurrentUser();
 
   return (
     <div className="flex w-full gap-2">

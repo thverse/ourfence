@@ -11,15 +11,16 @@ import { useState } from "react";
 import PostImageModal from "./PostImageModal";
 import { timeAgo } from "@/lib/utils";
 import { PostResponse } from "shared";
-import { useUser } from "@/modules/user/hooks/useUser";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
 import { usePostDelete } from "../hooks/usePostDelete";
 import { useRouter } from "next/navigation";
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
+
 const Post = ({ post }: { post: PostResponse }) => {
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { data: currentUser } = useUser();
+  const { data: currentUser } = useCurrentUser();
 
   const { mutate: deletePost } = usePostDelete(post.id);
 

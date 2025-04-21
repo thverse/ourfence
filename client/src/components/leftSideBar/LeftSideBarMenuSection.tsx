@@ -2,11 +2,11 @@ import React from "react";
 import LeftSideBarMenuItem from "./LeftSideBarMenuItem";
 import { Bell, Home, UserCheck } from "lucide-react";
 import PostCreateModal from "@/modules/post/components/PostCreateModal";
-import { useUser } from "@/modules/user/hooks/useUser";
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { SignOutButton } from "@/modules/auth/components/SignOutButton";
 
 const LeftSideBarMenuSection = () => {
-  const { data: user } = useUser();
+  const { data: user } = useCurrentUser();
 
   const LeftSideBarMenuItems = [
     {

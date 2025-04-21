@@ -1,8 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
-import { useUser } from "@/modules/user/hooks/useUser";
-
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 const user = {
   name: "기마무개",
   username: "kim",
@@ -10,7 +9,7 @@ const user = {
 };
 
 const LeftSideBarHeader = () => {
-  const { data: user } = useUser();
+  const { data: user } = useCurrentUser();
 
   return (
     <div className="flex justify-center items-center flex-col border-b-2">

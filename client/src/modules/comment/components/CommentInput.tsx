@@ -9,11 +9,10 @@ import {
   type CommentCreateFormData,
 } from "../schemas/schema";
 import { toast } from "react-toastify";
-import { useUser } from "@/modules/user/hooks/useUser";
-
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 const CommentInput = ({ postId }: { postId: number }) => {
   const { createComment, isPending } = useCommentCreate();
-  const { data: user } = useUser();
+  const { data: user } = useCurrentUser();
 
   const form = useForm<CommentCreateFormData>({
     resolver: zodResolver(commentCreateSchema),
