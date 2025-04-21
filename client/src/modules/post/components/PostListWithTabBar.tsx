@@ -1,15 +1,14 @@
 import { PostResponse } from "shared";
 import { TabBarItem } from "@/types/tabBarType";
-import { useEffect } from "react";
 import Post from "@/modules/post/components/Post";
 import TabBar from "@/components/TabBar";
-import { useTabBarStore } from "@/app/store";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 interface PostListWithTabBarProps {
   tabs: TabBarItem[];
   initialActiveTab: string;
-  postList: PostResponse[];
-  isFetched?: boolean;
+  postList?: PostResponse[];
+  triggers?: any[];
   emptyMessage?: string;
   classNameForTabBar?: string;
 }
@@ -18,17 +17,11 @@ const PostListWithTabBar = ({
   tabs,
   initialActiveTab,
   postList,
-  isFetched,
+  triggers = [],
   emptyMessage = "게시물이 없습니다.",
   classNameForTabBar,
 }: PostListWithTabBarProps) => {
-  const { selectedTabId } = useTabBarStore();
-
-  useEffect(() => {
-    if (isFetched) {
-      window.scrollTo(0, 0);
-    }
-  }, [isFetched, selectedTabId]);
+  useScrollToTop([...triggers]);
 
   return (
     <div>
