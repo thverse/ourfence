@@ -10,8 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileFormData, profileFormData } from "../schemas/schema";
 import useUpdateProfile from "../hooks/useUpdateProfile";
 import { useModal } from "@/hooks/useModal";
-import ScreenLoader from "@/components/ui/screenLoader";
-import { useUser } from "@/modules/user/hooks/useUser";
 import { UserWithProfileResponse } from "shared";
 
 const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
