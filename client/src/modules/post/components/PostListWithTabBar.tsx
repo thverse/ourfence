@@ -3,12 +3,14 @@ import { TabBarItem } from "@/types/tabBarType";
 import Post from "@/modules/post/components/Post";
 import TabBar from "@/components/TabBar";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useEffect } from "react";
+import { useTabBarStore } from "@/app/store";
+import { PostType } from "../types/post.type";
+import { usePostListFromCurrentUser } from "../hooks/usePostList";
 
 interface PostListWithTabBarProps {
   tabs: TabBarItem[];
-  initialActiveTab: string;
-  postList?: PostResponse[];
-  triggers?: any[];
+  initialActiveTab: PostType;
   emptyMessage?: string;
   classNameForTabBar?: string;
 }
@@ -16,12 +18,18 @@ interface PostListWithTabBarProps {
 const PostListWithTabBar = ({
   tabs,
   initialActiveTab,
-  postList,
-  triggers = [],
   emptyMessage = "게시물이 없습니다.",
   classNameForTabBar,
 }: PostListWithTabBarProps) => {
-  useScrollToTop([...triggers]);
+  const { selectedTabId } = useTabBarStore();
+
+  const { data: postList, isFetched } = usePostListFromCurrentUser({
+    type: selectedTabId
+      ? (selectedTabId as PostType)
+      : (initialActiveTab as PostType),
+  });
+
+  useScrollToTop([isFetched]);
 
   return (
     <div>

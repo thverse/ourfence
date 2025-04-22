@@ -22,7 +22,7 @@ export class LikeService {
   async likePost(userId: number, createLikeDto: CreateLikeDto): Promise<Like> {
     const { postId } = createLikeDto;
 
-    const post = await this.postService.getPost(postId);
+    const post = await this.postService.getPost(userId, postId);
 
     if (!post) {
       throw new PostNotFoundException(postId);
@@ -77,12 +77,7 @@ export class LikeService {
     return like;
   }
 
-  async deleteLikePost(
-    userId: number,
-    deleteLikeDto: DeleteLikeDto,
-  ): Promise<Like> {
-    const { postId } = deleteLikeDto;
-
+  async deleteLikePost(userId: number, postId: number): Promise<Like> {
     const result = await this.prismaService.like.delete({
       where: { userId_postId: { userId, postId } },
     });

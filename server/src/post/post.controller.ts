@@ -51,8 +51,11 @@ export class PostController {
   }
 
   @Get(':id')
-  getPost(@Param('id') postId: number): Promise<PostResponse> {
-    return this.postService.getPost(postId);
+  getPost(
+    @Param('id') postId: number,
+    @User('id') userId: number,
+  ): Promise<PostResponse> {
+    return this.postService.getPost(userId, postId);
   }
 
   @Patch()

@@ -15,7 +15,6 @@ import { useEffect } from "react";
 const ProfilePage = () => {
   const params = useParams();
   const userId = params.id as string;
-  const { selectedTabId } = useTabBarStore();
   const { data: user } = useUserProfile({ userId });
 
   const tabBarItems = [
@@ -32,11 +31,6 @@ const ProfilePage = () => {
       label: "댓글",
     },
   ];
-
-  const { data: postList, isFetched } = usePostListFromUser({
-    type: selectedTabId as PostType,
-    targetUserId: userId,
-  });
 
   return (
     <div>
@@ -99,8 +93,6 @@ const ProfilePage = () => {
       <PostListWithTabBar
         tabs={tabBarItems}
         initialActiveTab={PostType.ME}
-        postList={postList}
-        triggers={[selectedTabId, isFetched]}
         emptyMessage="게시물이 없습니다."
       />
     </div>

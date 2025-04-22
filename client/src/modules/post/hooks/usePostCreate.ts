@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { PostCreateFormData } from "../schema";
-import { postService } from "../post.service";
+import { postService } from "../services/post.service";
 export const usePostCreate = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation({

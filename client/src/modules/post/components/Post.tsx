@@ -15,6 +15,7 @@ import { usePostDelete } from "../hooks/usePostDelete";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { Button } from "@/components/ui/button";
+import { usePostLike } from "../hooks/usePostLike";
 
 interface PostProps {
   post: PostResponse;
@@ -56,12 +57,13 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
     }
   };
 
-  const setPostImage = () => {
-    if (post.postImages && post.postImages.length > 0) {
-      return post.postImages[0].url;
-    }
+  const { toggleLike, isPending: isLikeLoading } = usePostLike(post.id);
 
-    return "";
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLikeLoading) {
+      toggleLike();
+    }
   };
 
   return (
@@ -178,10 +180,17 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
               <span>{post._count?.comments}</span>
             </button>
             <button
-              className="flex items-center gap-1 hover:text-red-500"
-              onClick={(e) => e.stopPropagation()}
+              className={`flex items-center gap-1 hover:text-red-500 ${
+                post.isCurrentUserLiked ? "text-red-500" : ""
+              }`}
+              onClick={handleLikeClick}
+              disabled={isLikeLoading}
             >
-              <Heart className="w-5 h-5" />
+              <Heart
+                className={`w-5 h-5 ${
+                  post.isCurrentUserLiked ? "fill-current" : ""
+                }`}
+              />
               <span>{post._count?.likes}</span>
             </button>
           </div>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { postService } from "../post.service";
+import { postService } from "../services/post.service";
 
 interface UsePostProps {
   postId: number;

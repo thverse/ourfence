@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { LikeService } from './like.service';
 import { CreateLikeDto, DeleteLikeDto, GetLikeCountDto } from './dto/like.dto';
 import { DeleteLikeResponse, likeCountResponse, LikeResponse } from 'shared';
@@ -9,7 +17,7 @@ import { User } from 'src/common/decorators/user.decorator';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post()
+  @Post('post')
   async like(
     @User('id') userId: number,
     @Body() createLikeDto: CreateLikeDto,
@@ -17,12 +25,12 @@ export class LikeController {
     return await this.likeService.likePost(userId, createLikeDto);
   }
 
-  @Delete()
+  @Delete('post/:postId')
   async deleteLike(
     @User('id') userId: number,
-    @Body() deleteLikeDto: DeleteLikeDto,
+    @Param('postId') postId: number,
   ): Promise<DeleteLikeResponse> {
-    return await this.likeService.deleteLikePost(userId, deleteLikeDto);
+    return await this.likeService.deleteLikePost(userId, postId);
   }
 
   @Post('count')

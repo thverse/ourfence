@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { postService } from "../post.service";
+import { postService } from "../services/post.service";
 
 export const usePostDelete = (postId: number) => {
   const queryClient = useQueryClient();

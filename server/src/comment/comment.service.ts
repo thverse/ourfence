@@ -26,7 +26,7 @@ export class CommentService {
   ): Promise<Comment> {
     const { postId, parentId, content } = createCommentDto;
 
-    const post = await this.postService.getPost(postId);
+    const post = await this.postService.getPost(userId, postId);
 
     if (!post) {
       throw new PostNotFoundException(postId);

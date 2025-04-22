@@ -19,3 +19,7 @@ export type GetPostListPayload = {
   limit: number;
   targetUserId?: string;
 };
+
+export type PostLikePayload = {
+  postId: number;
+};

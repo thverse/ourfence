@@ -1,5 +1,9 @@
 import { apiClient } from "@/lib/api";
-import { GetPostListPayload, PostCreatePayload } from "./types/post.type";
+import {
+  GetPostListPayload,
+  PostCreatePayload,
+  PostLikePayload,
+} from "../types/post.type";
 import { PostMutationResponse, PostResponse } from "shared";
 
 export const postService = {
@@ -14,7 +18,7 @@ export const postService = {
     return response.data;
   },
 
-  getPosts: async (
+  getPostList: async (
     getPostListPayload: GetPostListPayload
   ): Promise<PostResponse[]> => {
     const response = await apiClient.post<PostResponse[]>(
@@ -31,6 +35,16 @@ export const postService = {
 
   deletePost: async (postId: number): Promise<PostMutationResponse> => {
     const response = await apiClient.delete(`api/post/${postId}`);
+    return response.data;
+  },
+
+  likePost: async (postLikePayload: PostLikePayload): Promise<PostResponse> => {
+    const response = await apiClient.post(`/api/like/post`, postLikePayload);
+    return response.data;
+  },
+
+  unlikePost: async (postId: number): Promise<PostResponse> => {
+    const response = await apiClient.delete(`/api/like/post/${postId}`);
     return response.data;
   },
 };

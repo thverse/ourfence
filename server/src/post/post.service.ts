@@ -98,7 +98,7 @@ export class PostService {
             },
           ];
 
-    return await this.prismaService.post.findMany({
+    const postList = await this.prismaService.post.findMany({
       where: {
         ...condition,
         createdAt: {
@@ -121,6 +121,7 @@ export class PostService {
         },
         postImages: true,
         comments: true,
+        likes: true,
         _count: {
           select: {
             likes: true,
@@ -131,9 +132,19 @@ export class PostService {
       orderBy,
       take: limit,
     });
+
+    // 각 포스트에 현재 사용자의 좋아요 여부 추가
+    const postsWithCurrentUserLikeStatus = postList.map((post) => ({
+      ...post,
+      isCurrentUserLiked: userId
+        ? post.likes.some((like) => like.userId === userId)
+        : false,
+    }));
+
+    return postsWithCurrentUserLikeStatus;
   }
 
-  async getPost(postId: number): Promise<PostResponse> {
+  async getPost(userId: number, postId: number): Promise<PostResponse> {
     const post = await this.prismaService.post.findUnique({
       where: { id: postId },
       include: {
@@ -152,6 +163,7 @@ export class PostService {
         },
         postImages: true,
         comments: true,
+        likes: true,
         _count: {
           select: {
             likes: true,
@@ -165,7 +177,14 @@ export class PostService {
       throw new NotFoundException('Post not found.');
     }
 
-    return post;
+    const isCurrentUserLiked = userId
+      ? post.likes.some((like) => like.userId === userId)
+      : false;
+
+    return {
+      ...post,
+      isCurrentUserLiked,
+    };
   }
 
   async updatePost(

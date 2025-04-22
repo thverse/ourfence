@@ -1,6 +1,6 @@
 // hooks/usePostList.ts
 import { useQuery } from "@tanstack/react-query";
-import { postService } from "../post.service";
+import { postService } from "../services/post.service";
 import { PostResponse } from "shared";
 import { PostType } from "../types/post.type";
 
@@ -15,9 +15,9 @@ export const usePostListFromCurrentUser = ({
   enabled = true,
 }: UsePostListProps) => {
   return useQuery<PostResponse[]>({
-    queryKey: ["postList", type],
+    queryKey: ["postList", "currentUser", type],
     queryFn: () => {
-      return postService.getPosts({
+      return postService.getPostList({
         type,
         cursor: "",
         limit: 10,
@@ -35,9 +35,9 @@ export const usePostListFromUser = ({
   enabled = true,
 }: UsePostListProps) => {
   return useQuery<PostResponse[]>({
-    queryKey: ["postList", type, targetUserId],
+    queryKey: ["postList", "user", type, targetUserId],
     queryFn: () => {
-      return postService.getPosts({
+      return postService.getPostList({
         type,
         cursor: "",
         limit: 10,

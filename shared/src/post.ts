@@ -54,4 +54,5 @@ export interface PostResponse {
     likes: number;
     comments: number;
   };
+  isCurrentUserLiked: boolean;
 }

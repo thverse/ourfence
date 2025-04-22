@@ -8,7 +8,7 @@ const LeftSideBarHeader = () => {
       className="flex justify-center items-center flex-col border-b-2 cursor-pointer"
       onClick={() => router.push("/")}
     >
-      <div className="text-3xl font-bold pb-1">Ourfence</div>
+      <div className="text-3xl font-bold pb-3">Ourfence</div>
     </div>
   );
 };
