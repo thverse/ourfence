@@ -57,6 +57,7 @@ const CommentInput = ({ postId }: { postId: number }) => {
           <Input
             placeholder="내용을 입력후 엔터를 눌러 댓글을 작성해주세요."
             className="h-10 rounded-2xl"
+            autoComplete="off"
             autoFocus
             {...register("content")}
             disabled={isPending}

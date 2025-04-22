@@ -23,7 +23,7 @@ export interface CommentResponse {
     username: string;
     email: string;
     userProfile: {
-      id: number;
+      nickname: string | null;
       profileImageUrl: string | null;
     } | null;
   };

@@ -4,7 +4,6 @@ import { useTabBarStore } from "@/app/store";
 import { usePostListFromCurrentUser } from "../../post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
-import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Feed = () => {
   const { selectedTabId } = useTabBarStore();
@@ -17,8 +16,6 @@ const Feed = () => {
   const { data: postList, isFetched } = usePostListFromCurrentUser({
     type: selectedTabId as PostType,
   });
-
-  useScrollToTop([selectedTabId, isFetched]);
 
   return (
     <PostListWithTabBar

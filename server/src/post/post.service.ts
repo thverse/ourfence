@@ -113,7 +113,7 @@ export class PostService {
             email: true,
             userProfile: {
               select: {
-                id: true,
+                nickname: true,
                 profileImageUrl: true,
               },
             },
@@ -133,12 +133,25 @@ export class PostService {
     });
   }
 
-  async getPost(postId: number): Promise<Post> {
+  async getPost(postId: number): Promise<PostResponse> {
     const post = await this.prismaService.post.findUnique({
       where: { id: postId },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            userProfile: {
+              select: {
+                nickname: true,
+                profileImageUrl: true,
+              },
+            },
+          },
+        },
         postImages: true,
+        comments: true,
         _count: {
           select: {
             likes: true,

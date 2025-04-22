@@ -20,7 +20,7 @@ const CommentItem = ({ comment }: { comment: CommentResponse }) => {
         >
           <AvatarImage
             src={comment.user.userProfile?.profileImageUrl ?? ""}
-            alt={comment.user.username}
+            alt={comment.user.userProfile?.nickname ?? ""}
           />
           <AvatarFallback>{comment.user.username[0]}</AvatarFallback>
         </Avatar>
@@ -29,7 +29,7 @@ const CommentItem = ({ comment }: { comment: CommentResponse }) => {
         <div className="flex flex-col justify-center bg-gray-50 rounded-2xl py-1 px-3">
           <div className="flex">
             <div className="font-bold pr-1 flex items-center">
-              {comment.user.username}
+              {comment.user.userProfile?.nickname}
             </div>
             <div className="text-sm text-gray-500 flex items-center">
               · {timeAgo(comment.createdAt)}

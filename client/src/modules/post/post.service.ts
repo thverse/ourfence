@@ -24,6 +24,11 @@ export const postService = {
     return response.data;
   },
 
+  getPost: async (postId: number) => {
+    const response = await apiClient.get(`/api/post/${postId}`);
+    return response.data;
+  },
+
   deletePost: async (postId: number): Promise<PostMutationResponse> => {
     const response = await apiClient.delete(`api/post/${postId}`);
     return response.data;

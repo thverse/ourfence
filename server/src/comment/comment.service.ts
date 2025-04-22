@@ -91,7 +91,7 @@ export class CommentService {
             email: true,
             userProfile: {
               select: {
-                id: true,
+                nickname: true,
                 profileImageUrl: true,
               },
             },

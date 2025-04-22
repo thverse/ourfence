@@ -24,7 +24,11 @@ export const useUpdateProfile = () => {
       return profileService.updateProfile(formData);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      // 모든 user 관련 쿼리 무효화
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "user" || query.queryKey.includes("postList"),
+      });
       toast.success("프로필이 업데이트되었습니다.");
     },
     onError: () => {

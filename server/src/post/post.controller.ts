@@ -50,10 +50,10 @@ export class PostController {
     return await this.postService.getPostList(userId, getPostListDto);
   }
 
-  // @Get(':id')
-  // getPost(@Param('id') id: number): Promise<PostResponse> {
-  //   return this.postService.getPost(+id);
-  // }
+  @Get(':id')
+  getPost(@Param('id') postId: number): Promise<PostResponse> {
+    return this.postService.getPost(postId);
+  }
 
   @Patch()
   async updatePost(

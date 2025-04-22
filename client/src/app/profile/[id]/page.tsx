@@ -10,6 +10,7 @@ import Image from "next/image";
 import { UserIcon, ImageIcon } from "lucide-react";
 import { PostType } from "@/modules/post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
   const params = useParams();
