@@ -6,6 +6,7 @@ import {
   CommentDeletePayload,
 } from "../types/comment.type";
 import { toast } from "react-toastify";
+import { PostType } from "@/modules/post/types/post.type";
 
 export const useCommentCreate = () => {
   const queryClient = useQueryClient();
@@ -21,6 +22,11 @@ export const useCommentCreate = () => {
       queryClient.invalidateQueries({
         queryKey: ["commentList", commentCreatePayload.postId],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["postList", "currentUser", PostType.COMMENT],
+      });
+
       // 포스트 캐시 업데이트 (댓글 작성 시 댓글 수 증가)
       queryClient.setQueryData(
         ["post", commentCreatePayload.postId],

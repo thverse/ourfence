@@ -1,3 +1,5 @@
+import { PostResponse } from "./post";
+
 export type LikeResponse = {
   userId: number;
   postId: number;
@@ -7,8 +9,14 @@ export type LikeResponse = {
   deletedAt: Date | null;
 };
 
-export type DeleteLikeResponse = LikeResponse;
+export type UnLikeResponse = LikeResponse;
 
-export type likeCountResponse = {
+export type LikeCountResponse = {
   count: number;
 };
+
+export type LikePostResponse = PostResponse & {
+  isCurrentUserLiked: boolean;
+};
+
+export type UnLikePostResponse = LikePostResponse;

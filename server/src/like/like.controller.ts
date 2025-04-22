@@ -8,8 +8,12 @@ import {
   Param,
 } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { CreateLikeDto, DeleteLikeDto, GetLikeCountDto } from './dto/like.dto';
-import { DeleteLikeResponse, likeCountResponse, LikeResponse } from 'shared';
+import { CreateLikeDto, GetLikeCountDto } from './dto/like.dto';
+import {
+  LikeCountResponse,
+  LikePostResponse,
+  UnLikePostResponse,
+} from 'shared';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { User } from 'src/common/decorators/user.decorator';
 @UseGuards(JwtGuard)
@@ -21,22 +25,22 @@ export class LikeController {
   async like(
     @User('id') userId: number,
     @Body() createLikeDto: CreateLikeDto,
-  ): Promise<LikeResponse> {
+  ): Promise<LikePostResponse> {
     return await this.likeService.likePost(userId, createLikeDto);
   }
 
   @Delete('post/:postId')
-  async deleteLike(
+  async unLike(
     @User('id') userId: number,
     @Param('postId') postId: number,
-  ): Promise<DeleteLikeResponse> {
-    return await this.likeService.deleteLikePost(userId, postId);
+  ): Promise<UnLikePostResponse> {
+    return await this.likeService.unLikePost(userId, postId);
   }
 
   @Post('count')
   async getLikeCount(
     @Body() getLikeCountDto: GetLikeCountDto,
-  ): Promise<likeCountResponse> {
+  ): Promise<LikeCountResponse> {
     return {
       count: await this.likeService.getLikePostCount(getLikeCountDto),
     };

@@ -12,6 +12,7 @@ import { LikeNotFoundException } from './exceptions/likeNotFound.exception';
 import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
+import { LikePostResponse } from 'shared';
 @Injectable()
 export class LikeService {
   constructor(
@@ -19,7 +20,10 @@ export class LikeService {
     private readonly postService: PostService,
     private readonly notificationGateway: NotificationGateway,
   ) {}
-  async likePost(userId: number, createLikeDto: CreateLikeDto): Promise<Like> {
+  async likePost(
+    userId: number,
+    createLikeDto: CreateLikeDto,
+  ): Promise<LikePostResponse> {
     const { postId } = createLikeDto;
 
     const post = await this.postService.getPost(userId, postId);
@@ -65,7 +69,12 @@ export class LikeService {
       );
     }
 
-    return like;
+    const postWithCurrentUserLikeStatus = {
+      ...post,
+      isCurrentUserLiked: true,
+    };
+
+    return postWithCurrentUserLikeStatus;
   }
 
   private async isExistLike(getLikeDto: GetLikeDto): Promise<Like | null> {
@@ -77,7 +86,13 @@ export class LikeService {
     return like;
   }
 
-  async deleteLikePost(userId: number, postId: number): Promise<Like> {
+  async unLikePost(userId: number, postId: number): Promise<LikePostResponse> {
+    const post = await this.postService.getPost(userId, postId);
+
+    if (!post) {
+      throw new PostNotFoundException(postId);
+    }
+
     const result = await this.prismaService.like.delete({
       where: { userId_postId: { userId, postId } },
     });
@@ -86,7 +101,12 @@ export class LikeService {
       throw new LikeNotFoundException(postId);
     }
 
-    return result;
+    const postWithCurrentUserLikeStatus = {
+      ...post,
+      isCurrentUserLiked: true,
+    };
+
+    return postWithCurrentUserLikeStatus;
   }
 
   async getLikePostCount(getLikeCountDto: GetLikeCountDto): Promise<number> {

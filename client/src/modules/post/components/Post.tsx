@@ -57,7 +57,7 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
     }
   };
 
-  const { toggleLike, isPending: isLikeLoading } = usePostLike(post.id);
+  const { toggleLike, isPending: isLikeLoading } = usePostLike(post);
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();

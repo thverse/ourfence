@@ -4,7 +4,12 @@ import {
   PostCreatePayload,
   PostLikePayload,
 } from "../types/post.type";
-import { PostMutationResponse, PostResponse } from "shared";
+import {
+  LikePostResponse,
+  PostMutationResponse,
+  PostResponse,
+  UnLikePostResponse,
+} from "shared";
 
 export const postService = {
   createPost: async (
@@ -38,13 +43,16 @@ export const postService = {
     return response.data;
   },
 
-  likePost: async (postLikePayload: PostLikePayload): Promise<PostResponse> => {
+  likePost: async (
+    postLikePayload: PostLikePayload
+  ): Promise<LikePostResponse> => {
     const response = await apiClient.post(`/api/like/post`, postLikePayload);
     return response.data;
   },
 
-  unlikePost: async (postId: number): Promise<PostResponse> => {
+  unlikePost: async (postId: number): Promise<UnLikePostResponse> => {
     const response = await apiClient.delete(`/api/like/post/${postId}`);
+    console.log("unlikePost response : ", response.data);
     return response.data;
   },
 };
