@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const tabBarItems = [
     {
       id: PostType.ME,
-      label: "내 게시물",
+      label: "게시물",
     },
     {
       id: PostType.LIKE,

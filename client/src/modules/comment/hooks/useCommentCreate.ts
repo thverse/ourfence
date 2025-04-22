@@ -21,6 +21,37 @@ export const useCommentCreate = () => {
       queryClient.invalidateQueries({
         queryKey: ["commentList", commentCreatePayload.postId],
       });
+      // 포스트 캐시 업데이트 (댓글 작성 시 댓글 수 증가)
+      queryClient.setQueryData(
+        ["post", commentCreatePayload.postId],
+        (oldPost: any) => {
+          if (!oldPost) return oldPost;
+          return {
+            ...oldPost,
+            _count: {
+              ...oldPost._count,
+              comments: (oldPost._count?.comments || 0) + 1,
+            },
+          };
+        }
+      );
+
+      // 포스트 목록 캐시 업데이트 (댓글 작성 시 댓글 수 증가)
+      queryClient.setQueriesData({ queryKey: ["postList"] }, (oldData: any) => {
+        if (!Array.isArray(oldData)) return oldData;
+        return oldData.map((post) => {
+          if (post.id === commentCreatePayload.postId) {
+            return {
+              ...post,
+              _count: {
+                ...post._count,
+                comments: (post._count?.comments || 0) + 1,
+              },
+            };
+          }
+          return post;
+        });
+      });
       toast.success("댓글이 작성되었습니다.");
     },
     onError: (error) => {
