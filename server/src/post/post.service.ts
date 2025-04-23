@@ -12,6 +12,8 @@ import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exceptio
 import { PostMutationResponse, PostResponse } from 'shared';
 import { POST_TYPE_CONDITIONS } from './constants/post.constants';
 import { PostType } from './types/post.type';
+import { PostNotFoundException } from './exceptions/postNotFound.exception';
+import { UnauthorizedPostAccessException } from './exceptions/unauthorizedPostAccessException';
 @Injectable()
 export class PostService {
   constructor(
@@ -198,8 +200,11 @@ export class PostService {
       select: { userId: true },
     });
 
-    if (!post || post.userId !== userId) {
-      throw new Error('Post not found or unauthorized');
+    if (!post) {
+      throw new PostNotFoundException(postId);
+    }
+    if (post.userId !== userId) {
+      throw new UnauthorizedPostAccessException(postId);
     }
 
     return await this.prismaService.post.update({
@@ -233,8 +238,11 @@ export class PostService {
       select: { userId: true },
     });
 
-    if (!post || post.userId !== userId) {
-      throw new Error('Post not found or unauthorized');
+    if (!post) {
+      throw new PostNotFoundException(postId);
+    }
+    if (post.userId !== userId) {
+      throw new UnauthorizedPostAccessException(postId);
     }
 
     return await this.prismaService.post.delete({

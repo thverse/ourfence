@@ -93,13 +93,14 @@ export class LikeService {
       throw new PostNotFoundException(postId);
     }
 
+    const like = await this.isExistLike({ userId, postId });
+    if (!like) {
+      throw new LikeNotFoundException(postId);
+    }
+
     const result = await this.prismaService.like.delete({
       where: { userId_postId: { userId, postId } },
     });
-
-    if (!result) {
-      throw new LikeNotFoundException(postId);
-    }
 
     const postWithCurrentUserLikeStatus = {
       ...post,
