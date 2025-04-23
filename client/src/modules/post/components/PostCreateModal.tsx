@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postCreateSchema, type PostCreateFormData } from "../schema";
 import { usePostCreate } from "../hooks/usePostCreate";
+import { useCurrentUser } from "@/modules/user/hooks/useUser";
 interface PostCreateModalProps {
   buttonText?: string;
 }
@@ -15,6 +16,7 @@ interface PostCreateModalProps {
 export default function PostCreateModal({
   buttonText = "post",
 }: PostCreateModalProps) {
+  const { data: currentUser } = useCurrentUser();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -126,8 +128,13 @@ export default function PostCreateModal({
               </div>
               <div className="border-b border-gray-200 p-4 flex gap-4">
                 <Avatar>
-                  <AvatarImage src="/tb.png" alt="User" />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage
+                    src={currentUser?.userProfile?.profileImageUrl ?? ""}
+                    alt="User"
+                  />
+                  <AvatarFallback>
+                    {currentUser?.username?.[0].toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1">

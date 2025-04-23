@@ -71,19 +71,17 @@ export class FollowController {
     return { count: await this.followService.getFollowingCount(userId) };
   }
 
-  @Post('followers/userid')
+  @Get('followers/:userId')
   async getFollowersByUserId(
-    @Body() getFollowersByUserIdDto: GetFollowersByUserIdDto,
+    @Param('userId') userId: number,
   ): Promise<FollowersResponse> {
-    const { userId } = getFollowersByUserIdDto;
     return this.followService.getFollowers(userId);
   }
 
-  @Post('following/userid')
+  @Get('following/:userId')
   async getFollowingByUserId(
-    @Body() getFollowingByUserIdDto: GetFollowingByUserIdDto,
+    @Param('userId') userId: number,
   ): Promise<FollowingsResponse> {
-    const { userId } = getFollowingByUserIdDto;
     return this.followService.getFollowing(userId);
   }
 

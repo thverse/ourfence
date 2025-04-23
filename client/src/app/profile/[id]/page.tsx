@@ -9,6 +9,9 @@ import { UserIcon, ImageIcon } from "lucide-react";
 import { PostType } from "@/modules/post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 import FollowButton from "@/modules/follow/components/FollowButton";
+import { usePostListFromUser } from "@/modules/post/hooks/usePostList";
+import { useTabBarStore } from "@/app/store";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -18,7 +21,13 @@ const ProfilePage = () => {
   const router = useRouter();
 
   const userInfo = userId === currentUser?.id?.toString() ? currentUser : user;
+  const { selectedTabId } = useTabBarStore();
 
+  const { data: postList } = usePostListFromUser({
+    type: selectedTabId as PostType,
+    targetUserId: userInfo?.id.toString(),
+    enabled: !!selectedTabId,
+  });
   const tabBarItems = [
     {
       id: PostType.ME,
@@ -33,8 +42,6 @@ const ProfilePage = () => {
       label: "댓글",
     },
   ];
-
-  console.log("userInfo :", userInfo);
 
   return (
     <div>
@@ -103,7 +110,7 @@ const ProfilePage = () => {
         <div className="flex gap-4 text-sm text-gray-500">
           <div
             className="cursor-pointer"
-            onClick={() => router.push(`/following/${userInfo?.id}`)}
+            onClick={() => router.push(`/follow/${userInfo?.id}`)}
           >
             <span className="font-bold text-black pr-1">
               {userInfo?._count.followings}
@@ -112,7 +119,7 @@ const ProfilePage = () => {
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => router.push(`/followers/${userInfo?.id}`)}
+            onClick={() => router.push(`/follow/${userInfo?.id}`)}
           >
             <span className="font-bold text-black pr-1">
               {userInfo?._count.followers}
@@ -126,6 +133,7 @@ const ProfilePage = () => {
         tabs={tabBarItems}
         initialActiveTab={PostType.ME}
         emptyMessage="게시물이 없습니다."
+        postList={postList ?? []}
       />
     </div>
   );

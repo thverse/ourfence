@@ -13,7 +13,7 @@ export const useCommentDelete = (commentId: number) => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["postList", "currentUser", "comment"],
+        queryKey: ["postList", "user", "comment"],
       });
 
       // 포스트 캐시 업데이트 (댓글 삭제 시 댓글 수 감소)

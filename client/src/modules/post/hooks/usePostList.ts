@@ -41,7 +41,7 @@ export const usePostListFromUser = ({
         type,
         cursor: "",
         limit: 10,
-        targetUserId: targetUserId,
+        targetUserId,
       });
     },
     enabled,

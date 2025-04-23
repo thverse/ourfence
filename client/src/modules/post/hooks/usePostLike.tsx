@@ -19,7 +19,7 @@ export const usePostLike = (post: PostResponse) => {
       const postTypes = Object.values(PostType);
       postTypes.forEach((type) => {
         queryClient.invalidateQueries({
-          queryKey: ["postList", "currentUser", type],
+          queryKey: ["postList", "user", type],
         });
       });
 

@@ -19,7 +19,7 @@ export const followService = {
   },
 
   getFollowings: async (userId: string): Promise<FollowResponse[]> => {
-    const response = await apiClient.get(`/api/follow/followings/${userId}`);
+    const response = await apiClient.get(`/api/follow/following/${userId}`);
     return response.data;
   },
 };

@@ -17,10 +17,15 @@ const FollowButton = ({ targetUserId, isFollowing }: FollowButtonProps) => {
     return null;
   }
 
+  const handleFollow = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    toggleFollow();
+  };
+
   return (
     <Button
       variant={isFollowing ? "outline" : "default"}
-      onClick={() => toggleFollow()}
+      onClick={handleFollow}
       disabled={isPending}
       size="lg"
       className="rounded-full font-bold"

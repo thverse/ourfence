@@ -73,7 +73,7 @@ export class FollowService {
 
   async getFollowers(userId: number): Promise<Follow[]> {
     const followers = await this.prismaService.follow.findMany({
-      where: { followingId: userId },
+      where: { followerId: userId },
     });
 
     return followers;
@@ -81,7 +81,7 @@ export class FollowService {
 
   async getFollowing(userId: number): Promise<Follow[]> {
     const following = await this.prismaService.follow.findMany({
-      where: { followerId: userId },
+      where: { followingId: userId },
     });
 
     return following;
