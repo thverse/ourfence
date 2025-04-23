@@ -1,7 +1,5 @@
 "use client";
 
-import { useTabBarStore } from "@/app/store";
-import { usePostListFromCurrentUser } from "../../post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 

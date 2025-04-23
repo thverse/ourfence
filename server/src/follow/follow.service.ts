@@ -14,19 +14,22 @@ export class FollowService {
     private readonly notificationGateway: NotificationGateway,
   ) {}
 
-  async followUser(createFollowDto: CreateFollowDto): Promise<Follow> {
-    const { followerId, followingId } = createFollowDto;
+  async followUser(
+    userId: number,
+    createFollowDto: CreateFollowDto,
+  ): Promise<Follow> {
+    const { targetUserId } = createFollowDto;
 
-    if (followerId === followingId) {
+    if (userId === targetUserId) {
       throw new FollowYourselfForbiddenException();
     }
 
-    if (await this.isExistFollowee(followerId, followingId)) {
+    if (await this.isExistFollowee(userId, targetUserId)) {
       throw new FollowNotFoundException();
     }
 
     const follow = await this.prismaService.follow.create({
-      data: { followerId, followingId },
+      data: { followerId: targetUserId, followingId: userId },
       include: {
         follower: true,
         following: true,
@@ -36,25 +39,29 @@ export class FollowService {
     const notification = await this.prismaService.notification.create({
       data: {
         type: NotificationType.FOLLOW,
-        userId: followingId, // 팔로우 받는 사람에게 알림
+        userId: targetUserId, // 팔로우 받는 사람에게 알림
         content: `${follow.follower.username}님이 회원님을 팔로우하기 시작했습니다.`,
-        referenceId: followerId,
+        referenceId: userId,
       },
     });
 
-    await this.notificationGateway.sendNotification(followingId, notification);
+    await this.notificationGateway.sendNotification(targetUserId, notification);
 
     return follow;
   }
 
-  async unfollowUser(deleteFollowDto: DeleteFollowDto): Promise<Follow> {
-    const { followerId, followingId } = deleteFollowDto;
-    if (await this.isExistFollowee(followerId, followingId)) {
+  async unfollowUser(userId: number, targetUserId: number): Promise<Follow> {
+    if (await this.isExistFollowee(userId, targetUserId)) {
       throw new FollowNotFoundException();
     }
 
     const result = await this.prismaService.follow.delete({
-      where: { followerId_followingId: { followerId, followingId } },
+      where: {
+        followerId_followingId: {
+          followerId: targetUserId,
+          followingId: userId,
+        },
+      },
     });
 
     if (!result) {

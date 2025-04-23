@@ -24,7 +24,7 @@ import { AuthRequest } from 'src/auth/types/auth.type';
 import {
   UserResponse,
   UserWithProfileResponse,
-  UserProfileResponse,
+  UserProfileUpdateResponse,
 } from 'shared';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 import { User } from 'src/common/decorators/user.decorator';
@@ -45,15 +45,18 @@ export class UserController {
 
   @Get('/profile')
   async getUserProfile(
-    @User('id') userId: number,
+    @User('id') currentUserId: number,
     @Query('userId') targetUserId?: string,
   ): Promise<UserWithProfileResponse> {
     // targetUserId가 있고, 현재 로그인한 사용자의 ID와 다른 경우 targetUserId로 조회
-    if (targetUserId && userId !== parseInt(targetUserId)) {
-      return this.userService.getUserProfile(parseInt(targetUserId));
+    if (targetUserId && currentUserId !== parseInt(targetUserId)) {
+      return this.userService.getUserProfile(
+        currentUserId,
+        parseInt(targetUserId),
+      );
     }
-    // Query가 없는 경우 자신의 프로필을 조회
-    return this.userService.getUserProfile(userId);
+    // targetUserId가 없는 경우 자신의 프로필을 조회
+    return this.userService.getUserProfile(currentUserId);
   }
 
   @Post('/profile')
@@ -71,7 +74,7 @@ export class UserController {
       profileImage: Express.Multer.File[];
       coverImage: Express.Multer.File[];
     },
-  ): Promise<UserProfileResponse> {
+  ): Promise<UserProfileUpdateResponse> {
     return await this.userService.updateUserProfile(
       userId,
       updateUserProfileDto,

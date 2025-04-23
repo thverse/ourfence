@@ -5,12 +5,7 @@ export class CreateFollowDto {
   @Type(() => Number)
   @IsNotEmpty()
   @IsNumber()
-  followerId: number;
-
-  @Type(() => Number)
-  @IsNotEmpty()
-  @IsNumber()
-  followingId: number;
+  targetUserId: number;
 }
 
 export class DeleteFollowDto extends CreateFollowDto {}

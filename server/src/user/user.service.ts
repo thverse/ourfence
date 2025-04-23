@@ -16,6 +16,7 @@ import {
 import { User, UserProfile, Prisma } from '@prisma/client';
 import {
   UserProfileResponse,
+  UserProfileUpdateResponse,
   UserResponse,
   UserWithProfileResponse,
 } from 'shared';
@@ -79,18 +80,42 @@ export class UserService {
     }
   }
 
-  async getUserProfile(id: number): Promise<UserWithProfileResponse> {
+  async getUserProfile(
+    currentUserId: number,
+    targetUserId?: number,
+  ): Promise<UserWithProfileResponse> {
+    // targetUserId 있을때는 targetUserId를 우선으로 사용
+    const userId = targetUserId || currentUserId;
+
     const user = await this.prismaService.user.findUnique({
-      where: { id },
+      where: {
+        id: userId,
+      },
       include: {
         userProfile: true,
+        _count: {
+          select: {
+            followers: true,
+            followings: true,
+          },
+        },
+        followers: true,
+        followings: true,
       },
     });
+
     if (!user) {
       throw new NotFoundException('Not found user');
     }
 
-    return user;
+    const isFollowing = user.followers.some(
+      (follower) => follower.followingId === currentUserId,
+    );
+
+    return {
+      ...user,
+      isFollowing,
+    };
   }
 
   async getUserById(id: number): Promise<User | null> {
@@ -214,7 +239,7 @@ export class UserService {
       profileImage: Express.Multer.File[];
       coverImage: Express.Multer.File[];
     },
-  ): Promise<UserProfileResponse> {
+  ): Promise<UserProfileUpdateResponse> {
     const user = await this.getUserByIdWithProfile(userId);
 
     if (!user) {

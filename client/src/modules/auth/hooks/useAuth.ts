@@ -11,7 +11,7 @@ export function useSignUp() {
   return useMutation({
     mutationFn: authService.signUp,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data);
+      queryClient.setQueryData(["user"], "me");
       router.push("/");
       toast.success("Welcome! Account created successfully.");
     },
@@ -28,7 +28,7 @@ export function useSignIn() {
   return useMutation({
     mutationFn: authService.signIn,
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data);
+      queryClient.setQueryData(["user"], "me");
       router.push("/");
       toast.success("Welcome Back! Account signed in successfully.");
     },

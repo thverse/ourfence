@@ -31,16 +31,18 @@ export class FollowController {
 
   @Post()
   async follow(
-    @Body() createfollowDto: CreateFollowDto,
+    @User('id') userId: number,
+    @Body() createFollowDto: CreateFollowDto,
   ): Promise<FollowResponse> {
-    return this.followService.followUser(createfollowDto);
+    return this.followService.followUser(userId, createFollowDto);
   }
 
-  @Delete()
+  @Delete(':id')
   async unfollow(
-    @Body() deleteFollowDto: DeleteFollowDto,
+    @User('id') userId: number,
+    @Param('id') targetUserId: number,
   ): Promise<FollowResponse> {
-    return await this.followService.unfollowUser(deleteFollowDto);
+    return await this.followService.unfollowUser(userId, targetUserId);
   }
 
   @Get('followers/me')

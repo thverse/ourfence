@@ -1,21 +1,23 @@
 "use client";
 
-import { useTabBarStore } from "@/app/store";
 import SectionHeader from "@/components/SectionHeader";
 import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
-import { usePostListFromUser } from "@/modules/post/hooks/usePostList";
-import { useUserProfile } from "@/modules/user/hooks/useUser";
-import { useParams } from "next/navigation";
+import { useUserProfile, useCurrentUser } from "@/modules/user/hooks/useUser";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { UserIcon, ImageIcon } from "lucide-react";
 import { PostType } from "@/modules/post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
-import { useEffect } from "react";
+import FollowButton from "@/modules/follow/components/FollowButton";
 
 const ProfilePage = () => {
   const params = useParams();
   const userId = params.id as string;
   const { data: user } = useUserProfile({ userId });
+  const { data: currentUser } = useCurrentUser();
+  const router = useRouter();
+
+  const userInfo = userId === currentUser?.id?.toString() ? currentUser : user;
 
   const tabBarItems = [
     {
@@ -32,14 +34,16 @@ const ProfilePage = () => {
     },
   ];
 
+  console.log("userInfo :", userInfo);
+
   return (
     <div>
       <SectionHeader pageTitle="내 정보" />
 
       <div className="h-48 bg-gray-200">
-        {user?.userProfile?.coverImageUrl ? (
+        {userInfo?.userProfile?.coverImageUrl ? (
           <Image
-            src={user.userProfile.coverImageUrl}
+            src={userInfo.userProfile.coverImageUrl}
             alt="cover"
             width={1500}
             height={500}
@@ -72,21 +76,49 @@ const ProfilePage = () => {
             )}
           </div>
           <div className="absolute bottom-4 right-0">
-            {user && <ProfileEditDialog user={user} />}
+            <div className="flex items-center gap-2">
+              {currentUser?.id !== userInfo?.id && userInfo?.id && (
+                <FollowButton
+                  targetUserId={userInfo?.id.toString()}
+                  isFollowing={userInfo?.isFollowing}
+                />
+              )}
+              {currentUser?.id === userInfo?.id && (
+                <div>{userInfo && <ProfileEditDialog user={userInfo} />}</div>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold">{user?.userProfile?.nickname}</h2>
-            <p className="text-gray-500">@{user?.username}</p>
-            <p className="text-gray-500">{user?.userProfile?.bio}</p>
+            <h2 className="text-xl font-bold">
+              {userInfo?.userProfile?.nickname}
+            </h2>
+            <p className="text-gray-500">@{userInfo?.username}</p>
+            <p className="text-gray-500">{userInfo?.userProfile?.bio}</p>
           </div>
         </div>
 
         <div className="flex gap-4 text-sm text-gray-500">
-          <span>100 팔로잉</span>
-          <span>200 팔로워</span>
+          <div
+            className="cursor-pointer"
+            onClick={() => router.push(`/following/${userInfo?.id}`)}
+          >
+            <span className="font-bold text-black pr-1">
+              {userInfo?._count.followings}
+            </span>
+            팔로잉
+          </div>
+          <div
+            className="cursor-pointer"
+            onClick={() => router.push(`/followers/${userInfo?.id}`)}
+          >
+            <span className="font-bold text-black pr-1">
+              {userInfo?._count.followers}
+            </span>
+            팔로워
+          </div>
         </div>
       </div>
 

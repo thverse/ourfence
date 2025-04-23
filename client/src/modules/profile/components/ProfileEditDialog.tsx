@@ -86,8 +86,9 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
   return (
     <div>
       <Button
-        className="rounded-full"
-        size="sm"
+        variant="outline"
+        size="lg"
+        className="rounded-full font-bold"
         onClick={() => setIsOpen(true)}
       >
         프로필 수정
