@@ -106,7 +106,7 @@ export default function PostCreateModal({
   return (
     <>
       <Button
-        className="text-2xl rounded-full h-10"
+        className="w-full font-bold py-3 rounded-full text-base transition-colors shadow-sm"
         onClick={() => setIsOpen(true)}
       >
         {buttonText}
