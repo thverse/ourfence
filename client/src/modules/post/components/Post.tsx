@@ -138,7 +138,7 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
             )}
           </div>
 
-          <p className={`mt-2 mb-2 text-gray-900 ${isDetail && "text-xl"}`}>
+          <p className={`mb-2 text-gray-900 ${isDetail && "text-xl"}`}>
             {post.content}
           </p>
 

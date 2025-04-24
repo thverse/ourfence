@@ -10,6 +10,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Pretendard", "sans-serif"], // 기본 폰트로 Pretendard 설정
+      },
       screens: {
         xsm: "500px",
         sm: "600px",
