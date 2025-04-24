@@ -1,13 +1,16 @@
 // src/app/profile/[id]/follows/page.tsx
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import TabBar from "@/components/TabBar";
 import { useTabBarStore } from "@/app/store";
 import { FollowList } from "@/modules/follow/components/FollowList";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 const FollowsPage = () => {
   const { id: userId } = useParams();
   const { selectedTabId } = useTabBarStore();
+  const router = useRouter();
 
   const tabs = [
     {
@@ -27,11 +30,17 @@ const FollowsPage = () => {
 
   return (
     <div>
-      <TabBar
-        items={tabs}
-        initialActiveTab="followers"
-        className="sticky top-0 z-10"
-      />
+      <div className="sticky top-0 z-10 flex items-center bg-white/90">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:bg-gray-200 rounded-full ml-2"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <TabBar items={tabs} initialActiveTab="followers" className="flex-1" />
+      </div>
       <FollowList
         userId={userId as string}
         emptyMessageTitle={
