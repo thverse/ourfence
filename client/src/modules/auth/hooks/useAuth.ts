@@ -46,7 +46,7 @@ export function useSignOut() {
     mutationFn: authService.signOut,
     onSuccess: () => {
       queryClient.setQueryData(["user"], null);
-      router.push("/");
+      router.push("/signin");
       toast.success("You have successfully signed out of your account!");
     },
     onError: (error: AxiosError<any>) => {
