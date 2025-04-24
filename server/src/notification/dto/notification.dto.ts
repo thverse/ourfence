@@ -1,22 +1,16 @@
 // notification/dto/notification.dto.ts
+import { NotificationType } from '@prisma/client';
 import { IsEnum, IsNumber, IsString, IsBoolean } from 'class-validator';
-
-export enum NotificationType {
-  FOLLOW = 'FOLLOW',
-  COMMENT = 'COMMENT',
-  LIKE = 'LIKE',
-  MENTION = 'MENTION',
-}
 
 export class CreateNotificationDto {
   @IsNumber()
   userId: number;
 
+  @IsNumber()
+  senderUserId: number;
+
   @IsEnum(NotificationType)
   type: NotificationType;
-
-  @IsString()
-  content: string;
 
   @IsNumber()
   referenceId: number;
@@ -30,7 +24,7 @@ export class UpdateNotificationDto {
   isRead: boolean;
 }
 
-export class MarkAsReadNotificationDto {
+export class ReadNotificationDto {
   @IsNumber()
   id: number;
 

@@ -26,7 +26,8 @@ model User {
   posts Post[] @relation("posts") 
   likes Like[] @relation("likes") 
   comments Comment[] @relation("comments") 
-  notifications Notification[] @relation("notifications") 
+  notifications Notification[] @relation("notifications")
+  sentNotifications Notification[] @relation("sent_notifications") 
   followers Follow[] @relation("Followers") 
   followings Follow[] @relation("Followings") 
   userProfile UserProfile? @relation("user_profile") 
@@ -148,12 +149,13 @@ enum NotificationType {
 model Notification {
   id Int @id @default(autoincrement()) 
   userId Int      
+  senderUserId Int
   type NotificationType      
-  content String     
   referenceId Int        
   isRead Boolean @default(false)
   created_at DateTime @default(now()) 
   user User @relation("notifications", fields: [userId], references: [id], onDelete: Cascade) 
+  sender User @relation("sent_notifications", fields: [senderUserId], references: [id], onDelete: Cascade) 
 
   @@map("notification")
 

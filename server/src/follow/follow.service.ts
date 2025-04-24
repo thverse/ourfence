@@ -6,11 +6,13 @@ import { FollowNotFoundException } from './exceptions/followNotFound.exception';
 import { FollowYourselfForbiddenException } from './exceptions/followYourselfForbidden.exception';
 import { CreateFollowDto, DeleteFollowDto } from './dto/follow.dto';
 import { NotificationGateway } from 'src/notification/notification.gateway';
+import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class FollowService {
   constructor(
     private prismaService: PrismaService,
     private userService: UserService,
+    private readonly notificationService: NotificationService,
     private readonly notificationGateway: NotificationGateway,
   ) {}
 
@@ -36,13 +38,11 @@ export class FollowService {
       },
     });
 
-    const notification = await this.prismaService.notification.create({
-      data: {
-        type: NotificationType.FOLLOW,
-        userId: targetUserId, // 팔로우 받는 사람에게 알림
-        content: `${follow.follower.username}님이 회원님을 팔로우하기 시작했습니다.`,
-        referenceId: userId,
-      },
+    const notification = await this.notificationService.createNotification({
+      userId: targetUserId,
+      senderUserId: userId,
+      type: NotificationType.FOLLOW,
+      referenceId: userId,
     });
 
     await this.notificationGateway.sendNotification(targetUserId, notification);

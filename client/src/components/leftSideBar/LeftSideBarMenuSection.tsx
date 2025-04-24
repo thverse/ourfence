@@ -4,6 +4,7 @@ import { Bell, Home, UserCheck } from "lucide-react";
 import PostCreateModal from "@/modules/post/components/PostCreateModal";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { SignOutButton } from "@/modules/auth/components/SignOutButton";
+import { NotificationIcon } from "@/modules/notification/components/NotificationIcon";
 
 const LeftSideBarMenuSection = () => {
   const { data: user } = useCurrentUser();
@@ -13,16 +14,19 @@ const LeftSideBarMenuSection = () => {
       title: "홈",
       icon: Home,
       path: "/",
+      iconSize: 25,
     },
     {
       title: "알림",
-      icon: Bell,
+      customIcon: <NotificationIcon size={25} />,
       path: "/notification",
+      iconSize: 25,
     },
     {
       title: "내 정보",
       icon: UserCheck,
       path: `/profile/${user?.id}`,
+      iconSize: 25,
     },
   ];
 
@@ -35,6 +39,8 @@ const LeftSideBarMenuSection = () => {
               key={idx}
               title={item.title}
               icon={item.icon}
+              customIcon={item.customIcon}
+              iconSize={item.iconSize}
               path={item.path}
             />
           );

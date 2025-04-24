@@ -13,12 +13,14 @@ import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
 import { LikePostResponse } from 'shared';
+import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class LikeService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly postService: PostService,
     private readonly notificationGateway: NotificationGateway,
+    private readonly notificationService: NotificationService,
   ) {}
   async likePost(
     userId: number,
@@ -54,13 +56,11 @@ export class LikeService {
 
     //자신의 게시글이 아닐 경우에만 알림 생성
     if (post.userId !== userId) {
-      const notification = await this.prismaService.notification.create({
-        data: {
-          type: NotificationType.LIKE,
-          userId: post.userId, // 게시글 작성자에게 알림
-          content: `${like.user.username}님이 회원님의 게시글을 좋아합니다.`,
-          referenceId: postId,
-        },
+      const notification = await this.notificationService.createNotification({
+        userId: post.userId,
+        senderUserId: userId,
+        type: NotificationType.LIKE,
+        referenceId: postId,
       });
 
       await this.notificationGateway.sendNotification(

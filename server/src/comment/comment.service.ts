@@ -12,11 +12,13 @@ import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
 import { CommentResponse } from 'shared';
+import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class CommentService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly postService: PostService,
+    private readonly notificationService: NotificationService,
     private readonly notificationGateway: NotificationGateway,
   ) {}
 
@@ -51,14 +53,11 @@ export class CommentService {
 
     // 자신의 게시글이 아닐 경우에만 알림 생성
     if (post.userId !== userId) {
-      // 알림 데이터 생성
-      const notification = await this.prismaService.notification.create({
-        data: {
-          type: NotificationType.COMMENT,
-          userId: post.userId, // 게시글 작성자에게 알림
-          content: `${comment.user.username}님이 회원님의 게시글에 댓글을 남겼습니다: ${comment.content.substring(0, 30)}...`,
-          referenceId: comment.id,
-        },
+      const notification = await this.notificationService.createNotification({
+        userId: post.userId,
+        senderUserId: userId,
+        type: NotificationType.COMMENT,
+        referenceId: comment.id,
       });
 
       // 실시간 알림 전송

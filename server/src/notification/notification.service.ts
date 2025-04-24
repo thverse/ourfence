@@ -3,14 +3,25 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateNotificationDto,
-  MarkAsReadNotificationDto,
+  ReadNotificationDto,
 } from './dto/notification.dto';
-
+import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class NotificationService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private userService: UserService,
+  ) {}
 
   async createNotification(createNotificationDto: CreateNotificationDto) {
+    const { userId } = createNotificationDto;
+
+    const user = await this.userService.getUserById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException(userId);
+    }
     return await this.prismaService.notification.create({
       data: createNotificationDto,
       include: {
@@ -19,7 +30,13 @@ export class NotificationService {
     });
   }
 
-  async getNotificationsByUserId(userId: number) {
+  async getNotificationList(userId: number) {
+    const user = await this.userService.getUserById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException(userId);
+    }
+
     return await this.prismaService.notification.findMany({
       where: {
         userId,
@@ -28,13 +45,30 @@ export class NotificationService {
         created_at: 'desc',
       },
       include: {
-        user: true,
+        sender: {
+          select: {
+            id: true,
+            username: true,
+            userProfile: {
+              select: {
+                profileImageUrl: true,
+                nickname: true,
+              },
+            },
+          },
+        },
       },
     });
   }
 
-  async markAsRead(markAsReadNotificationDto: MarkAsReadNotificationDto) {
-    const { id, userId } = markAsReadNotificationDto;
+  async readNotification(readNotificationDto: ReadNotificationDto) {
+    const { id, userId } = readNotificationDto;
+
+    const user = await this.userService.getUserById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException(userId);
+    }
     return await this.prismaService.notification.update({
       where: {
         id,
@@ -47,6 +81,11 @@ export class NotificationService {
   }
 
   async getUnreadCount(userId: number) {
+    const user = await this.userService.getUserById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException(userId);
+    }
     return await this.prismaService.notification.count({
       where: {
         userId,

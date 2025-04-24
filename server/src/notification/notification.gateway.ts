@@ -9,7 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { NotificationService } from './notification.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
-import { MarkAsReadNotificationDto } from './dto/notification.dto';
+import { ReadNotificationDto } from './dto/notification.dto';
 import { Notification } from '@prisma/client';
 @WebSocketGateway({
   cors: {
@@ -56,20 +56,17 @@ export class NotificationGateway
     }
   }
 
-  @SubscribeMessage('mark-as-read')
-  async handleMarkAsRead(
-    client: Socket,
-    markAsReadNotificationDto: MarkAsReadNotificationDto,
-  ) {
+  @SubscribeMessage('read-notification')
+  async handleRead(client: Socket, readNotificationDto: ReadNotificationDto) {
     try {
       const userId = client.handshake.auth.userId;
 
-      await this.notificationService.markAsRead(markAsReadNotificationDto);
+      await this.notificationService.readNotification(readNotificationDto);
 
       const unreadCount = await this.notificationService.getUnreadCount(userId);
       client.emit('unread-count', unreadCount);
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error('Error reading notification:', error);
     }
   }
 

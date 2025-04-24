@@ -45,7 +45,7 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <SectionHeader pageTitle="내 정보" />
+      <SectionHeader pageTitle={userInfo?.userProfile?.nickname ?? ""} />
 
       <div className="h-48 bg-gray-200">
         {userInfo?.userProfile?.coverImageUrl ? (
