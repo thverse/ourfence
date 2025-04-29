@@ -18,7 +18,7 @@ const LeftSideBarMenuSection = () => {
     },
     {
       title: "알림",
-      customIcon: <NotificationIcon size={25} />,
+      customIcon: <NotificationIcon size={25} userId={user?.id} />,
       path: "/notification",
       iconSize: 25,
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePostListFromUser } from "@/modules/post/hooks/usePostList";
+import { usePostList } from "@/modules/post/hooks/usePostList";
 import { PostType } from "../../post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 import { useTabBarStore } from "@/app/store";
@@ -13,7 +13,7 @@ const Feed = () => {
 
   const { selectedTabId } = useTabBarStore();
 
-  const { data: postList } = usePostListFromUser({
+  const { data: postList } = usePostList({
     type: selectedTabId as PostType,
     enabled: !!selectedTabId,
   });
@@ -22,7 +22,6 @@ const Feed = () => {
     <PostListWithTabBar
       tabs={tabBarItems}
       initialActiveTab={PostType.RECOMMEND}
-      emptyMessage="게시물이 없습니다."
       classNameForTabBar="top-0 sticky"
       postList={postList ?? []}
     />

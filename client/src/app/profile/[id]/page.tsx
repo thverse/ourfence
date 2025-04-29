@@ -9,7 +9,7 @@ import { UserIcon, ImageIcon } from "lucide-react";
 import { PostType } from "@/modules/post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
 import FollowButton from "@/modules/follow/components/FollowButton";
-import { usePostListFromUser } from "@/modules/post/hooks/usePostList";
+import { usePostList } from "@/modules/post/hooks/usePostList";
 import { useTabBarStore } from "@/app/store";
 import { useEffect } from "react";
 
@@ -23,7 +23,7 @@ const ProfilePage = () => {
   const userInfo = userId === currentUser?.id?.toString() ? currentUser : user;
   const { selectedTabId } = useTabBarStore();
 
-  const { data: postList } = usePostListFromUser({
+  const { data: postList } = usePostList({
     type: selectedTabId as PostType,
     targetUserId: userInfo?.id.toString(),
     enabled: !!selectedTabId,

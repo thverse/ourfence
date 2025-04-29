@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { NotificationService } from "../services/notification.service";
 
 interface UseNotificationUnreadCountProps {
-  userId: number;
+  userId?: number;
   enabled?: boolean;
 }
 

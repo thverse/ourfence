@@ -10,26 +10,7 @@ interface UsePostListProps {
   enabled?: boolean;
 }
 
-export const usePostListFromCurrentUser = ({
-  type,
-  enabled = true,
-}: UsePostListProps) => {
-  return useQuery<PostResponse[]>({
-    queryKey: ["postList", "currentUser", type],
-    queryFn: () => {
-      return postService.getPostList({
-        type,
-        cursor: "",
-        limit: 10,
-      });
-    },
-    enabled,
-    staleTime: 1000 * 60, // 1분
-    gcTime: 1000 * 60 * 5, // 5분
-  });
-};
-
-export const usePostListFromUser = ({
+export const usePostList = ({
   type,
   targetUserId,
   enabled = true,

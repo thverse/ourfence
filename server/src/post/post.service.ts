@@ -74,6 +74,8 @@ export class PostService {
   ): Promise<PostResponse[]> {
     const { type, cursor, limit } = getPostListDto;
 
+    console.log('type', type);
+
     // targetUserId가 있는 경우 targetUserId로 조회
     const postAuthorId = getPostListDto.targetUserId
       ? parseInt(getPostListDto.targetUserId)
