@@ -28,13 +28,10 @@ const NotificationItem = ({
     referenceId?: number,
     router?: ReturnType<typeof useRouter>
   ): NotificationInfo => {
-    const boldNickname = (
-      <span className="font-bold text-black">{nickname}</span>
-    );
-
     const createMessage = (text: string) => (
       <div>
-        {boldNickname}님이 {text}
+        <span className="font-bold text-black">{nickname}</span>
+        님이 {text}
       </div>
     );
 
@@ -103,7 +100,7 @@ const NotificationItem = ({
           {notification.sender.userProfile.nickname[0]}
         </AvatarFallback>
       </Avatar>
-      <div className="text-gray-500">
+      <div className="text-gray-500 flex items-center">
         {
           getNotificationInfo(
             notification.type as NotificationType,

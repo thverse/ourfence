@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { NotificationService } from "../services/notification.service";
 
 interface UseNotificationListProps {
-  userId: number;
-  enabled?: boolean;
+  userId?: number;
+  enabled: boolean;
 }
 
 export const useNotificationList = ({
