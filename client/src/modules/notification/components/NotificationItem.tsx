@@ -5,7 +5,7 @@ import React from "react";
 import { NotificationResponse } from "shared";
 import { useReadNotification } from "../hooks/useReadNotification";
 import { NotificationType } from "../types/noticiation.type";
-
+import { cn } from "@/lib/utils";
 const NotificationItem = ({
   notification,
 }: {
@@ -44,21 +44,30 @@ const NotificationItem = ({
         return {
           icon: createIcon(MessageCircle),
           message: createMessage("내 글에 댓글을 남겼습니다."),
-          onClick: () => router?.push(`/post/${referenceId}`),
+          onClick: () => {
+            router?.push(`/post/${referenceId}`);
+            readNotification(notification.id);
+          },
         };
 
       case "LIKE":
         return {
           icon: createIcon(Heart),
           message: createMessage("내 글을 좋아합니다."),
-          onClick: () => router?.push(`/post/${referenceId}`),
+          onClick: () => {
+            router?.push(`/post/${referenceId}`);
+            readNotification(notification.id);
+          },
         };
 
       case "FOLLOW":
         return {
           icon: createIcon(UserPlus),
           message: createMessage("나를 팔로우 하기 시작했습니다."),
-          onClick: () => {},
+          onClick: () => {
+            router?.push(`/profile/${notification.sender.id}`);
+            readNotification(notification.id);
+          },
         };
 
       default:
@@ -71,7 +80,10 @@ const NotificationItem = ({
   };
   return (
     <div
-      className="flex gap-2 border-b border-gray-200 p-4 cursor-pointer"
+      className={cn(
+        "flex gap-2 border-b border-gray-200 p-4 cursor-pointer",
+        notification.isRead ? "bg-white" : "bg-blue-50"
+      )}
       onClick={() => {
         getNotificationInfo(
           notification.type as NotificationType,

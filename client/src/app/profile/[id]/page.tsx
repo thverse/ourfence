@@ -132,7 +132,6 @@ const ProfilePage = () => {
       <PostListWithTabBar
         tabs={tabBarItems}
         initialActiveTab={PostType.ME}
-        emptyMessage="게시물이 없습니다."
         postList={postList ?? []}
       />
     </div>

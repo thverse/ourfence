@@ -5,6 +5,7 @@ export interface NotificationResponse {
   type: string;
   content: string;
   referenceId: number;
+  isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
