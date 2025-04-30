@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api";
-import { NotificationResponse } from "shared";
+import { NotificationResponse, NotificationUnreadCountResponse } from "shared";
 
 export const NotificationService = {
   getNotificationList: async () => {
@@ -10,7 +10,9 @@ export const NotificationService = {
   },
 
   getUnreadCount: async () => {
-    const response = await apiClient.get("/api/notification/unread-count");
+    const response = await apiClient.get<NotificationUnreadCountResponse>(
+      "/api/notification/unread-count"
+    );
     return response.data;
   },
 

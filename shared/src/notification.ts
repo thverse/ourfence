@@ -18,3 +18,7 @@ export interface NotificationResponse {
     };
   };
 }
+
+export interface NotificationUnreadCountResponse {
+  count: number;
+}

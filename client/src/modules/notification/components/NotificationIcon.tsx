@@ -19,7 +19,7 @@ export const NotificationIcon = ({ size, userId }: NotificationIconProps) => {
   return (
     <div className="relative inline-flex items-center">
       <Bell size={size} />
-      {unreadCount > 0 && (
+      {unreadCount && unreadCount.count > 0 && (
         <div
           className={cn(
             "absolute -top-1.5 -left-1.5", // 위치 조정
@@ -28,7 +28,7 @@ export const NotificationIcon = ({ size, userId }: NotificationIconProps) => {
             "text-[10px] font-bold text-white"
           )}
         >
-          {unreadCount > 99 ? "99+" : unreadCount}
+          {unreadCount.count > 99 ? "99+" : unreadCount.count}
         </div>
       )}
     </div>
