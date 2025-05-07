@@ -15,7 +15,7 @@ import {
   FollowingsResponse,
   FollowResponse,
   UnfollowResponse,
-} from 'shared';
+} from '@ourfence/shared';
 import {
   CreateFollowDto,
   DeleteFollowDto,

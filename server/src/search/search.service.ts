@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SearchDto } from './dto/search.dto';
-import { SearchUserResponse, SearchPostResponse } from 'shared';
+import { SearchUserResponse, SearchPostResponse } from '@ourfence/shared';
 
 @Injectable()
 export class SearchService {

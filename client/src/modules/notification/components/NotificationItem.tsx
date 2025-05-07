@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { NotificationResponse } from "shared";
+import { NotificationResponse } from "@ourfence/shared";
 import { useReadNotification } from "../hooks/useReadNotification";
 import { NotificationType } from "../types/noticiation.type";
 import { cn } from "@/lib/utils";

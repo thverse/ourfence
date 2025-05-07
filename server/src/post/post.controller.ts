@@ -21,7 +21,7 @@ import {
 } from './dto/post.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { AuthRequest } from '../auth/types/auth.type';
-import { PostMutationResponse, PostResponse } from 'shared';
+import { PostMutationResponse, PostResponse } from '@ourfence/shared';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { User } from 'src/common/decorators/user.decorator';
 import { Prisma } from '@prisma/client';

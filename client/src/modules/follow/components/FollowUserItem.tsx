@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import FollowButton from "@/modules/follow/components/FollowButton";
 import { useUserProfile } from "@/modules/user/hooks/useUser";
-import { UserWithProfileResponse } from "shared";
+import { UserWithProfileResponse } from "@ourfence/shared";
 import Link from "next/link";
 
 export const FollowUserItem = ({ userId }: { userId: string }) => {

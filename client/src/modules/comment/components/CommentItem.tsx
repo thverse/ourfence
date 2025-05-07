@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { timeAgo } from "@/lib/utils";
-import { CommentResponse } from "shared";
+import { CommentResponse } from "@ourfence/shared";
 import { useCommentDelete } from "../hooks/useCommentDelete";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";

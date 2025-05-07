@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileFormData, profileFormData } from "../schemas/schema";
 import useUpdateProfile from "../hooks/useUpdateProfile";
 import { useModal } from "@/hooks/useModal";
-import { UserWithProfileResponse } from "shared";
+import { UserWithProfileResponse } from "@ourfence/shared";
 
 const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);

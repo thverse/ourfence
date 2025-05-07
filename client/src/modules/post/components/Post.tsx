@@ -9,7 +9,7 @@ import CommentSection from "@/modules/comment/components/CommentSection";
 import { useState } from "react";
 import PostImageModal from "./PostImageModal";
 import { timeAgo } from "@/lib/utils";
-import { PostResponse } from "shared";
+import { PostResponse } from "@ourfence/shared";
 import { DeleteAlertDialog } from "@/components/DeleteAlertDialog";
 import { usePostDelete } from "../hooks/usePostDelete";
 import { useRouter } from "next/navigation";

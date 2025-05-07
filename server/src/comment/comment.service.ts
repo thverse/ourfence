@@ -11,7 +11,7 @@ import { CommentNotFoundException } from './exceptions/commentNotFound.exception
 import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
-import { CommentResponse } from 'shared';
+import { CommentResponse } from '@ourfence/shared';
 import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class CommentService {

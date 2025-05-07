@@ -28,11 +28,11 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-toastify": "^11.0.5",
-    "shared": "link:..\\shared",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "@ourfence/shared": "workspace:*"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.67.2",
@@ -46,9 +46,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "sharp"
-    ],
-    "overrides": {
-      "shared": "link:..\\shared"
-    }
+    ]
   }
 }

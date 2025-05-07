@@ -1,5 +1,8 @@
 import { apiClient } from "@/lib/api";
-import { NotificationResponse, NotificationUnreadCountResponse } from "shared";
+import {
+  NotificationResponse,
+  NotificationUnreadCountResponse,
+} from "@ourfence/shared";
 
 export const NotificationService = {
   getNotificationList: async () => {

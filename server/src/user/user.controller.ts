@@ -25,7 +25,7 @@ import {
   UserResponse,
   UserWithProfileResponse,
   UserProfileUpdateResponse,
-} from 'shared';
+} from '@ourfence/shared';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 import { User } from 'src/common/decorators/user.decorator';
 import {

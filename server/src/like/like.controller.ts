@@ -13,7 +13,7 @@ import {
   LikeCountResponse,
   LikePostResponse,
   UnLikePostResponse,
-} from 'shared';
+} from '@ourfence/shared';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { User } from 'src/common/decorators/user.decorator';
 @UseGuards(JwtGuard)

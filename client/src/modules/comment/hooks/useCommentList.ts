@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CommentResponse } from "shared";
+import { CommentResponse } from "@ourfence/shared";
 import { commentService } from "../services/comment.service";
 
 export const useGetCommentList = (postId: number) => {

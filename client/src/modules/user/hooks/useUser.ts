@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "../user.service";
-import { UserWithProfileResponse } from "shared";
+import { UserWithProfileResponse } from "@ourfence/shared";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 

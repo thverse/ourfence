@@ -18,8 +18,8 @@ import { Response } from 'express';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { AuthRequest } from './types/auth.type';
 import { JwtGuard } from './guards/jwt.guard';
-import { AuthResponse, AuthRefreshResponse } from 'shared';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
+import { AuthResponse, AuthRefreshResponse } from '@ourfence/shared';
 @Controller()
 export class AuthController {
   constructor(

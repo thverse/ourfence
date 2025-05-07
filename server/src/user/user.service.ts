@@ -19,7 +19,7 @@ import {
   UserProfileUpdateResponse,
   UserResponse,
   UserWithProfileResponse,
-} from 'shared';
+} from '@ourfence/shared';
 import { UploadService } from 'src/upload/upload.service';
 import { UserWithProfile } from './types/user.type';
 import { DuplicateNicknameException } from './exceptions/duplicateNickname.exception';

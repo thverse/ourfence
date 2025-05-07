@@ -17,7 +17,7 @@ import {
   GetCommentListDto,
 } from './dto/comment.dto';
 import { User } from 'src/common/decorators/user.decorator';
-import { CommentMutationResponse, CommentResponse } from 'shared';
+import { CommentMutationResponse, CommentResponse } from '@ourfence/shared';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @UseGuards(JwtGuard)

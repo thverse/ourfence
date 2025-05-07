@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api";
-import { UserProfileResponse } from "shared";
+import { UserProfileResponse } from "@ourfence/shared";
 import { ProfileUpdatePayload } from "../types/profile.type";
 
 export const profileService = {

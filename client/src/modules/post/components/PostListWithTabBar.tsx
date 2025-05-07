@@ -1,4 +1,4 @@
-import { PostResponse } from "shared";
+import { PostResponse } from "@ourfence/shared";
 import { TabBarItem } from "@/types/tabBarType";
 import Post from "@/modules/post/components/Post";
 import TabBar from "@/components/TabBar";

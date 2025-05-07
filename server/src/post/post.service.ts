@@ -9,7 +9,7 @@ import {
 import { Post, Prisma } from '@prisma/client';
 import { UploadService } from 'src/upload/upload.service';
 import { UserNotFoundException } from 'src/user/exceptions/userNotFound.exception';
-import { PostMutationResponse, PostResponse } from 'shared';
+import { PostMutationResponse, PostResponse } from '@ourfence/shared';
 import { POST_TYPE_CONDITIONS } from './constants/post.constants';
 import { PostType } from './types/post.type';
 import { PostNotFoundException } from './exceptions/postNotFound.exception';

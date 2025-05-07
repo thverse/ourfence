@@ -12,7 +12,7 @@ import { LikeNotFoundException } from './exceptions/likeNotFound.exception';
 import { PostService } from 'src/post/post.service';
 import { PostNotFoundException } from 'src/post/exceptions/postNotFound.exception';
 import { NotificationGateway } from 'src/notification/notification.gateway';
-import { LikePostResponse } from 'shared';
+import { LikePostResponse } from '@ourfence/shared';
 import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class LikeService {

@@ -9,7 +9,7 @@ import {
   PostMutationResponse,
   PostResponse,
   UnLikePostResponse,
-} from "shared";
+} from "@ourfence/shared";
 
 export const postService = {
   createPost: async (

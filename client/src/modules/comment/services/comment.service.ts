@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api";
-import { CommentResponse } from "shared";
+import { CommentResponse } from "@ourfence/shared";
 import {
   CommentCreatePayload,
   CommentUpdatePayload,

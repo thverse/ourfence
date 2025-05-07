@@ -7,7 +7,12 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "paths": {
+      "@ourfence/shared": ["../shared/src"]
+    }
   },
   "include": ["src/**/*"]
 }

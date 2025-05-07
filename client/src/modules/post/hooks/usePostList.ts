@@ -1,7 +1,7 @@
 // hooks/usePostList.ts
 import { useQuery } from "@tanstack/react-query";
 import { postService } from "../services/post.service";
-import { PostResponse } from "shared";
+import { PostResponse } from "@ourfence/shared";
 import { PostType } from "../types/post.type";
 
 interface UsePostListProps {

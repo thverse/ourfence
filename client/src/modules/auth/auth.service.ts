@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api";
 import { SignInPayload, SignUpPayload } from "./types/auth.type";
-import { AuthResponse } from "shared";
+import { AuthResponse } from "@ourfence/shared";
 
 export const authService = {
   signIn: async function (condition: SignInPayload) {

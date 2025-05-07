@@ -3,7 +3,7 @@ import { postService } from "../services/post.service";
 import { toast } from "react-toastify";
 import { PostType } from "../types/post.type";
 import { cpSync } from "fs";
-import { PostResponse } from "shared";
+import { PostResponse } from "@ourfence/shared";
 
 export const usePostLike = (post: PostResponse) => {
   const queryClient = useQueryClient();
