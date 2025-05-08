@@ -19,11 +19,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use('/assets', express.static(join(__dirname, '..', 'assets')));
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: ['*'],
     credentials: true,
   });
   app.use(cookieParser());
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(4000);
 }
 bootstrap();
