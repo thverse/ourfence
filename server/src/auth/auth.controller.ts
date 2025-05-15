@@ -20,11 +20,13 @@ import { AuthRequest } from './types/auth.type';
 import { JwtGuard } from './guards/jwt.guard';
 import { ExcludeFieldsInterceptor } from 'src/common/interceptors/excludeFields.interceptor';
 import { AuthResponse, AuthRefreshResponse } from '@ourfence/shared';
+import { ConfigService } from '@nestjs/config';
 @Controller()
 export class AuthController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('signup')
@@ -78,7 +80,9 @@ export class AuthController {
 
     this.authService.setTokenCookies(res, tokens);
 
-    return res.redirect('http://localhost:3000/');
+    return res.redirect(
+      this.configService.get('GOOGLE_REDIRECT_URL') || 'http://localhost:3000',
+    );
   }
 
   @Post('refreshtoken')
