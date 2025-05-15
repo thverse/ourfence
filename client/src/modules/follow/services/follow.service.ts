@@ -1,6 +1,6 @@
 // src/modules/user/services/follow.service.ts
 import { apiClient } from "@/lib/api";
-import { FollowResponse } from "shared/src/follow";
+import { FollowResponse } from "@ourfence/shared";
 
 export const followService = {
   follow: async (targetUserId: string): Promise<FollowResponse> => {

@@ -5,7 +5,6 @@ import {
   useFollowingList,
 } from "@/modules/follow/hooks/useFollowList";
 import { useTabBarStore } from "@/app/store";
-import { FollowResponse } from "shared/src/follow";
 import { FollowUserItem } from "./FollowUserItem";
 
 interface FollowListProps {
