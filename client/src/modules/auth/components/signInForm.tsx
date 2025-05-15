@@ -37,7 +37,7 @@ export function SignInForm({
   });
 
   const onGoogleSignIn = () => {
-    window.location.href = `http://localhost:4000/api/google-signin`;
+    window.location.href = `http://${process.env.NEXT_PUBLIC_API_URL}/api/google-signin`;
   };
 
   return (
