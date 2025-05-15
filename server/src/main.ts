@@ -19,7 +19,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use('/assets', express.static(join(__dirname, '..', 'assets')));
   app.enableCors({
-    origin: ['*'],
+    origin: [
+      'http://localhost:3000',
+      'https://ourfence-client-624614743449.asia-northeast1.run.app',
+    ],
     credentials: true,
   });
   app.use(cookieParser());
