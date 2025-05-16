@@ -2,3 +2,5 @@
 /shared/dist
 
 node_modules
+Deploy.server.bat
+Deploy.client.bat

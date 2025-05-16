@@ -140,23 +140,27 @@ export class AuthService {
 
   setTokenCookies(res: Response, tokens: SetTokenCookies): void {
     if (tokens.accessToken) {
-      res.cookie('accessToken', tokens.accessToken, {
+      const cookieOptions = {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-        sameSite: 'none',
+        sameSite: 'none' as const,
         secure: true,
-        domain: this.configService.get<string>('COOKIE_DOMAIN'),
-      });
+      };
+
+      console.log('Access Token Cookie Options:', cookieOptions);
+      res.cookie('accessToken', tokens.accessToken, cookieOptions);
     }
 
     if (tokens.refreshToken) {
-      res.cookie('refreshToken', tokens.refreshToken, {
+      const cookieOptions = {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-        sameSite: 'none',
+        sameSite: 'none' as const,
         secure: true,
-        domain: this.configService.get<string>('COOKIE_DOMAIN'),
-      });
+      };
+
+      console.log('Refresh Token Cookie Options:', cookieOptions);
+      res.cookie('refreshToken', tokens.refreshToken, cookieOptions);
     }
   }
 }
