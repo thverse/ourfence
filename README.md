@@ -8,8 +8,8 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 ## 🔗 프로젝트 링크
 
-- **GitHub**: [OurFence Repository](repository-link)
-- **배포 URL**: [https://ourfence.xyz](deployment-link)
+- **GitHub**: [OurFence Repository](repository-link){:target="\_blank"}
+- **배포 URL**: [https://ourfence.xyz](https://ourfence.xyz){:target="\_blank"}
 
 ## 🛠 사용 기술
 
