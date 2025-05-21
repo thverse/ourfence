@@ -8,6 +8,7 @@ import {
   Res,
   UseGuards,
   UseInterceptors,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { SignInDto, SignUpDto } from './dto/auth.dto';
@@ -52,11 +53,19 @@ export class AuthController {
     @Body() dto: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponse> {
-    const { user, tokens } = await this.authService.signIn(dto);
+    try {
+      const { user, tokens } = await this.authService.signIn(dto);
 
-    this.authService.setTokenCookies(res, tokens);
-
-    return user;
+      if (user && tokens) {
+        this.authService.setTokenCookies(res, tokens);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Authentication failed');
+    }
   }
 
   @Post('signout')

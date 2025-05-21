@@ -40,6 +40,7 @@ export class UploadService {
               transformationValues,
               { quality: 'auto' },
               { fetch_format: 'webp' },
+              { secure: true },
             ],
           },
           (error, result) => {
@@ -71,6 +72,12 @@ export class UploadService {
           {
             public_id: this.generateFileName(userId, file.originalname),
             resource_type: 'image',
+            folder: 'ourfence',
+            transformation: [
+              { quality: 'auto' },
+              { fetch_format: 'webp' },
+              { secure: true },
+            ],
           },
           (error, result) => {
             if (error) return reject(error);

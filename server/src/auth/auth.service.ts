@@ -139,12 +139,15 @@ export class AuthService {
   }
 
   setTokenCookies(res: Response, tokens: SetTokenCookies): void {
+    console.log('쿠키 생성');
     if (tokens.accessToken) {
       const cookieOptions = {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-        sameSite: 'none' as const,
-        secure: true,
+        sameSite:
+          process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
+        secure: process.env.MODE === 'DEV' ? false : true,
+        domain: process.env.COOKIE_DOMAIN,
       };
 
       console.log('Access Token Cookie Options:', cookieOptions);
@@ -155,8 +158,10 @@ export class AuthService {
       const cookieOptions = {
         httpOnly: true,
         maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-        sameSite: 'none' as const,
-        secure: true,
+        sameSite:
+          process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
+        secure: process.env.MODE === 'DEV' ? false : true,
+        domain: process.env.COOKIE_DOMAIN,
       };
 
       console.log('Refresh Token Cookie Options:', cookieOptions);

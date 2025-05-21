@@ -16,17 +16,18 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   app.setGlobalPrefix('api');
   app.use('/assets', express.static(join(__dirname, '..', 'assets')));
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://ourfence-client-624614743449.asia-northeast1.run.app',
-    ],
+    origin: ['http://localhost:3000', 'https://ourfence.xyz'],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Set-Cookie'],
   });
   app.use(cookieParser());
   console.log('MODE : ', process.env.MODE);
-  await app.listen(8080);
+  await app.listen(process.env.MODE === 'DEV' ? 4000 : 8080);
 }
 bootstrap();
