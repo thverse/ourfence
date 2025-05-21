@@ -191,6 +191,16 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                       />
                     </div>
                   </div>
+                  {errors.profileImage && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.profileImage.message}
+                    </p>
+                  )}
+                  {errors.coverImage && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.coverImage.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="p-4 space-y-4">
@@ -204,6 +214,11 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                       className="w-full p-2 border rounded-md"
                       placeholder="닉네임을 입력하세요"
                     />
+                    {errors.nickname && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nickname.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -216,6 +231,11 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                       rows={3}
                       placeholder="자기소개를 입력하세요"
                     />
+                    {errors.bio && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.bio.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               </form>
