@@ -48,6 +48,8 @@ export default function PostImageModal({
           onClick={(e) => e.stopPropagation()}
           quality={85}
           sizes="90vw"
+          priority
+          unoptimized
         />
         <button
           className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"

@@ -70,11 +70,13 @@ export class AuthController {
 
   @Post('signout')
   @UseGuards(JwtGuard)
-  async signOut(@Res() res: Response, @Req() req: AuthRequest): Promise<void> {
+  async signOut(
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: AuthRequest,
+  ): Promise<void> {
     const result = await this.authService.signOut(req.user.id);
 
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    this.authService.clearTokenCookies(res);
     res.status(200).json({ result });
   }
 

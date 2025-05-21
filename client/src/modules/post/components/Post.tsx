@@ -167,6 +167,7 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 onLoadingComplete={(img) => handleImageLoad(img)}
                 priority
+                unoptimized
               />
             </div>
           )}

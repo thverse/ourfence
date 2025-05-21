@@ -55,6 +55,7 @@ const ProfilePage = () => {
             width={1500}
             height={500}
             className="w-full h-full object-cover"
+            unoptimized
             priority // 빠른 로딩을 위해 추가
           />
         ) : (
@@ -74,6 +75,7 @@ const ProfilePage = () => {
                 width={400}
                 height={400}
                 priority
+                unoptimized
                 className="object-cover w-full h-full rounded-full border-white border-2"
               />
             ) : (

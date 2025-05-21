@@ -139,33 +139,34 @@ export class AuthService {
   }
 
   setTokenCookies(res: Response, tokens: SetTokenCookies): void {
-    console.log('쿠키 생성');
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: tokens.refreshToken
+        ? this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE')
+        : this.configService.get<number>('JWT_MAX_AGE'),
+      sameSite:
+        process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
+      secure: process.env.MODE === 'DEV' ? false : true,
+      domain: process.env.COOKIE_DOMAIN,
+    };
     if (tokens.accessToken) {
-      const cookieOptions = {
-        httpOnly: true,
-        maxAge: this.configService.get<number>('JWT_MAX_AGE'),
-        sameSite:
-          process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
-        secure: process.env.MODE === 'DEV' ? false : true,
-        domain: process.env.COOKIE_DOMAIN,
-      };
-
-      console.log('Access Token Cookie Options:', cookieOptions);
       res.cookie('accessToken', tokens.accessToken, cookieOptions);
     }
 
     if (tokens.refreshToken) {
-      const cookieOptions = {
-        httpOnly: true,
-        maxAge: this.configService.get<number>('JWT_REFRESH_TOKEN_MAX_AGE'),
-        sameSite:
-          process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
-        secure: process.env.MODE === 'DEV' ? false : true,
-        domain: process.env.COOKIE_DOMAIN,
-      };
-
-      console.log('Refresh Token Cookie Options:', cookieOptions);
       res.cookie('refreshToken', tokens.refreshToken, cookieOptions);
     }
+  }
+
+  clearTokenCookies(res: Response): void {
+    const cookieOptions = {
+      httpOnly: true,
+      sameSite:
+        process.env.MODE === 'DEV' ? ('lax' as const) : ('none' as const),
+      secure: process.env.MODE === 'DEV' ? false : true,
+      domain: process.env.COOKIE_DOMAIN,
+    };
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
   }
 }
