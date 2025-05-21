@@ -8,7 +8,6 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 ## 🔗 프로젝트 링크
 
-- **GitHub**: <a href="repository-link" target="_blank" rel="noopener noreferrer">OurFence Repository</a>
 - **배포 URL**: <a href="https://ourfence.xyz" target="_blank" rel="noopener noreferrer">https://ourfence.xyz</a>
 
 ## 🛠 사용 기술
@@ -22,6 +21,119 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
   - Docker
   - Multi-stage builds
   - Client/Server 각각 컨테이너화
+
+### Database Schema
+
+```mermaid
+erDiagram
+    User ||--o{ Post : creates
+    User ||--o{ Comment : writes
+    User ||--o{ Like : gives
+    User ||--o{ Follow : follows
+    User ||--o{ Notification : receives
+    User ||--o{ Notification : sends
+    User ||--|| UserProfile : has
+    User ||--|| GoogleAccount : has
+
+    Post ||--o{ PostImage : contains
+    Post ||--o{ Comment : has
+    Post ||--o{ Like : receives
+    Comment ||--o{ Comment : replies
+
+    User {
+        int id PK
+        string username UK
+        string email UK
+        string password
+        string refreshToken
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    UserProfile {
+        int id PK
+        int userId FK
+        string nickname
+        string profileImageUrl
+        string coverImageUrl
+        string bio
+        string location
+        string websiteUrl
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    GoogleAccount {
+        int id PK
+        int userId FK
+        string name
+        string email UK
+        string image
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    Post {
+        int id PK
+        int userId FK
+        string content
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    PostImage {
+        int id PK
+        int postId FK
+        string url
+        string type
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    Comment {
+        int id PK
+        int userId FK
+        int postId FK
+        int parentId FK
+        string content
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    Like {
+        int id PK
+        int postId FK
+        int userId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    Follow {
+        int id PK
+        int followerId FK
+        int followingId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    Notification {
+        int id PK
+        int userId FK
+        int senderUserId FK
+        enum type
+        int referenceId
+        boolean isRead
+        datetime createdAt
+    }
+```
 
 ### Frontend
 
