@@ -8,8 +8,8 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 ## 🔗 프로젝트 링크
 
-- **GitHub**: [OurFence Repository](repository-link){:target="\_blank"}
-- **배포 URL**: [https://ourfence.xyz](https://ourfence.xyz){:target="\_blank"}
+- **GitHub**: <a href="repository-link" target="_blank" rel="noopener noreferrer">OurFence Repository</a>
+- **배포 URL**: <a href="https://ourfence.xyz" target="_blank" rel="noopener noreferrer">https://ourfence.xyz</a>
 
 ## 🛠 사용 기술
 
@@ -18,10 +18,14 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 - **Monorepo**: pnpm workspace
 - **Package Manager**: pnpm
 - **Shared**: TypeScript shared types package
+- **Containerization**:
+  - Docker
+  - Multi-stage builds
+  - Client/Server 각각 컨테이너화
 
 ### Frontend
 
-- **Framework**: Next.js 13+
+- **Framework**: Nextjs 15+
 - **Language**: TypeScript
 - **State Management**:
   - TanStack Query (React Query)
@@ -34,9 +38,9 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 ### Backend
 
-- **Framework**: NestJS
+- **Framework**: Nestjs
 - **Language**: TypeScript
-- **Database**: Mysql
+- **Database**: MySQL (Aiven Cloud)
 - **ORM**: Prisma
 - **Authentication**:
   - JWT (JSON Web Token)
@@ -125,28 +129,8 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 ### 3. 반응형 디자인
 
-- 모바일 퍼스트 접근
-- Tailwind CSS를 활용한 반응형 UI
+- Tailwind CSS, Shadcn/ui을 활용한 반응형 UI
 - 직관적인 사용자 인터페이스
-
-## 📈 성과 및 배운 점
-
-1. **기술적 성과**
-
-   - React Query를 활용한 효율적인 상태 관리 구현
-   - TypeScript를 통한 타입 안정성 확보
-   - 컴포넌트 재사용성 향상
-
-2. **문제 해결**
-
-   - 실시간 데이터 동기화 문제 해결
-   - 이미지 최적화 및 성능 개선
-   - 사용자 경험 최적화
-
-3. **배운 점**
-   - 대규모 애플리케이션의 상태 관리 전략
-   - 컴포넌트 설계 패턴
-   - 성능 최적화 기법
 
 ## 🔜 향후 계획
 
