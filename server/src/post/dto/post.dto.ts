@@ -10,6 +10,8 @@ import {
 import { Type } from 'class-transformer';
 import { CursorPaginationDto } from 'src/common/dtos/common.dto';
 import { PostType } from '../types/post.type';
+import { UploadApiResponse } from 'cloudinary';
+
 export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
@@ -33,7 +35,7 @@ export class UpdatePostDto {
 
   @IsOptional()
   @IsArray()
-  images?: { url: string; type: string }[];
+  images?: UploadApiResponse[];
 }
 
 export class DeletePostDto {

@@ -297,7 +297,7 @@ export class UserService {
             userId,
             type: ImageType.profileImage,
           });
-        updateData.profileImageUrl = updatedImage.url;
+        updateData.profileImageUrl = updatedImage.secure_url;
       } catch (error) {
         throw new Error('이미지 처리 중 오류가 발생했습니다.');
       }
@@ -319,7 +319,7 @@ export class UserService {
             userId,
             type: ImageType.coverImage,
           });
-        updateData.coverImageUrl = updatedImage.url;
+        updateData.coverImageUrl = updatedImage.secure_url;
       } catch (error) {
         throw new Error('이미지 처리 중 오류가 발생했습니다.');
       }
@@ -328,7 +328,7 @@ export class UserService {
     try {
       // 프로필 업데이트
       const updatedProfile = await this.prismaService.userProfile.update({
-        where: { id: user.id },
+        where: { userId: user.id },
         data: updateData,
       });
 

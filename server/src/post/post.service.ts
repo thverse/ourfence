@@ -56,7 +56,7 @@ export class PostService {
         postImages: {
           create:
             uploadedFiles?.map((file) => ({
-              url: file.url,
+              url: file.secure_url,
               type: file.type,
             })) || [],
         },
@@ -217,7 +217,7 @@ export class PostService {
           deleteMany: {},
           create:
             images?.map((image) => ({
-              url: image.url,
+              url: image.secure_url,
               type: image.type,
             })) || [],
         },

@@ -10,6 +10,7 @@ import { ImageType } from './types/upload.type';
 
 interface UploadFile {
   url: string;
+  secure_url?: string;
   type: string;
 }
 
@@ -20,6 +21,7 @@ export class UploadService {
       cloud_name: this.configService.get('CLOUDINARY_CLOUD_NAME'),
       api_key: this.configService.get('CLOUDINARY_API_KEY'),
       api_secret: this.configService.get('CLOUDINARY_API_SECRET'),
+      secure: true,
     });
   }
   async uploadFileByCloudinaryForUserProfile(
@@ -40,8 +42,8 @@ export class UploadService {
               transformationValues,
               { quality: 'auto' },
               { fetch_format: 'webp' },
-              { secure: true },
             ],
+            secure: true,
           },
           (error, result) => {
             if (error) return reject(error);
@@ -73,11 +75,8 @@ export class UploadService {
             public_id: this.generateFileName(userId, file.originalname),
             resource_type: 'image',
             folder: 'ourfence',
-            transformation: [
-              { quality: 'auto' },
-              { fetch_format: 'webp' },
-              { secure: true },
-            ],
+            transformation: [{ quality: 'auto' }, { fetch_format: 'webp' }],
+            secure: true,
           },
           (error, result) => {
             if (error) return reject(error);
@@ -97,7 +96,7 @@ export class UploadService {
   async uploadFilesByCloudinary(
     files: Express.Multer.File[],
     userId: number,
-  ): Promise<UploadFile[] | null> {
+  ): Promise<UploadApiResponse[] | null> {
     if (!files?.length) return null;
     return await Promise.all(
       files.map((file) => this.uploadFileByCloudinary(file, userId)),
