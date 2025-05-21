@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api";
 import { SignInPayload, SignUpPayload } from "./types/auth.type";
 import { AuthResponse } from "@ourfence/shared";
+import { queryClient } from "@/components/Providers";
 
 export const authService = {
   signIn: async function (condition: SignInPayload) {
@@ -8,6 +9,7 @@ export const authService = {
       "/api/signin",
       condition
     );
+    queryClient.clear();
     return response.data;
   },
 
@@ -18,6 +20,7 @@ export const authService = {
 
   signOut: async function () {
     const response = await apiClient.post<AuthResponse>("/api/signout");
+    queryClient.clear();
     return response.data;
   },
 

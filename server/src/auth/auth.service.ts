@@ -33,6 +33,8 @@ export class AuthService {
       password,
     });
 
+    console.log('로그인 유저 아이디: ', user.id);
+
     const payload = {
       iss: this.configService.get<string>('PROJECT_NAME') as string,
       id: user.id,
@@ -80,6 +82,7 @@ export class AuthService {
   }
 
   async signOut(userId: number): Promise<AuthSignOutResponse> {
+    console.log('로그아웃 유저 아이디: ', userId);
     const user = await this.userSerive.getUserById(userId);
 
     if (!user) {

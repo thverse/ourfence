@@ -36,21 +36,28 @@ export class UserService {
     //중복 검사
     await this.duplicateCheckUser(dto);
 
-    const user = await this.prismaService.user.create({
-      data: {
-        username: dto.username,
-        email: dto.email,
-        password: await hash(dto.password, 10),
-        userProfile: {
-          create: {
-            nickname: dto.nickname,
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          username: dto.username,
+          email: dto.email,
+          password: await hash(dto.password, 10),
+          userProfile: {
+            create: {
+              nickname: dto.nickname,
+            },
           },
         },
-      },
-      include: {
-        userProfile: true,
-      },
-    });
+        include: {
+          userProfile: true,
+        },
+      });
+
+      return user;
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw new Error('회원가입 중 오류가 발생했습니다.');
+    }
 
     // await this.prismaService.userProfile.create({
     //   data: {
@@ -58,8 +65,6 @@ export class UserService {
     //     nickname: dto.nickname,
     //   },
     // });
-
-    return user;
   }
 
   async getUsers(): Promise<User[]> {
