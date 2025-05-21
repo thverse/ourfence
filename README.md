@@ -4,12 +4,20 @@
 
 X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.js와 TypeScript를 기반으로 개발되었으며, 실시간 상호작용과 최적화된 사용자 경험을 제공합니다.
 
+이 프로젝트는 모노레포(Monorepo) 구조로 구성되어 있어 클라이언트(`client`), 서버(`server`), 공통 타입(`shared`) 패키지를 하나의 저장소에서 관리합니다. 특히 `shared` 패키지를 통해 클라이언트와 서버 간에 타입을 공유하여 타입 안정성을 보장하고 개발 생산성을 향상시켰습니다.
+
 ## 🔗 프로젝트 링크
 
 - **GitHub**: [OurFence Repository](repository-link)
-- **배포 URL**: [https://ourfence.vercel.app](deployment-link)
+- **배포 URL**: [https://ourfence.xyz](deployment-link)
 
 ## 🛠 사용 기술
+
+### Project Structure
+
+- **Monorepo**: pnpm workspace
+- **Package Manager**: pnpm
+- **Shared**: TypeScript shared types package
 
 ### Frontend
 
@@ -24,99 +32,82 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 - **HTTP Client**: Axios
 - **Others**: date-fns, Lucide React
 
+### Backend
+
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: Mysql
+- **ORM**: Prisma
+- **Authentication**:
+  - JWT (JSON Web Token)
+  - Passport.js
+- **File Storage**: Cloudinary
+- **Testing**: Jest
+- **Others**:
+  - Socket.IO (실시간 통신)
+  - Multer (파일 업로드)
+  - Class Validator (DTO 검증)
+
+### Deployment
+
+- **Cloud Platform**: Google Cloud Platform (GCP)
+- **Container Orchestration**: Google Cloud Run
+- **Containerization**:
+  - Docker를 통한 클라이언트/서버 각각 컨테이너화
+  - Multi-stage 빌드를 통한 최적화된 이미지 생성
+- **Domain**: Gabia
+
 ## 🔍 주요 기능
 
-### 1. 인증 시스템
+### 1. 인증 및 사용자 관리
 
-- 회원가입/로그인 기능
-- 사용자 인증 상태 관리
+- JWT 기반 회원가입/로그인
+- 소셜 로그인 (Google OAuth)
+- 사용자 프로필 관리
+  - 프로필/커버 이미지 업로드 (Cloudinary)
+  - 닉네임, 소개글 수정
 - 보호된 라우트 구현
-
-```typescript
-// 인증 상태에 따른 라우팅 보호 예시
-export default function ProtectedLayout({ children }: Props) {
-  const pathname = usePathname();
-  const { data: user } = useCurrentUser();
-  const excludedPaths = ["/signin", "/signup"];
-
-  if (!user && !excludedPaths.includes(pathname)) {
-    redirect("/signin");
-  }
-
-  return <>{children}</>;
-}
-```
 
 ### 2. 게시물 관리
 
 - 이미지 업로드가 가능한 게시물 작성
+- 게시물 타입별 조회
+  - 내 게시물
+  - 좋아요한 게시물
+  - 팔로우한 사용자의 게시물
+  - 댓글 단 게시물
+  - 추천 게시물
 - 실시간 좋아요 기능 (Optimistic Updates)
 - 무한 스크롤 피드
-
-```typescript
-// 낙관적 업데이트를 적용한 좋아요 기능 예시
-const { mutate: toggleLike } = useMutation({
-  mutationFn: (post: Post) => {
-    return post.isLiked
-      ? postService.unlikePost(post.id)
-      : postService.likePost(post.id);
-  },
-  onMutate: async (post) => {
-    await queryClient.cancelQueries({ queryKey: ["post", post.id] });
-    const previousPost = queryClient.getQueryData(["post", post.id]);
-    queryClient.setQueryData(["post", post.id], {
-      ...post,
-      isLiked: !post.isLiked,
-    });
-    return { previousPost };
-  },
-});
-```
 
 ### 3. 댓글 시스템
 
 - 실시간 댓글 작성 및 삭제
-- 스팸 방지를 위한 작성 간격 제한
+- 스팸 방지를 위한 작성 간격 제한 (30초)
 - 댓글 작성자 권한 관리
+- 댓글 목록 조회 및 페이지네이션
 
-```typescript
-// 댓글 작성 시간 제한 구현 예시
-const [lastCommentTime, setLastCommentTime] = useState<number>(0);
+### 4. 팔로우 시스템
 
-const onSubmit = (data: CommentFormData) => {
-  const now = Date.now();
-  if (now - lastCommentTime < 30000) {
-    toast.error(
-      `${Math.floor(
-        30 - (now - lastCommentTime) / 1000
-      )}초 후 다시 시도해주세요.`
-    );
-    return;
-  }
-  setLastCommentTime(now);
-  createComment(data);
-};
-```
+- 사용자 팔로우/언팔로우
+- 팔로워/팔로잉 목록 조회
+- 팔로우/팔로워 수 카운트
+- 팔로우 알림 기능
 
-### 4. 프로필 관리
+### 5. 알림 시스템
 
-- 프로필/커버 이미지 업로드
-- 사용자 정보 수정
-- 작성/좋아요/댓글 탭별 게시물 조회
+- 실시간 알림 (Socket.IO)
+- 알림 타입별 처리
+  - 팔로우 알림
+  - 좋아요 알림
+  - 댓글 알림
+- 알림 목록 조회 및 페이지네이션
 
-```typescript
-// 프로필 페이지 탭 구현 예시
-const tabItems = [
-  { id: PostType.ME, label: "게시물" },
-  { id: PostType.LIKE, label: "좋아요" },
-  { id: PostType.COMMENT, label: "댓글" },
-];
+### 6. 검색 기능 (현재는 api만 구현되어있음)
 
-const { data: postList } = usePostListFromUser({
-  type: selectedTabId as PostType,
-  targetUserId: userId,
-});
-```
+- 사용자 검색
+- 게시물 검색
+- 실시간 검색 결과
 
 ## 🎯 핵심 구현 사항
 
@@ -161,8 +152,8 @@ const { data: postList } = usePostListFromUser({
 
 1. **기능 개선**
 
+   - 검색 기능 추가 (프론트)
    - 실시간 알림 시스템 구현
-   - 팔로우/팔로잉 기능 추가
    - 다중 이미지 업로드 지원
 
 2. **성능 최적화**
