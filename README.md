@@ -164,7 +164,7 @@ erDiagram
   - Multer (파일 업로드)
   - Class Validator (DTO 검증)
 
-### Deployment
+### Infrastructure
 
 - **Cloud Platform**: Google Cloud Platform (GCP)
 - **Container Orchestration**: Google Cloud Run
