@@ -10,7 +10,11 @@ interface FollowButtonProps {
 
 const FollowButton = ({ targetUserId, isFollowing }: FollowButtonProps) => {
   const { data: currentUser } = useCurrentUser();
-  const { toggleFollow, isPending } = useFollow(targetUserId, isFollowing);
+  const { toggleFollow, isPending } = useFollow(
+    currentUser?.id.toString() ?? "",
+    targetUserId,
+    isFollowing
+  );
 
   // 자기 자신을 팔로우할 수 없음
   if (currentUser?.id === parseInt(targetUserId)) {

@@ -2,7 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { followService } from "../services/follow.service";
 import { toast } from "react-toastify";
 
-export const useFollow = (targetUserId: string, isFollowing: boolean) => {
+export const useFollow = (
+  currentUserId: string,
+  targetUserId: string,
+  isFollowing: boolean
+) => {
   const queryClient = useQueryClient();
 
   const { mutate: toggleFollow, isPending } = useMutation({
@@ -13,24 +17,32 @@ export const useFollow = (targetUserId: string, isFollowing: boolean) => {
     },
 
     onMutate: async () => {
-      // 모든 관련 쿼리 취소
+      // 쿼리 취소
       await Promise.all([
         queryClient.cancelQueries({ queryKey: ["user", targetUserId] }),
         queryClient.cancelQueries({ queryKey: ["user", "me"] }),
         queryClient.cancelQueries({ queryKey: ["followerList", targetUserId] }),
         queryClient.cancelQueries({
-          queryKey: ["followingList", targetUserId],
+          queryKey: ["followingList", currentUserId],
         }),
       ]);
 
-      // 이전 상태 저장
+      // 이전 데이터 저장
       const previousTargetUser = queryClient.getQueryData<any>([
         "user",
         targetUserId,
       ]);
       const previousMe = queryClient.getQueryData<any>(["user", "me"]);
+      const previousFollowerList = queryClient.getQueryData<any[]>([
+        "followerList",
+        targetUserId,
+      ]);
+      const previousFollowingList = queryClient.getQueryData<any[]>([
+        "followingList",
+        currentUserId,
+      ]);
 
-      // 낙관적 업데이트
+      // 낙관적 업데이트: 대상 유저
       if (previousTargetUser) {
         queryClient.setQueryData(["user", targetUserId], {
           ...previousTargetUser,
@@ -41,6 +53,7 @@ export const useFollow = (targetUserId: string, isFollowing: boolean) => {
         });
       }
 
+      // 낙관적 업데이트: 나
       if (previousMe) {
         queryClient.setQueryData(["user", "me"], {
           ...previousMe,
@@ -50,19 +63,53 @@ export const useFollow = (targetUserId: string, isFollowing: boolean) => {
         });
       }
 
-      return { previousTargetUser, previousMe };
+      // 낙관적 업데이트: followerList
+      if (previousFollowerList) {
+        const updatedFollowerList = isFollowing
+          ? previousFollowerList.filter((user) => user.id !== previousMe?.id)
+          : [...previousFollowerList, previousMe];
+        queryClient.setQueryData(
+          ["followerList", targetUserId],
+          updatedFollowerList
+        );
+      }
+
+      // 낙관적 업데이트: followingList
+      if (previousFollowingList) {
+        const updatedFollowingList = isFollowing
+          ? previousFollowingList.filter((user) => user.id !== targetUserId)
+          : [...previousFollowingList, previousTargetUser];
+        queryClient.setQueryData(
+          ["followingList", currentUserId],
+          updatedFollowingList
+        );
+      }
+
+      return {
+        previousTargetUser,
+        previousMe,
+        previousFollowerList,
+        previousFollowingList,
+      };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previousTargetUser) {
-        queryClient.setQueryData(
-          ["user", targetUserId],
-          context.previousTargetUser
-        );
-      }
-      if (context?.previousMe) {
-        queryClient.setQueryData(["user", "me"], context.previousMe);
-      }
+      if (!context) return;
+
+      queryClient.setQueryData(
+        ["user", targetUserId],
+        context.previousTargetUser
+      );
+      queryClient.setQueryData(["user", "me"], context.previousMe);
+      queryClient.setQueryData(
+        ["followerList", targetUserId],
+        context.previousFollowerList
+      );
+      queryClient.setQueryData(
+        ["followingList", currentUserId],
+        context.previousFollowingList
+      );
+
       toast.error("팔로우 처리 중 오류가 발생했습니다.");
     },
 
@@ -71,14 +118,13 @@ export const useFollow = (targetUserId: string, isFollowing: boolean) => {
     },
 
     onSettled: () => {
-      // 서버 응답 후 정확한 데이터 유지
       queryClient.invalidateQueries({ queryKey: ["user", targetUserId] });
       queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       queryClient.invalidateQueries({
         queryKey: ["followerList", targetUserId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["followingList", targetUserId],
+        queryKey: ["followingList", currentUserId],
       });
     },
   });
