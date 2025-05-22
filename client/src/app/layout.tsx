@@ -3,7 +3,7 @@ import ClientLayout from "@/components/layout/ClientLayout";
 
 export const metadata: Metadata = {
   title: "Ourfence",
-  description: "Ourfence, 우리의 이야기가 모이는 곳",
+  description: "Ourfence, 우리들의 이야기가 모이는 곳",
   icons: {
     icon: "/favicon.svg",
   },

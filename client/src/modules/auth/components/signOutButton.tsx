@@ -11,7 +11,8 @@ export function SignOutButton() {
     <Button
       onClick={() => signOut()}
       disabled={isPending}
-      className="bg-gray-300 hover:bg-gray-400 text-black"
+      variant="ghost"
+      className="bg-white hover:bg-gray-100 text-black [&_svg]:!size-6 p-2"
     >
       <LogOut />
     </Button>

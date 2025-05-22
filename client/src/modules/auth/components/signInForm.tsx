@@ -44,8 +44,8 @@ export function SignInForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">
-            Ourfence, 우리의 이야기가 모이는 곳
+          <CardTitle className="text-lg">
+            Ourfence, 우리들의 이야기가 모이는 곳
           </CardTitle>
           {/* <CardDescription>Google 계정으로 로그인</CardDescription> */}
         </CardHeader>

@@ -12,6 +12,7 @@ import { usePostCreate } from "../hooks/usePostCreate";
 import { useTabBarStore } from "@/app/store";
 import { PostType } from "../types/post.type";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PostDialogProps {
   isOpen: boolean;
