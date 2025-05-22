@@ -9,9 +9,9 @@ export const POST_TYPE_CONDITIONS: Record<PostType, PostConditionFunction> = {
   }),
   [PostType.FOLLOW]: (userId) => ({
     user: {
-      followings: {
+      followers: {
         some: {
-          followerId: userId,
+          followingId: userId,
         },
       },
     },
