@@ -92,12 +92,12 @@ export function SignInForm({
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">비밀번호</Label>
-                    <a
+                    {/* <a
                       href="#"
                       className="ml-auto text-sm underline-offset-4 hover:underline"
                     >
                       비밀번호를 잊으셨나요?
-                    </a>
+                    </a> */}
                   </div>
                   <Input
                     id="password"
