@@ -17,10 +17,6 @@ export const useUpdateProfile = () => {
         formData.append("coverImage", profileFormData.coverImage);
       }
 
-      // FormData 내용 확인 (디버깅용)
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
       return profileService.updateProfile(formData);
     },
     onSuccess: (data) => {

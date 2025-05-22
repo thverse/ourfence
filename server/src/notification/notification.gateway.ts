@@ -28,7 +28,6 @@ export class NotificationGateway
   constructor(private readonly notificationService: NotificationService) {}
 
   async handleConnection(client: Socket) {
-    console.log('Client connected');
     try {
       // 쿠키에서 유저 정보 추출
       const userId = client.handshake.auth.userId;

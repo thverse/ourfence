@@ -52,7 +52,6 @@ export const postService = {
 
   unlikePost: async (postId: number): Promise<UnLikePostResponse> => {
     const response = await apiClient.delete(`/api/like/post/${postId}`);
-    console.log("unlikePost response : ", response.data);
     return response.data;
   },
 };

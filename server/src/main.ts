@@ -27,7 +27,6 @@ async function bootstrap() {
     exposedHeaders: ['Set-Cookie'],
   });
   app.use(cookieParser());
-  console.log('MODE : ', process.env.MODE);
   await app.listen(process.env.MODE === 'DEV' ? 4000 : 8080);
 }
 bootstrap();

@@ -33,8 +33,7 @@ export function useSignIn() {
       toast.success("Welcome Back! Account signed in successfully.");
     },
     onError: (error: AxiosError<any>) => {
-      console.log("Signing Error: ", error);
-      toast.error(error.response?.data?.message || "Sign ip failed");
+      toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
     },
   });
 }
@@ -50,7 +49,7 @@ export function useSignOut() {
       toast.success("You have successfully signed out of your account!");
     },
     onError: (error: AxiosError<any>) => {
-      toast.error(error.response?.data?.message || "Sign out failed");
+      toast.error(error.response?.data?.message || "로그아웃에 실패했습니다.");
     },
   });
 }
