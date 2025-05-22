@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { usePostCreate } from "../hooks/usePostCreate";
 import { useTabBarStore } from "@/app/store";
 import { PostType } from "../types/post.type";
