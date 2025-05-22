@@ -25,8 +25,16 @@ export default function PostCreateModal({
     resolver: zodResolver(postCreateSchema),
   });
 
-  const closeModal = () => {
+  const closeModal = (reset: boolean = true) => {
     if (isLoading) return;
+    setIsOpen(false);
+    if (reset) {
+      form.reset();
+      removeImage();
+    }
+  };
+
+  const closeModalOnSuccess = () => {
     setIsOpen(false);
     form.reset();
     removeImage();
@@ -40,7 +48,9 @@ export default function PostCreateModal({
     clearErrors,
   } = form;
 
-  const { createPost, isLoading, isSuccess } = usePostCreate();
+  const { createPost, isLoading } = usePostCreate({
+    onSuccess: closeModalOnSuccess,
+  });
 
   const onSubmit = (data: PostCreateFormData) => {
     createPost(data);
@@ -97,12 +107,6 @@ export default function PostCreateModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      closeModal();
-    }
-  }, [isSuccess]);
-
   return (
     <>
       <Button
@@ -116,7 +120,10 @@ export default function PostCreateModal({
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div
               className="fixed inset-0 bg-black bg-opacity-50"
-              onClick={closeModal}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!isLoading) closeModal(false);
+              }}
             ></div>
 
             <form
@@ -124,7 +131,13 @@ export default function PostCreateModal({
               className="bg-white p-4 rounded-lg shadow-lg z-10 w-full max-w-xl"
             >
               <div className="flex justify-end">
-                <X onClick={closeModal} className="cursor-pointer" />
+                <X
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isLoading) closeModal(false);
+                  }}
+                  className="cursor-pointer"
+                />
               </div>
               <div className="border-b border-gray-200 p-4 flex gap-4">
                 <Avatar>

@@ -5,11 +5,14 @@ import TabBar from "@/components/TabBar";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { PostType } from "../types/post.type";
 import EmptyStateGuide from "@/components/EmptyStateGuide";
+import { PostSkeleton } from "@/components/ui/loading-skeleton";
+
 interface PostListWithTabBarProps {
   tabs: TabBarItem[];
   initialActiveTab: PostType;
   classNameForTabBar?: string;
   postList: PostResponse[];
+  isLoading?: boolean;
 }
 
 const PostListWithTabBar = ({
@@ -17,6 +20,7 @@ const PostListWithTabBar = ({
   initialActiveTab,
   classNameForTabBar,
   postList,
+  isLoading = false,
 }: PostListWithTabBarProps) => {
   useScrollToTop([postList]);
 
@@ -27,7 +31,9 @@ const PostListWithTabBar = ({
         initialActiveTab={initialActiveTab}
         className={classNameForTabBar}
       />
-      {postList?.length > 0 ? (
+      {isLoading ? (
+        <PostSkeleton />
+      ) : postList?.length > 0 ? (
         postList?.map((post) => <Post key={post.id} post={post} />)
       ) : (
         <EmptyStateGuide message="게시물이 없습니다." />

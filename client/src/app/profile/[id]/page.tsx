@@ -1,33 +1,37 @@
 "use client";
 
-import SectionHeader from "@/components/SectionHeader";
-import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
-import { useUserProfile, useCurrentUser } from "@/modules/user/hooks/useUser";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import { UserIcon, ImageIcon } from "lucide-react";
+import { useUserProfile, useCurrentUser } from "@/modules/user/hooks/useUser";
+import { useTabBarStore } from "@/app/store";
 import { PostType } from "@/modules/post/types/post.type";
 import PostListWithTabBar from "@/modules/post/components/PostListWithTabBar";
-import FollowButton from "@/modules/follow/components/FollowButton";
 import { usePostList } from "@/modules/post/hooks/usePostList";
-import { useTabBarStore } from "@/app/store";
-import { useEffect } from "react";
+import SectionHeader from "@/components/SectionHeader";
+import ProfileEditDialog from "@/modules/profile/components/ProfileEditDialog";
+import { ProfileSkeleton } from "@/components/ui/loading-skeleton";
+import Image from "next/image";
+import { UserIcon, ImageIcon } from "lucide-react";
+import FollowButton from "@/modules/follow/components/FollowButton";
 
 const ProfilePage = () => {
   const params = useParams();
   const userId = params.id as string;
-  const { data: user } = useUserProfile({ userId });
-  const { data: currentUser } = useCurrentUser();
+  const { data: user, isLoading: isUserLoading } = useUserProfile({ userId });
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUser();
   const router = useRouter();
 
   const userInfo = userId === currentUser?.id?.toString() ? currentUser : user;
   const { selectedTabId } = useTabBarStore();
 
-  const { data: postList } = usePostList({
+  const { data: postList, isLoading: isPostListLoading } = usePostList({
     type: selectedTabId as PostType,
     targetUserId: userInfo?.id.toString(),
     enabled: !!selectedTabId,
   });
+
+  const isLoading = isUserLoading || isCurrentUserLoading;
+
   const tabBarItems = [
     {
       id: PostType.ME,
@@ -43,10 +47,23 @@ const ProfilePage = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div>
+        <ProfileSkeleton />
+        <PostListWithTabBar
+          tabs={tabBarItems}
+          initialActiveTab={PostType.ME}
+          postList={[]}
+          isLoading={true}
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
       <SectionHeader pageTitle={userInfo?.userProfile?.nickname ?? ""} />
-
       <div className="h-48 bg-gray-200">
         {userInfo?.userProfile?.coverImageUrl ? (
           <Image
@@ -56,7 +73,7 @@ const ProfilePage = () => {
             height={500}
             className="w-full h-full object-cover"
             unoptimized
-            priority // 빠른 로딩을 위해 추가
+            priority
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -135,6 +152,7 @@ const ProfilePage = () => {
         tabs={tabBarItems}
         initialActiveTab={PostType.ME}
         postList={postList ?? []}
+        isLoading={isPostListLoading}
       />
     </div>
   );

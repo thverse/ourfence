@@ -13,7 +13,7 @@ const Feed = () => {
 
   const { selectedTabId } = useTabBarStore();
 
-  const { data: postList } = usePostList({
+  const { data: postList, isLoading } = usePostList({
     type: selectedTabId as PostType,
     enabled: !!selectedTabId,
   });
@@ -24,6 +24,7 @@ const Feed = () => {
       initialActiveTab={PostType.RECOMMEND}
       classNameForTabBar="top-0 sticky"
       postList={postList ?? []}
+      isLoading={isLoading}
     />
   );
 };

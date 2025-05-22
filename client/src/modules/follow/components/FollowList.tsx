@@ -6,6 +6,7 @@ import {
 } from "@/modules/follow/hooks/useFollowList";
 import { useTabBarStore } from "@/app/store";
 import { FollowUserItem } from "./FollowUserItem";
+import { ListSkeleton } from "@/components/ui/loading-skeleton";
 
 interface FollowListProps {
   userId: string;
@@ -24,9 +25,9 @@ export const FollowList = ({
       ? useFollowerList(userId)
       : useFollowingList(userId);
 
-  //   if (isLoading) {
-  //     return <LoadingSpinner />;
-  //   }
+  if (isLoading) {
+    return <ListSkeleton />;
+  }
 
   if (!userList?.length) {
     return (
