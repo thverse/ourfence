@@ -122,8 +122,13 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
                 @{post.user?.username} · {timeAgo(post.createdAt)}
               </span>
             </div>
-            {post.user?.id === currentUser?.id && isDetail && (
-              <div className="flex flex-1 justify-end">
+            {post.user?.id === currentUser?.id && (
+              <div
+                className="flex flex-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <DeleteAlertDialog
                   onDelete={() => {
                     deletePost();
