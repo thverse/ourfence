@@ -35,7 +35,7 @@ const CommentItem = ({ comment }: { comment: CommentResponse }) => {
               · {timeAgo(comment.createdAt)}
             </div>
             {comment.user.id === user?.id && (
-              <div className="flex flex-1 justify-end">
+              <div className="flex flex-1">
                 <DeleteAlertDialog
                   onDelete={deleteComment}
                   title="댓글을 삭제하시겠습니까?"
