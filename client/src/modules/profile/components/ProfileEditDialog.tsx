@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Camera, ImageIcon, UserIcon, X } from "lucide-react";
+import { Camera, ImageIcon, UserIcon, X, Loader2 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -108,8 +108,20 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                     <X className="cursor-pointer" onClick={handleClose} />
                     <h2 className="text-xl font-bold">프로필 수정</h2>
                   </div>
-                  <Button className="rounded-full" size="sm" type="submit">
-                    저장
+                  <Button
+                    className="rounded-full"
+                    size="sm"
+                    type="submit"
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        저장 중...
+                      </>
+                    ) : (
+                      "저장"
+                    )}
                   </Button>
                 </div>
 
@@ -121,6 +133,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                         alt="Cover preview"
                         fill
                         className="object-cover"
+                        unoptimized
                       />
                     ) : getImageUrl("cover") ? (
                       <Image
@@ -128,6 +141,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                         alt="Cover preview"
                         fill
                         className="object-cover"
+                        unoptimized
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -137,8 +151,9 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                   </div>
                   <button
                     type="button"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-70"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-70 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => coverInputRef.current?.click()}
+                    disabled={isPending}
                   >
                     <Camera className="w-5 h-5" />
                   </button>
@@ -149,6 +164,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                     className="hidden"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, "cover")}
+                    disabled={isPending}
                   />
                 </div>
 
@@ -176,8 +192,9 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                       )}
                       <button
                         type="button"
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-70"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-70 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => profileInputRef.current?.click()}
+                        disabled={isPending}
                       >
                         <Camera className="w-5 h-5" />
                       </button>
@@ -188,6 +205,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                         className="hidden"
                         accept="image/*"
                         onChange={(e) => handleImageUpload(e, "profile")}
+                        disabled={isPending}
                       />
                     </div>
                   </div>
@@ -211,8 +229,9 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                     <input
                       {...register("nickname")}
                       type="text"
-                      className="w-full p-2 border rounded-md"
+                      className="w-full p-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="닉네임을 입력하세요"
+                      disabled={isPending}
                     />
                     {errors.nickname && (
                       <p className="text-red-500 text-sm mt-1">
@@ -227,9 +246,10 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                     </label>
                     <textarea
                       {...register("bio")}
-                      className="w-full p-2 border rounded-md"
+                      className="w-full p-2 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                       rows={3}
                       placeholder="자기소개를 입력하세요"
+                      disabled={isPending}
                     />
                     {errors.bio && (
                       <p className="text-red-500 text-sm mt-1">

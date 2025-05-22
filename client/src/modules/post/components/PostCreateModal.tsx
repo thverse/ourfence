@@ -1,6 +1,6 @@
 import { use, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Image as ImageIcon, X, Pencil } from "lucide-react";
+import { Image as ImageIcon, X, Pencil, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
@@ -223,7 +223,14 @@ export default function PostCreateModal({
                 </button>
 
                 <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "게시 중..." : "게시"}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      게시 중...
+                    </>
+                  ) : (
+                    "게시"
+                  )}
                 </Button>
               </div>
             </form>
