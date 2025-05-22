@@ -82,23 +82,28 @@ export class PostService {
     const condition = POST_TYPE_CONDITIONS[type](postAuthorId);
 
     // RECOMMEND 타입일 때는 좋아요 수로 정렬
-    const orderBy =
-      type === PostType.RECOMMEND
-        ? [
-            {
-              likes: {
-                _count: Prisma.SortOrder.desc,
-              },
-            },
-            {
-              createdAt: Prisma.SortOrder.desc, // 같은 좋아요 수일 경우 최신순
-            },
-          ]
-        : [
-            {
-              createdAt: Prisma.SortOrder.desc,
-            },
-          ];
+    // const orderBy =
+    //   type === PostType.RECOMMEND
+    //     ? [
+    //         {
+    //           likes: {
+    //             _count: Prisma.SortOrder.desc,
+    //           },
+    //         },
+    //         {
+    //           createdAt: Prisma.SortOrder.desc, // 같은 좋아요 수일 경우 최신순
+    //         },
+    //       ]
+    //     : [
+    //         {
+    //           createdAt: Prisma.SortOrder.desc,
+    //         },
+    //       ];
+    const orderBy = [
+      {
+        createdAt: Prisma.SortOrder.desc,
+      },
+    ];
 
     const postList = await this.prismaService.post.findMany({
       where: {
