@@ -110,7 +110,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('Not found user');
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
     const isFollowing = user.followers.some(
@@ -177,7 +177,7 @@ export class UserService {
     const user = await this.getUserById(id);
 
     if (!user) {
-      throw new NotFoundException('Not found user');
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
     return await this.prismaService.user.update({
@@ -199,7 +199,7 @@ export class UserService {
     const user = await this.getUserById(id);
 
     if (!user) {
-      throw new NotFoundException('Not found user');
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
     return await this.prismaService.user.update({
@@ -218,7 +218,7 @@ export class UserService {
     const getUserByemail = await this.getUserByEmail(email);
 
     if (getUserByUsername || getUserByemail) {
-      throw new ConflictException('User already exists.');
+      throw new ConflictException('이미 존재하는 아이디 또는 이메일입니다.');
     }
   }
 
@@ -226,12 +226,12 @@ export class UserService {
     const user = await this.getUserByUsername(dto.username);
 
     if (!user) {
-      throw new UnauthorizedException('Please check your username or email.');
+      throw new UnauthorizedException('아이디가 존재하지 않습니다.');
     }
 
     const isPasswordWrong = !(await compare(dto.password, user.password));
     if (isPasswordWrong) {
-      throw new UnauthorizedException('Please check your password');
+      throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
 
     return user;

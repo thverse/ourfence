@@ -45,9 +45,9 @@ export function SignInForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">
-            There are stories in the Ourfence
+            Ourfence, 우리의 이야기가 모이는 곳
           </CardTitle>
-          <CardDescription>Login with your Google account</CardDescription>
+          {/* <CardDescription>Google 계정으로 로그인</CardDescription> */}
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit}>
@@ -70,16 +70,16 @@ export function SignInForm({
               </div>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  또는 계정으로 로그인
                 </span>
               </div>
 
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">아이디</Label>
                   <Input
                     id="username"
-                    placeholder="username"
+                    placeholder="아이디를 입력하세요"
                     {...signInField("username")}
                   />
                   {errors.username && (
@@ -91,18 +91,18 @@ export function SignInForm({
 
                 <div className="grid gap-2">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">비밀번호</Label>
                     <a
                       href="#"
                       className="ml-auto text-sm underline-offset-4 hover:underline"
                     >
-                      Forgot your password?
+                      비밀번호를 잊으셨나요?
                     </a>
                   </div>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="********"
+                    placeholder="비밀번호를 입력하세요"
                     {...signInField("password")}
                   />
                   {errors.password && (
@@ -118,14 +118,14 @@ export function SignInForm({
                       Signing in account...
                     </>
                   ) : (
-                    "Sign in"
+                    "로그인"
                   )}
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don't have an account?{" "}
+                계정이 없으신가요?{" "}
                 <Link href="/signup" className="underline underline-offset-4">
-                  Sign up
+                  회원가입
                 </Link>
               </div>
             </div>

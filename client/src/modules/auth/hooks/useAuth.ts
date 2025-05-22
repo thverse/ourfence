@@ -13,10 +13,10 @@ export function useSignUp() {
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], "me");
       router.push("/");
-      toast.success("Welcome! Account created successfully.");
+      toast.success("환영합니다! 계정이 성공적으로 생성되었습니다.");
     },
     onError: (error: AxiosError<any>) => {
-      toast.error(error.response?.data?.message || "Sign up failed");
+      toast.error(error.response?.data?.message || "회원가입에 실패했습니다.");
     },
   });
 }
@@ -30,7 +30,7 @@ export function useSignIn() {
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], "me");
       router.push("/");
-      toast.success("Welcome Back! Account signed in successfully.");
+      toast.success("환영합니다! 로그인되었습니다.");
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
@@ -46,7 +46,7 @@ export function useSignOut() {
     onSuccess: () => {
       queryClient.setQueryData(["user"], null);
       router.push("/signin");
-      toast.success("You have successfully signed out of your account!");
+      toast.success("로그아웃되었습니다.");
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data?.message || "로그아웃에 실패했습니다.");

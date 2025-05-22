@@ -41,7 +41,7 @@ export function SignUpForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">
-            There are stories in the Ourfence
+            Ourfence에서 이야기를 나누세요
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -49,10 +49,10 @@ export function SignUpForm({
             <div className="grid gap-6">
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">아이디</Label>
                   <Input
                     id="username"
-                    placeholder="username"
+                    placeholder="아이디를 입력하세요"
                     {...signUpField("username")}
                     required
                   />
@@ -63,10 +63,10 @@ export function SignUpForm({
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="nickname">Nickname</Label>
+                  <Label htmlFor="nickname">닉네임</Label>
                   <Input
                     id="nickname"
-                    placeholder="nickname"
+                    placeholder="닉네임을 입력하세요"
                     {...signUpField("nickname")}
                     required
                   />
@@ -77,31 +77,26 @@ export function SignUpForm({
                   )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">이메일</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="username@example.com"
+                    placeholder="이메일을 입력하세요"
                     {...signUpField("email")}
                     required
                   />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">비밀번호</Label>
                   </div>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="********"
+                    placeholder="비밀번호를 입력하세요"
                     {...signUpField("password")}
                     required
                   />
-                  {errors.password && (
-                    <p className="text-sm text-destructive">
-                      {errors.password.message}
-                    </p>
-                  )}
                   {errors.password && (
                     <p className="text-sm text-destructive">
                       {errors.password.message}
@@ -115,14 +110,14 @@ export function SignUpForm({
                       Creating account...
                     </>
                   ) : (
-                    "Sign up"
+                    "회원가입"
                   )}
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Do have an account?{" "}
+                계정이 있으신가요?{" "}
                 <Link href="/signin" className="underline underline-offset-4">
-                  Sign in
+                  로그인
                 </Link>
               </div>
             </div>

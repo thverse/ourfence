@@ -172,11 +172,8 @@ const Post = ({ post, isDetail = false, onBack }: PostProps) => {
             </div>
           )}
 
-          <div className="flex mt-3 gap-10 text-gray-500">
-            <button
-              className="flex items-center gap-1 hover:text-blue-500"
-              onClick={(e) => e.stopPropagation()}
-            >
+          <div className="flex mt-3 gap-3 text-gray-500">
+            <button className="flex items-center gap-1 hover:text-blue-500">
               <MessageSquare className="w-5 h-5" />
               <span>{post._count?.comments}</span>
             </button>

@@ -33,14 +33,14 @@ apiClient.interceptors.response.use(
 
         // 리프레시 토큰이 없거나 만료되었다면 로그아웃 처리
         if (refreshResponse.status !== 200) {
-          toast.error("Refresh token is invalid or expired.");
+          toast.error("리프레시 토큰이 유효하지 않거나 만료되었습니다.");
           throw error;
         }
 
         // 재요청 (Access Token이 갱신되었으므로 다시 호출)
         return await apiClient.request(error.config);
       } catch (refreshError) {
-        toast.error("Token refresh failed");
+        toast.error("토큰 갱신에 실패했습니다.");
         throw refreshError;
       }
     }
