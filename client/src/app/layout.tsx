@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import ClientLayout from "@/components/layout/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "OurFence",
-  description: "우리만의 울타리, OurFence",
+  title: "Ourfence",
+  description: "Ourfence, 우리의 이야기가 모이는 곳",
   icons: {
     icon: "/favicon.svg",
   },
