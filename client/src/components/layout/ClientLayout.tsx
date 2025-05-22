@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import { ToastContainer } from "react-toastify";
 import LeftSideBar from "@/components/layout/LeftSideBar";
 import RightSideBar from "@/components/layout/RightSideBar";
+import BottomNavBar from "@/components/layout/BottomNavBar";
 import { Button } from "@/components/ui/button";
 import { Bell, Home, MessageSquare, Plus, Search, User } from "lucide-react";
 import {
@@ -52,7 +53,7 @@ export default function RootLayout({
               </div>
 
               {/* 모바일 햄버거 메뉴 */}
-              <Sheet open={open} onOpenChange={setOpen}>
+              {/* <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="ghost"
@@ -67,7 +68,10 @@ export default function RootLayout({
                   </SheetHeader>
                   <LeftSideBarMenuSection onClose={() => setOpen(false)} />
                 </SheetContent>
-              </Sheet>
+              </Sheet> */}
+
+              {/* 모바일 하단 네비게이션 바 */}
+              <BottomNavBar />
             </div>
           )}
 

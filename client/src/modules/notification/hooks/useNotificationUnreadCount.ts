@@ -15,5 +15,6 @@ export const useNotificationUnreadCount = ({
     queryFn: () => NotificationService.getUnreadCount(),
     staleTime: 1000 * 60, // 1분
     gcTime: 1000 * 60 * 5, // 5분
+    enabled: enabled && !!userId,
   });
 };
