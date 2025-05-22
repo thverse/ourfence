@@ -4,7 +4,10 @@
 
 /* 라우팅 될때 페이지 레이아웃 밀리는 증상 방지 */
 html {
-  width: calc(100vw - 12px);
+  @media (min-width: 768px) {
+    width: calc(100vw - 12px);
+  }
+  width: 100vw;
   overflow-x: hidden;
 }
 

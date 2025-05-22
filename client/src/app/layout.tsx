@@ -9,9 +9,17 @@ import LeftSideBar from "@/components/layout/LeftSideBar";
 import RightSideBar from "@/components/layout/RightSideBar";
 import { Button } from "@/components/ui/button";
 import { Bell, Home, MessageSquare, Plus, Search, User } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { Providers } from "@/components/Providers";
+import LeftSideBarMenuSection from "@/components/leftSideBar/LeftSideBarMenuSection";
+import { useState } from "react";
 
 // export const metadata: Metadata = {
 //   title: "Ourfence",
@@ -24,6 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   // auth 관련 페이지 별도 레이아웃 적용
   const isAuthPage =
@@ -50,33 +59,20 @@ export default function RootLayout({
               </div>
 
               {/* 모바일 햄버거 메뉴 */}
-              <Sheet>
+              <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="md:hidden fixed bottom-4 right-4"
+                    className="z-10 md:hidden fixed right-1"
                   >
                     <Plus size={24} />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-64">
-                  <nav className="flex flex-col gap-4">
-                    <Button variant="ghost" className="flex gap-2">
-                      <Home size={20} /> 홈
-                    </Button>
-                    <Button variant="ghost" className="flex gap-2">
-                      <Search size={20} /> 탐색
-                    </Button>
-                    <Button variant="ghost" className="flex gap-2">
-                      <Bell size={20} /> 알림
-                    </Button>
-                    <Button variant="ghost" className="flex gap-2">
-                      <MessageSquare size={20} /> 메시지
-                    </Button>
-                    <Button variant="ghost" className="flex gap-2">
-                      <User size={20} /> 프로필
-                    </Button>
-                  </nav>
+                  <SheetHeader>
+                    <SheetTitle></SheetTitle>
+                  </SheetHeader>
+                  <LeftSideBarMenuSection onClose={() => setOpen(false)} />
                 </SheetContent>
               </Sheet>
             </div>

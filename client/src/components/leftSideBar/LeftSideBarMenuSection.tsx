@@ -6,7 +6,11 @@ import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { SignOutButton } from "@/modules/auth/components/SignOutButton";
 import { NotificationIcon } from "@/modules/notification/components/NotificationIcon";
 
-const LeftSideBarMenuSection = () => {
+interface LeftSideBarMenuSectionProps {
+  onClose?: () => void;
+}
+
+const LeftSideBarMenuSection = ({ onClose }: LeftSideBarMenuSectionProps) => {
   const { data: user } = useCurrentUser();
 
   const LeftSideBarMenuItems = [
@@ -30,19 +34,24 @@ const LeftSideBarMenuSection = () => {
     },
   ];
 
+  const handleItemClick = () => {
+    onClose?.();
+  };
+
   return (
     <div className="flex flex-col justify-between h-full">
       <nav className="flex flex-col gap-2 pb-5">
         {LeftSideBarMenuItems.map((item, idx) => {
           return (
-            <LeftSideBarMenuItem
-              key={idx}
-              title={item.title}
-              icon={item.icon}
-              customIcon={item.customIcon}
-              iconSize={item.iconSize}
-              path={item.path}
-            />
+            <div key={idx} onClick={handleItemClick}>
+              <LeftSideBarMenuItem
+                title={item.title}
+                icon={item.icon}
+                customIcon={item.customIcon}
+                iconSize={item.iconSize}
+                path={item.path}
+              />
+            </div>
           );
         })}
         <PostCreateModal buttonText="게시하기" />
