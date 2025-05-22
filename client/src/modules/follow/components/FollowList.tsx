@@ -45,6 +45,7 @@ export const FollowList = ({
       {userList.map((user) => {
         const userId =
           selectedTabId === "followers" ? user.followingId : user.followerId;
+        if (!userId) return null;
         return <FollowUserItem key={userId} userId={userId.toString()} />;
       })}
     </div>

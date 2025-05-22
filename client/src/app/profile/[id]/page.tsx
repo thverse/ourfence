@@ -22,7 +22,7 @@ const ProfilePage = () => {
   const router = useRouter();
 
   const userInfo = userId === currentUser?.id?.toString() ? currentUser : user;
-  const { selectedTabId } = useTabBarStore();
+  const { selectedTabId, setSelectedTabId } = useTabBarStore();
 
   const { data: postList, isLoading: isPostListLoading } = usePostList({
     type: selectedTabId as PostType,
@@ -129,7 +129,10 @@ const ProfilePage = () => {
         <div className="flex gap-4 text-sm text-gray-500">
           <div
             className="cursor-pointer"
-            onClick={() => router.push(`/follow/${userInfo?.id}`)}
+            onClick={() => {
+              router.push(`/follow/${userInfo?.id}?tab=following`);
+              setSelectedTabId("following");
+            }}
           >
             <span className="font-bold text-black pr-1">
               {userInfo?._count.followings}
@@ -138,7 +141,10 @@ const ProfilePage = () => {
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => router.push(`/follow/${userInfo?.id}`)}
+            onClick={() => {
+              router.push(`/follow/${userInfo?.id}?tab=followers`);
+              setSelectedTabId("followers");
+            }}
           >
             <span className="font-bold text-black pr-1">
               {userInfo?._count.followers}

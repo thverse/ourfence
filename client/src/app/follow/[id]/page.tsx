@@ -1,16 +1,25 @@
 // src/app/profile/[id]/follows/page.tsx
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import TabBar from "@/components/TabBar";
 import { useTabBarStore } from "@/app/store";
 import { FollowList } from "@/modules/follow/components/FollowList";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
 const FollowsPage = () => {
   const { id: userId } = useParams();
-  const { selectedTabId } = useTabBarStore();
+  const { selectedTabId, setSelectedTabId } = useTabBarStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+
+  useEffect(() => {
+    if (tab) {
+      setSelectedTabId(tab);
+    }
+  }, [tab, setSelectedTabId]);
 
   const tabs = [
     {
@@ -39,7 +48,11 @@ const FollowsPage = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <TabBar items={tabs} initialActiveTab="followers" className="flex-1" />
+        <TabBar
+          items={tabs}
+          initialActiveTab={selectedTabId || "followers"}
+          className="flex-1"
+        />
       </div>
       <FollowList
         userId={userId as string}
