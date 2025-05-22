@@ -1,6 +1,6 @@
 import { use, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Image as ImageIcon, X } from "lucide-react";
+import { Image as ImageIcon, X, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postCreateSchema, type PostCreateFormData } from "../schema";
 import { usePostCreate } from "../hooks/usePostCreate";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";
+import { cn } from "@/lib/utils";
+
 interface PostCreateModalProps {
   buttonText?: string;
 }
@@ -110,10 +112,20 @@ export default function PostCreateModal({
   return (
     <>
       <Button
-        className="w-full font-bold py-3 rounded-full text-base transition-colors shadow-sm"
+        className={cn(
+          // 모바일 스타일 (기본)
+          "w-14 h-14 p-0 flex items-center justify-center rounded-full",
+          "bg-black/30 text-white",
+          "shadow-sm transition-colors",
+          // 데스크톱 스타일
+          "md:w-auto md:px-4 md:py-3",
+          "md:flex md:items-center md:gap-2",
+          "md:font-bold md:text-base md:bg-black"
+        )}
         onClick={() => setIsOpen(true)}
       >
-        {buttonText}
+        <Pencil size={24} className="md:hidden" />
+        <span className="hidden md:inline">{buttonText}</span>
       </Button>
       {isOpen &&
         createPortal(
