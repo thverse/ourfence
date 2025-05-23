@@ -11,9 +11,6 @@ export const useFollow = (
 
   const { mutate: toggleFollow, isPending } = useMutation({
     mutationFn: async () => {
-      // 3초 지연
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
       // 실제 API 호출
       return isFollowing
         ? followService.unfollow(targetUserId)
@@ -48,44 +45,48 @@ export const useFollow = (
 
       // 낙관적 업데이트: 대상 유저
       if (previousTargetUser) {
-        queryClient.setQueryData(["user", targetUserId], {
-          ...previousTargetUser,
+        queryClient.setQueryData(["user", targetUserId], (old: any) => ({
+          ...old,
           isFollowedByMe: !isFollowing,
           followerCount: isFollowing
-            ? previousTargetUser.followerCount - 1
-            : previousTargetUser.followerCount + 1,
-        });
+            ? old.followerCount - 1
+            : old.followerCount + 1,
+        }));
       }
 
       // 낙관적 업데이트: 나
       if (previousMe) {
-        queryClient.setQueryData(["user", "me"], {
-          ...previousMe,
+        queryClient.setQueryData(["user", "me"], (old: any) => ({
+          ...old,
           followingCount: isFollowing
-            ? previousMe.followingCount - 1
-            : previousMe.followingCount + 1,
-        });
+            ? old.followingCount - 1
+            : old.followingCount + 1,
+        }));
       }
 
       // 낙관적 업데이트: followerList
       if (previousFollowerList) {
-        const updatedFollowerList = isFollowing
-          ? previousFollowerList.filter((user) => user.id !== previousMe?.id)
-          : [...previousFollowerList, previousMe];
         queryClient.setQueryData(
           ["followerList", targetUserId],
-          updatedFollowerList
+          (old: any[]) => {
+            if (isFollowing) {
+              return old.filter((user) => user.id !== previousMe?.id);
+            }
+            return [...old, previousMe];
+          }
         );
       }
 
       // 낙관적 업데이트: followingList
       if (previousFollowingList) {
-        const updatedFollowingList = isFollowing
-          ? previousFollowingList.filter((user) => user.id !== targetUserId)
-          : [...previousFollowingList, previousTargetUser];
         queryClient.setQueryData(
           ["followingList", currentUserId],
-          updatedFollowingList
+          (old: any[]) => {
+            if (isFollowing) {
+              return old.filter((user) => user.id !== targetUserId);
+            }
+            return [...old, previousTargetUser];
+          }
         );
       }
 
