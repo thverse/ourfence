@@ -7,11 +7,37 @@ import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { NotificationIcon } from "@/modules/notification/components/NotificationIcon";
 import PostCreateModal from "@/modules/post/components/PostCreateModal";
 import { useSignOut } from "@/modules/auth/hooks/useAuth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useState, useEffect } from "react";
 
 const BottomNavBar = () => {
   const pathname = usePathname();
   const { data: user } = useCurrentUser();
-  const { mutate: signOut } = useSignOut();
+  const { mutate: signOut, isPending } = useSignOut();
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
+    }
+  }, [isOpen]);
+
+  const handleSignOut = () => {
+    signOut();
+    setIsOpen(false);
+  };
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === path;
@@ -36,14 +62,6 @@ const BottomNavBar = () => {
       path: `/profile/${user?.id}`,
       iconSize: 24,
     },
-    {
-      title: "로그아웃",
-      icon: LogOut,
-      path: "",
-      iconSize: 24,
-      onClick: () => signOut(),
-      className: "text-gray-500",
-    },
   ];
 
   return (
@@ -58,15 +76,43 @@ const BottomNavBar = () => {
               key={idx}
               href={item.path}
               className={`flex-1 flex flex-col items-center justify-center gap-0.5 ${
-                item.className ||
-                (isActive(item.path) ? "text-black" : "text-gray-500")
+                isActive(item.path) ? "text-black" : "text-gray-500"
               }`}
-              onClick={item.onClick}
             >
-              {item.customIcon || (item.icon && <item.icon size={22} />)}
+              {item.customIcon ||
+                (item.icon && <item.icon size={item.iconSize} />)}
               <span className="text-[10px]">{item.title}</span>
             </Link>
           ))}
+          <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+            <AlertDialogTrigger asChild>
+              <button
+                className="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-500"
+                disabled={isPending}
+              >
+                <LogOut size={24} />
+                <span className="text-[10px]">로그아웃</span>
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
+                <AlertDialogDescription className="sr-only">
+                  로그아웃하면 다시 로그인해야 합니다.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>취소</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleSignOut}
+                  className="bg-red-500 hover:bg-red-600"
+                  disabled={isPending}
+                >
+                  로그아웃
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>

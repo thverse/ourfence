@@ -57,7 +57,7 @@ export class CommentService {
         userId: post.userId,
         senderUserId: userId,
         type: NotificationType.COMMENT,
-        referenceId: comment.id,
+        referenceId: postId,
       });
 
       // 실시간 알림 전송
