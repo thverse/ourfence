@@ -23,6 +23,8 @@ export function useUserProfile({ userId }: UseUserProfileProps = {}) {
 export function useCurrentUser({ enabled }: UseCurrentUserProps = {}) {
   return useQuery<UserWithProfileResponse>({
     queryKey: ["user", "me"],
+    // 파라미터를 넣지않은 이유는 nestjs 서버에서
+    // 쿠키로 현재 유저를 조회하는 것이기 때문에 파라미터가 필요없음
     queryFn: () => getUserProfile(""),
     staleTime: 1000 * 60 * 10,
     retry: false,
