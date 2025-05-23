@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { usePost } from "@/modules/post/hooks/usePost";
 import Post from "@/modules/post/components/Post";
+import { PostDetailSkeleton } from "@/components/ui/loading-skeleton";
 
 const PostDetailPage = () => {
   const params = useParams();
@@ -11,7 +12,7 @@ const PostDetailPage = () => {
   const { data: post, isLoading } = usePost({ postId });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PostDetailSkeleton />;
   }
 
   if (!post) {

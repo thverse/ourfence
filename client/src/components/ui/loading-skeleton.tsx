@@ -43,13 +43,60 @@ export function PostSkeleton() {
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
           </div>
+          <div className="mt-4">
+            <Skeleton className="aspect-square w-full rounded-2xl" />
+          </div>
           <div className="mt-4 flex space-x-4">
-            <Skeleton className="h-4 w-16" />
             <Skeleton className="h-4 w-16" />
             <Skeleton className="h-4 w-16" />
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+export function PostDetailSkeleton() {
+  return (
+    <div>
+      <div className="sticky top-0 z-10 border-b bg-white/90 backdrop-blur">
+        <div className="flex items-center gap-6 p-4">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+      </div>
+      <div className="p-4">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+        <div className="mt-4 space-y-2">
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-6 w-3/4" />
+        </div>
+        <div className="mt-4">
+          <Skeleton className="aspect-square w-full rounded-2xl" />
+        </div>
+        <div className="mt-4 flex space-x-4">
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+        <div className="mt-6 space-y-4">
+          <Skeleton className="h-12 w-full rounded-lg" />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex space-x-4">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
