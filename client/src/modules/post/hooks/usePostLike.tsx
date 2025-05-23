@@ -8,7 +8,8 @@ export const usePostLike = (post: PostResponse) => {
   const queryClient = useQueryClient();
 
   const { mutate: toggleLike, isPending } = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
+      // 실제 API 호출
       return post?.isCurrentUserLiked
         ? postService.unlikePost(post.id)
         : postService.likePost({ postId: post.id });
@@ -17,22 +18,56 @@ export const usePostLike = (post: PostResponse) => {
     // 낙관적 업데이트 처리
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["post", post.id] });
+      const postTypes = Object.values(PostType);
+      await Promise.all(
+        postTypes.map((type) =>
+          queryClient.cancelQueries({ queryKey: ["postList", "user", type] })
+        )
+      );
 
       const previousPost = queryClient.getQueryData<PostResponse>([
         "post",
         post.id,
       ]);
 
-      // 낙관적 업데이트
+      // 포스트 상세 낙관적 업데이트
       queryClient.setQueryData<PostResponse>(["post", post.id], (old) => {
         if (!old) return old;
         return {
           ...old,
           isCurrentUserLiked: !old.isCurrentUserLiked,
-          likeCount: old.isCurrentUserLiked
-            ? old._count.likes - 1
-            : old._count.likes + 1,
+          _count: {
+            ...old._count,
+            likes: old.isCurrentUserLiked
+              ? old._count.likes - 1
+              : old._count.likes + 1,
+          },
         };
+      });
+
+      // 포스트 리스트 낙관적 업데이트
+      postTypes.forEach((type) => {
+        queryClient.setQueriesData<PostResponse[]>(
+          { queryKey: ["postList", "user", type] },
+          (old) => {
+            if (!old) return old;
+            return old.map((p) => {
+              if (p.id === post.id) {
+                return {
+                  ...p,
+                  isCurrentUserLiked: !p.isCurrentUserLiked,
+                  _count: {
+                    ...p._count,
+                    likes: p.isCurrentUserLiked
+                      ? p._count.likes - 1
+                      : p._count.likes + 1,
+                  },
+                };
+              }
+              return p;
+            });
+          }
+        );
       });
 
       return { previousPost };

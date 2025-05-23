@@ -10,7 +10,11 @@ export const useFollow = (
   const queryClient = useQueryClient();
 
   const { mutate: toggleFollow, isPending } = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
+      // 3초 지연
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // 실제 API 호출
       return isFollowing
         ? followService.unfollow(targetUserId)
         : followService.follow(targetUserId);
