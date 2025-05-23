@@ -6,6 +6,43 @@ import { NotificationResponse } from "@ourfence/shared";
 import { useReadNotification } from "../hooks/useReadNotification";
 import { NotificationType } from "../types/noticiation.type";
 import { cn } from "@/lib/utils";
+
+interface NotificationInfo {
+  message: React.ReactNode;
+  icon: React.ReactNode;
+  path: string;
+}
+
+const NOTIFICATION_CONFIG: Record<
+  NotificationType,
+  {
+    message: string;
+    icon: typeof Heart | typeof MessageCircle | typeof UserPlus;
+    getPath: (notification: NotificationResponse) => string;
+  }
+> = {
+  COMMENT: {
+    message: "내 글에 댓글을 남겼습니다.",
+    icon: MessageCircle,
+    getPath: (notification) => `/post/${notification.referenceId}`,
+  },
+  LIKE: {
+    message: "내 글을 좋아합니다.",
+    icon: Heart,
+    getPath: (notification) => `/post/${notification.referenceId}`,
+  },
+  FOLLOW: {
+    message: "나를 팔로우 하기 시작했습니다.",
+    icon: UserPlus,
+    getPath: (notification) => `/profile/${notification.sender.id}`,
+  },
+  MENTION: {
+    message: "",
+    icon: MessageCircle,
+    getPath: () => "",
+  },
+};
+
 const NotificationItem = ({
   notification,
 }: {
@@ -16,90 +53,57 @@ const NotificationItem = ({
     userId: notification.userId,
   });
 
-  interface NotificationInfo {
-    message: React.ReactNode;
-    icon: React.ReactNode;
-    onClick: () => void;
-  }
+  const getNotificationInfo = (): NotificationInfo => {
+    const type = notification.type as NotificationType;
+    const config = NOTIFICATION_CONFIG[type];
 
-  const getNotificationInfo = (
-    type: NotificationType,
-    nickname: string,
-    referenceId?: number,
-    router?: ReturnType<typeof useRouter>
-  ): NotificationInfo => {
-    const createMessage = (text: string) => (
+    if (!config) {
+      return {
+        icon: null,
+        message: null,
+        path: "",
+      };
+    }
+
+    const Icon = config.icon;
+    const message = (
       <div>
-        <span className="font-bold text-black">{nickname}</span>
-        님이 {text}
+        <span className="font-bold text-black">
+          {notification.sender.userProfile.nickname}
+        </span>
+        님이 {config.message}
       </div>
     );
 
-    const createIcon = (
-      Icon: typeof Heart | typeof MessageCircle | typeof UserPlus
-    ) => <Icon size={25} className="mt-2" />;
+    return {
+      icon: <Icon size={25} className="mt-2" />,
+      message,
+      path: config.getPath(notification),
+    };
+  };
 
-    switch (type) {
-      case "COMMENT":
-        return {
-          icon: createIcon(MessageCircle),
-          message: createMessage("내 글에 댓글을 남겼습니다."),
-          onClick: () => {
-            router?.push(`/post/${referenceId}`);
-            readNotification(notification.id);
-          },
-        };
-
-      case "LIKE":
-        return {
-          icon: createIcon(Heart),
-          message: createMessage("내 글을 좋아합니다."),
-          onClick: () => {
-            router?.push(`/post/${referenceId}`);
-            readNotification(notification.id);
-          },
-        };
-
-      case "FOLLOW":
-        return {
-          icon: createIcon(UserPlus),
-          message: createMessage("나를 팔로우 하기 시작했습니다."),
-          onClick: () => {
-            router?.push(`/profile/${notification.sender.id}`);
-            readNotification(notification.id);
-          },
-        };
-
-      default:
-        return {
-          icon: null,
-          message: null,
-          onClick: () => {},
-        };
+  const handleNotificationClick = () => {
+    const { path } = getNotificationInfo();
+    if (path) {
+      readNotification(notification.id, {
+        onSuccess: () => {
+          router.push(path);
+        },
+      });
     }
   };
+
+  const { icon, message } = getNotificationInfo();
+
   return (
     <div
       className={cn(
         "flex gap-2 border-b border-gray-200 p-4 cursor-pointer",
         notification.isRead ? "bg-white" : "bg-blue-50"
       )}
-      onClick={() => {
-        getNotificationInfo(
-          notification.type as NotificationType,
-          notification.sender.userProfile.nickname,
-          notification.referenceId,
-          router
-        ).onClick();
-      }}
+      onClick={handleNotificationClick}
     >
-      {
-        getNotificationInfo(
-          notification.type as NotificationType,
-          notification.sender.userProfile.nickname,
-          notification.referenceId
-        ).icon
-      }
+      {icon}
       <Avatar>
         <AvatarImage
           src={notification.sender.userProfile.profileImageUrl}
@@ -112,15 +116,7 @@ const NotificationItem = ({
           {notification.sender.userProfile.nickname[0]}
         </AvatarFallback>
       </Avatar>
-      <div className="text-gray-500 flex items-center">
-        {
-          getNotificationInfo(
-            notification.type as NotificationType,
-            notification.sender.userProfile.nickname,
-            notification.referenceId
-          ).message
-        }
-      </div>
+      <div className="text-gray-500 flex items-center">{message}</div>
     </div>
   );
 };
