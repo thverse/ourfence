@@ -2,16 +2,17 @@
 
 import SectionHeader from "@/components/SectionHeader";
 import NotificationItem from "@/modules/notification/components/NotificationItem";
-import React, { useEffect } from "react";
+import React from "react";
 import { useNotificationList } from "@/modules/notification/hooks/useNotificationList";
 import { useCurrentUser } from "@/modules/user/hooks/useUser";
 import { useRouter } from "next/navigation";
 import EmptyStateGuide from "@/components/EmptyStateGuide";
+import { NotificationSkeleton } from "@/components/ui/loading-skeleton";
 
 export default function NotificationPage() {
   const { data: user } = useCurrentUser();
 
-  const { data: notificationList } = useNotificationList({
+  const { data: notificationList, isLoading } = useNotificationList({
     userId: user?.id,
     enabled: !!user,
   });
@@ -20,7 +21,9 @@ export default function NotificationPage() {
     <div>
       <div className="flex flex-col">
         <SectionHeader pageTitle="알림" />
-        {notificationList && notificationList.length > 0 ? (
+        {isLoading ? (
+          <NotificationSkeleton />
+        ) : notificationList && notificationList.length > 0 ? (
           notificationList?.map((notification) => (
             <NotificationItem
               key={notification.id}
