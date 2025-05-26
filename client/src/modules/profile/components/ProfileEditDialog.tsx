@@ -177,6 +177,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                           alt="Profile preview"
                           fill
                           className="rounded-full object-cover"
+                          unoptimized
                         />
                       ) : getImageUrl("profile") ? (
                         <Image
@@ -184,6 +185,7 @@ const ProfileEditDialog = ({ user }: { user: UserWithProfileResponse }) => {
                           alt="Profile preview"
                           fill
                           className="rounded-full object-cover"
+                          unoptimized
                         />
                       ) : (
                         <div className="w-full h-full rounded-full flex items-center justify-center">

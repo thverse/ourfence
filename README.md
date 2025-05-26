@@ -10,6 +10,13 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 - **배포 URL**: <a href="https://ourfence.xyz" target="_blank" rel="noopener noreferrer">https://ourfence.xyz</a>
 
+## 테스트 계정 정보
+
+테스트를 위해 다음 계정을 사용할 수 있습니다:
+
+- 아이디: master
+- 비밀번호: Master25!!
+
 ## 🛠 사용 기술
 
 ### Project Structure
