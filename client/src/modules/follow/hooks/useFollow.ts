@@ -47,10 +47,10 @@ export const useFollow = (
       if (previousTargetUser) {
         queryClient.setQueryData(["user", targetUserId], (old: any) => ({
           ...old,
-          isFollowedByMe: !isFollowing,
-          followerCount: isFollowing
-            ? old.followerCount - 1
-            : old.followerCount + 1,
+          isFollowing: !isFollowing,
+          _count: isFollowing
+            ? { ...old._count, followers: old._count.followers - 1 }
+            : { ...old._count, followers: old._count.followers + 1 },
         }));
       }
 
@@ -58,9 +58,9 @@ export const useFollow = (
       if (previousMe) {
         queryClient.setQueryData(["user", "me"], (old: any) => ({
           ...old,
-          followingCount: isFollowing
-            ? old.followingCount - 1
-            : old.followingCount + 1,
+          _count: isFollowing
+            ? { ...old._count, following: old._count.following - 1 }
+            : { ...old._count, following: old._count.following + 1 },
         }));
       }
 
@@ -83,7 +83,9 @@ export const useFollow = (
           ["followingList", currentUserId],
           (old: any[]) => {
             if (isFollowing) {
-              return old.filter((user) => user.id !== targetUserId);
+              return old.filter(
+                (user) => user.followerId.toString() !== targetUserId
+              );
             }
             return [...old, previousTargetUser];
           }
@@ -116,10 +118,6 @@ export const useFollow = (
       );
 
       toast.error("팔로우 처리 중 오류가 발생했습니다.");
-    },
-
-    onSuccess: () => {
-      toast.success(isFollowing ? "팔로우를 취소했습니다." : "팔로우했습니다.");
     },
 
     onSettled: () => {
