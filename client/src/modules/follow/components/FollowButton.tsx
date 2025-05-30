@@ -30,7 +30,6 @@ const FollowButton = ({ targetUserId, isFollowing }: FollowButtonProps) => {
     <Button
       variant={isFollowing ? "outline" : "default"}
       onClick={handleFollow}
-      disabled={isPending}
       size="lg"
       className="rounded-full font-bold"
     >
