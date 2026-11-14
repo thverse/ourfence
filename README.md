@@ -6,17 +6,6 @@ X(구 Twitter)를 모티브로 한 소셜 네트워킹 서비스입니다. Next.
 
 이 프로젝트는 모노레포(Monorepo) 구조로 구성되어 있어 클라이언트(`client`), 서버(`server`), 공통 타입(`shared`) 패키지를 하나의 저장소에서 관리합니다. 특히 `shared` 패키지를 통해 클라이언트와 서버 간에 타입을 공유하여 타입 안정성을 보장하고 개발 생산성을 향상시켰습니다.
 
-## 🔗 프로젝트 링크
-
-- **배포 URL**: <a href="https://ourfence.xyz" target="_blank" rel="noopener noreferrer">https://ourfence.xyz</a>
-
-## 테스트 계정 정보
-
-테스트를 위해 다음 계정을 사용할 수 있습니다:
-
-- 아이디: master
-- 비밀번호: Master25!!
-
 ## 🛠 사용 기술
 
 ### Project Structure
